@@ -56,8 +56,8 @@ export default function Navbar() {
             <Image 
               src="/images/logo.png" 
               alt="KalyanautsavaMat Logo" 
-              width={130} 
-              height={130}
+              width={150} 
+              height={150}
               className="object-contain"
               priority
             />

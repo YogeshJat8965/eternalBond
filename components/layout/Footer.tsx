@@ -15,8 +15,8 @@ export default function Footer() {
               <Image 
                 src="/images/logo.png" 
                 alt="KalyanautsavaMat Logo" 
-                width={48} 
-                height={48}
+                width={96} 
+                height={96}
                 className="object-contain"
                 priority
               />
