@@ -49,24 +49,30 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-golden-100">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex justify-between items-center h-20 gap-12">
-          <Link href="/" className="flex items-center space-x-2 py-2">
-            <Image 
-              src="/images/logo.png" 
-              alt="KalyanautsavaMat Logo" 
-              width={150} 
-              height={150}
-              className="object-contain"
-              priority
-            />
-            <span className="text-2xl font-bold text-transparent bg-clip-text whitespace-nowrap" style={{ backgroundImage: 'linear-gradient(to right, #EEC900, #EEC900)' }}>
-              KalyanautsavaMat
-            </span>
-          </Link>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-golden-100 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo and Brand Name on Left */}
+          <div className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center flex-shrink-0">
+              <Image 
+                src="/images/logo.png" 
+                alt="KalyanautsavaMat Logo" 
+                width={96} 
+                height={96}
+                className="object-contain w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
+                priority
+              />
+            </Link>
+            <Link href="/" className="hidden sm:block">
+              <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text whitespace-nowrap" style={{ backgroundImage: 'linear-gradient(to right, #EEC900, #EEC900)' }}>
+                KalyanautsavaMat
+              </span>
+            </Link>
+          </div>
 
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Desktop Menu on Right - Fixed Width */}
+          <div className="hidden lg:flex items-center space-x-6 flex-shrink-0">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -113,12 +119,16 @@ export default function Navbar() {
             )}
           </div>
 
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-gray-700"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile: Hamburger Menu on Right */}
+          <div className="flex lg:hidden items-center">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-gray-700 hover:text-golden-600 p-2 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 

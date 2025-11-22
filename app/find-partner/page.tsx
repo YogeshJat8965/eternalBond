@@ -430,15 +430,14 @@ export default function FindPartnerPage() {
                       </div>
                     </div>
 
-                    <Link href={`/members/${result.id}`}>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
-                      >
-                        View Full Profile
-                      </motion.button>
-                    </Link>
+                    <motion.button
+                      onClick={(e) => e.preventDefault()}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium cursor-default"
+                    >
+                      View Full Profile
+                    </motion.button>
                   </div>
                 </motion.div>
               ))}

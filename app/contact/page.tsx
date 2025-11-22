@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
 import PetalAnimation from '@/components/animations/PetalAnimation';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ContactPage() {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,7 +17,11 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Thank you for contacting us! We will get back to you soon.');
+    toast({
+      title: "Thank you for contacting us! ✨",
+      description: "We have received your message and will get back to you soon.",
+      className: "bg-green-50 border-green-500 text-green-900",
+    });
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
 

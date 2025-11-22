@@ -135,7 +135,7 @@ export default function Home() {
         <FloatingHearts />
       </div>
 
-      <section className="relative min-h-screen flex items-center justify-center pt-16 pb-8 md:pb-0 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center pt-24 sm:pt-20 md:pt-16 pb-8 md:pb-0 overflow-hidden">
         {/* Animated Background Images */}
         <div className="absolute inset-0 w-full h-full">
           {heroImages.map((image, index) => (
@@ -165,7 +165,7 @@ export default function Home() {
         </div>
 
         {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/30 to-black/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/40 to-black/50"></div>
         
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZWNkZDMiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAgMTBjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-10"></div>
 
@@ -175,28 +175,31 @@ export default function Home() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-3xl mx-auto text-center"
+              className="max-w-4xl mx-auto text-center space-y-4 md:space-y-6"
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center space-x-2 bg-golden-100 px-3 py-1.5 md:px-4 md:py-2 rounded-full mb-4 md:mb-6"
+                className="inline-flex items-center justify-center space-x-2 bg-white/95 backdrop-blur-md px-4 py-2 md:px-5 md:py-2.5 rounded-full shadow-xl border border-golden-200"
               >
-                <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-golden-600" />
-                <span className="text-golden-700 text-xs md:text-sm font-medium">
+                <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-golden-600 flex-shrink-0" />
+                <span className="text-golden-700 text-xs sm:text-sm md:text-base font-semibold">
                   Trusted by thousands of happy couples
                 </span>
               </motion.div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight drop-shadow-lg">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight drop-shadow-2xl px-4">
                 Find Your{' '}
-                <RotatingWords 
-                  className="bg-gradient-to-r from-pink-400 to-pink-500 bg-clip-text text-transparent"
-                  words={['Perfect Match', 'True Love', 'Soulmate', 'Forever Partner']}
-                />
+                <span className="block mt-2">
+                  <RotatingWords 
+                    className="bg-gradient-to-r from-pink-400 to-pink-500 bg-clip-text text-transparent"
+                    words={['Perfect Match', 'True Love', 'Soulmate', 'Forever Partner']}
+                  />
+                </span>
               </h1>
-              <p className="text-lg md:text-xl lg:text-2xl text-white mb-6 md:mb-8 leading-relaxed drop-shadow-md">
+              
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white leading-relaxed drop-shadow-lg px-6 max-w-3xl mx-auto font-medium">
                 Discover meaningful connections and begin your journey to eternal
                 happiness with someone special.
               </p>
@@ -347,11 +350,12 @@ export default function Home() {
                       {profile.profession}
                     </p>
                     <p className="text-gray-500 text-sm">{profile.location}</p>
-                    <Link href="/members">
-                      <button className="mt-4 w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200">
-                        View Profile
-                      </button>
-                    </Link>
+                    <button 
+                      onClick={(e) => e.preventDefault()} 
+                      className="mt-4 w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 cursor-default"
+                    >
+                      View Profile
+                    </button>
                   </div>
                 </div>
               ))}
@@ -387,11 +391,12 @@ export default function Home() {
                     {profile.profession}
                   </p>
                   <p className="text-gray-500 text-xs mb-3">{profile.location}</p>
-                  <Link href="/members">
-                    <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 text-sm rounded-lg hover:shadow-md transition-all duration-200">
-                      View Profile
-                    </button>
-                  </Link>
+                  <button 
+                    onClick={(e) => e.preventDefault()} 
+                    className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 text-sm rounded-lg hover:shadow-md transition-all duration-200 cursor-default"
+                  >
+                    View Profile
+                  </button>
                 </div>
               </motion.div>
             ))}
