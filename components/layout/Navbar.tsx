@@ -1,12 +1,43 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { Heart, Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Heart, Menu, X, LogOut, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if user is registered
+    const checkRegistration = () => {
+      const registered = localStorage.getItem('isRegistered') === 'true';
+      setIsRegistered(registered);
+    };
+    
+    // Check on mount
+    checkRegistration();
+    
+    // Listen for registration events
+    window.addEventListener('registrationComplete', checkRegistration);
+    window.addEventListener('storage', checkRegistration);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('registrationComplete', checkRegistration);
+      window.removeEventListener('storage', checkRegistration);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('isRegistered');
+    localStorage.removeItem('userName');
+    setIsRegistered(false);
+    router.push('/');
+  };
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -43,18 +74,40 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/login"
-              className="text-rose-500 hover:text-rose-600 font-medium"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
-            >
-              Register
-            </Link>
+            
+            {isRegistered ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-rose-500 transition-colors duration-200 font-medium"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>Dashboard</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-rose-500 hover:text-rose-600 font-medium"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
 
           <button
@@ -85,20 +138,46 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/login"
-                className="block text-rose-500 py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className="block bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full text-center"
-                onClick={() => setIsOpen(false)}
-              >
-                Register
-              </Link>
+              
+              {isRegistered ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center space-x-2 text-gray-700 hover:text-rose-500 py-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>Dashboard</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsOpen(false);
+                    }}
+                    className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="block text-rose-500 py-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="block bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full text-center"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}

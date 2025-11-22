@@ -5,6 +5,12 @@ import { Search, Heart, Users, Award, ArrowRight, Sparkles } from 'lucide-react'
 import { useState } from 'react';
 import Link from 'next/link';
 import FloatingHearts from '@/components/animations/FloatingHearts';
+import RotatingWords from '@/components/animations/RotatingWords';
+import HeroImageSlider from '@/components/animations/HeroImageSlider';
+import CounterAnimation from '@/components/animations/CounterAnimation';
+import emmaAndDavid from './images/ama&david.jpg';
+import sophiaAndRyan from './images/sophia&ryan.jpg';
+import aishaAndOmar from './images/aisha&romar.jpg';
 
 export default function Home() {
   const [searchData, setSearchData] = useState({
@@ -13,6 +19,7 @@ export default function Home() {
     ageTo: '',
     religion: '',
   });
+  const [hoveredStory, setHoveredStory] = useState<number | null>(null);
 
   const featuredProfiles = [
     {
@@ -47,29 +54,45 @@ export default function Home() {
       location: 'London, UK',
       image: 'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
+    {
+      id: 5,
+      name: 'Emily Rodriguez',
+      age: 29,
+      profession: 'Marketing Manager',
+      location: 'Toronto, Canada',
+      image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
+    },
+    {
+      id: 6,
+      name: 'David Kim',
+      age: 31,
+      profession: 'Business Analyst',
+      location: 'Singapore',
+      image: 'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
+    },
   ];
 
   const stats = [
-    { icon: Users, label: 'Active Members', value: '50K+' },
-    { icon: Heart, label: 'Success Stories', value: '10K+' },
-    { icon: Award, label: 'Years of Trust', value: '15+' },
+    { icon: Users, label: 'Active Members', value: 50, suffix: 'K+' },
+    { icon: Heart, label: 'Success Stories', value: 10, suffix: 'K+' },
+    { icon: Award, label: 'Years of Trust', value: 15, suffix: '+' },
   ];
 
   const successStories = [
     {
       couple: 'Emma & David',
       story: 'We found each other through EternalBond and it was love at first sight!',
-      image: 'https://images.pexels.com/photos/2072179/pexels-photo-2072179.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: emmaAndDavid,
     },
     {
       couple: 'Sophia & Ryan',
       story: 'Thank you for bringing us together. Best decision we ever made!',
-      image: 'https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: sophiaAndRyan,
     },
     {
       couple: 'Aisha & Omar',
       story: 'A perfect match made through perfect service. Highly recommended!',
-      image: 'https://images.pexels.com/photos/1667849/pexels-photo-1667849.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: aishaAndOmar,
     },
   ];
 
@@ -101,9 +124,10 @@ export default function Home() {
 
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight">
                 Find Your{' '}
-                <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
-                  Perfect Match
-                </span>
+                <RotatingWords 
+                  className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent"
+                  words={['Perfect Match', 'True Love', 'Soulmate', 'Forever Partner']}
+                />
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 Discover meaningful connections and begin your journey to eternal
@@ -174,31 +198,7 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative"
             >
-              <div className="relative w-full aspect-square max-w-lg mx-auto">
-                <motion.div
-                  animate={{
-                    rotate: [0, 5, -5, 0],
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                  className="absolute inset-0 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full blur-3xl opacity-30"
-                ></motion.div>
-                <img
-                  src="https://images.pexels.com/photos/1024960/pexels-photo-1024960.jpeg?auto=compress&cs=tinysrgb&w=800"
-                  alt="Happy Couple"
-                  className="relative rounded-3xl shadow-2xl object-cover w-full h-full"
-                />
-                <motion.div
-                  className="absolute -top-6 -right-6 bg-white p-4 rounded-2xl shadow-xl"
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                >
-                  <Heart className="w-8 h-8 text-rose-500 fill-rose-500" />
-                </motion.div>
-              </div>
+              <HeroImageSlider />
             </motion.div>
           </div>
         </div>
@@ -220,7 +220,11 @@ export default function Home() {
                   <stat.icon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-4xl font-bold text-gray-800 mb-2">
-                  {stat.value}
+                  <CounterAnimation 
+                    end={stat.value} 
+                    suffix={stat.suffix}
+                    duration={2000}
+                  />
                 </h3>
                 <p className="text-gray-600">{stat.label}</p>
               </motion.div>
@@ -245,43 +249,55 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProfiles.map((profile, index) => (
-              <motion.div
-                key={profile.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100"
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={profile.image}
-                    alt={profile.name}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                  />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full">
-                    <Heart className="w-5 h-5 text-rose-500" />
+          {/* Auto-scrolling carousel */}
+          <div className="relative overflow-hidden">
+            <motion.div
+              className="flex gap-6"
+              animate={{
+                x: [0, -1920], // Adjust based on card width (320px * 6 cards = 1920px)
+              }}
+              transition={{
+                x: {
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 30,
+                  ease: "linear",
+                },
+              }}
+            >
+              {/* Render profiles twice for seamless loop */}
+              {[...featuredProfiles, ...featuredProfiles].map((profile, index) => (
+                <div
+                  key={`${profile.id}-${index}`}
+                  className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100"
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    <img
+                      src={profile.image}
+                      alt={profile.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full">
+                      <Heart className="w-5 h-5 text-rose-500" />
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-1">
+                      {profile.name}, {profile.age}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-2">
+                      {profile.profession}
+                    </p>
+                    <p className="text-gray-500 text-sm">{profile.location}</p>
+                    <Link href="/members">
+                      <button className="mt-4 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200">
+                        View Profile
+                      </button>
+                    </Link>
                   </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-1">
-                    {profile.name}, {profile.age}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-2">
-                    {profile.profession}
-                  </p>
-                  <p className="text-gray-500 text-sm">{profile.location}</p>
-                  <Link href="/members">
-                    <button className="mt-4 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200">
-                      View Profile
-                    </button>
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
+              ))}
+            </motion.div>
           </div>
 
           <div className="text-center mt-12">
@@ -323,21 +339,170 @@ export default function Home() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                whileHover={{ 
+                  y: -15,
+                  scale: 1.05,
+                  rotateZ: index % 2 === 0 ? 2 : -2,
+                  transition: { duration: 0.3, type: "spring", stiffness: 300 }
+                }}
+                onHoverStart={() => setHoveredStory(index)}
+                onHoverEnd={() => setHoveredStory(null)}
+                className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer"
               >
-                <div className="relative h-64">
-                  <img
-                    src={story.image}
-                    alt={story.couple}
-                    className="w-full h-full object-cover"
-                  />
+                {/* Animated gradient border effect */}
+                <motion.div 
+                  className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  style={{ 
+                    backgroundSize: '200% 200%',
+                    padding: '3px'
+                  }}
+                >
+                  <div className="w-full h-full bg-white rounded-2xl" />
+                </motion.div>
+
+                {/* Continuous bursting hearts on hover - WHOLE CARD */}
+                {hoveredStory === index && (
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+                    {[...Array(12)].map((_, i) => {
+                      const startX = Math.random() * 100;
+                      const startY = Math.random() * 100;
+                      const endX = startX + (Math.random() - 0.5) * 60;
+                      const endY = startY - 40 - Math.random() * 40;
+                      const delay = (i * 0.15) % 1.8;
+                      
+                      return (
+                        <motion.div
+                          key={`burst-${i}`}
+                          className="absolute"
+                          style={{
+                            left: `${startX}%`,
+                            top: `${startY}%`,
+                          }}
+                          initial={{
+                            opacity: 0,
+                            scale: 0,
+                            rotate: 0,
+                          }}
+                          animate={{
+                            opacity: [0, 1, 1, 0],
+                            scale: [0, 1, 1.2, 0.8],
+                            x: [`0%`, `${endX - startX}%`],
+                            y: [`0%`, `${endY - startY}%`],
+                            rotate: [0, 360],
+                          }}
+                          transition={{
+                            duration: 1.8,
+                            delay: delay,
+                            repeat: Infinity,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <Heart className="w-3 h-3 text-rose-400 fill-rose-400" />
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Content wrapper */}
+                <div className="relative z-10">
+                  <div className="relative h-64 overflow-hidden">
+                    <motion.img
+                      src={story.image.src}
+                      alt={story.couple}
+                      className="w-full h-full object-cover"
+                      whileHover={{ 
+                        scale: 1.15,
+                        transition: { duration: 0.4 }
+                      }}
+                    />
+                    
+                    {/* Floating hearts on hover */}
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                    >
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute"
+                          initial={{ 
+                            bottom: "10%",
+                            left: `${20 + i * 15}%`,
+                            opacity: 0 
+                          }}
+                          whileHover={{
+                            bottom: "90%",
+                            opacity: [0, 1, 0],
+                            transition: {
+                              duration: 2,
+                              delay: i * 0.2,
+                              repeat: Infinity,
+                            }
+                          }}
+                        >
+                          <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
+                        </motion.div>
+                      ))}
+                    </motion.div>
+
+                    {/* Shimmer effect overlay */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                      initial={{ x: '-100%' }}
+                      whileHover={{
+                        x: '100%',
+                        transition: { duration: 0.8, ease: "easeInOut" }
+                      }}
+                    />
+                  </div>
+
+                  <div className="p-6 bg-white">
+                    <motion.h3 
+                      className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-rose-500 transition-colors duration-300"
+                      whileHover={{ scale: 1.05, x: 5 }}
+                    >
+                      {story.couple}
+                    </motion.h3>
+                    <motion.p 
+                      className="text-gray-600 italic"
+                      initial={{ opacity: 0.8 }}
+                      whileHover={{ 
+                        opacity: 1,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
+                      {story.story}
+                    </motion.p>
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                    {story.couple}
-                  </h3>
-                  <p className="text-gray-600 italic">{story.story}</p>
-                </div>
+
+                {/* Sparkle effect on corners */}
+                <motion.div
+                  className="absolute top-2 right-2 text-yellow-400"
+                  initial={{ opacity: 0, scale: 0, rotate: 0 }}
+                  whileHover={{
+                    opacity: [0, 1, 1, 0],
+                    scale: [0, 1.2, 1, 0],
+                    rotate: [0, 180, 360],
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      repeatDelay: 0.5
+                    }
+                  }}
+                >
+                  <Sparkles className="w-6 h-6" />
+                </motion.div>
               </motion.div>
             ))}
           </div>

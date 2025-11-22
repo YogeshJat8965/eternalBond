@@ -7,6 +7,8 @@ import Link from 'next/link';
 
 export default function MembersPage() {
   const [showFilters, setShowFilters] = useState(false);
+  const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
+  const [burstingHeart, setBurstingHeart] = useState<number | null>(null);
   const [filters, setFilters] = useState({
     gender: '',
     ageFrom: '',
@@ -17,6 +19,16 @@ export default function MembersPage() {
     height: '',
     maritalStatus: '',
   });
+
+  const toggleLike = (memberId: number) => {
+    if (likedProfiles.includes(memberId)) {
+      setLikedProfiles(likedProfiles.filter((id) => id !== memberId));
+    } else {
+      setLikedProfiles([...likedProfiles, memberId]);
+      setBurstingHeart(memberId);
+      setTimeout(() => setBurstingHeart(null), 600);
+    }
+  };
 
   const members = [
     {
@@ -304,13 +316,71 @@ export default function MembersPage() {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg"
-                    >
-                      <Heart className="w-5 h-5 text-rose-500" />
-                    </motion.button>
+                    
+                    {/* Heart button with burst animation */}
+                    <div className="absolute top-4 right-4">
+                      <motion.button
+                        onClick={() => toggleLike(member.id)}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="relative bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg z-10"
+                      >
+                        <motion.div
+                          animate={
+                            likedProfiles.includes(member.id)
+                              ? {
+                                  scale: [1, 1.3, 1],
+                                }
+                              : {}
+                          }
+                          transition={{ duration: 0.3 }}
+                        >
+                          <Heart
+                            className={`w-5 h-5 transition-colors duration-200 ${
+                              likedProfiles.includes(member.id)
+                                ? 'text-rose-500 fill-rose-500'
+                                : 'text-rose-500'
+                            }`}
+                          />
+                        </motion.div>
+                      </motion.button>
+
+                      {/* Burst animation particles */}
+                      {burstingHeart === member.id && (
+                        <div className="absolute inset-0 pointer-events-none">
+                          {[...Array(8)].map((_, i) => {
+                            const angle = (i * 360) / 8;
+                            const x = Math.cos((angle * Math.PI) / 180) * 40;
+                            const y = Math.sin((angle * Math.PI) / 180) * 40;
+                            
+                            return (
+                              <motion.div
+                                key={i}
+                                className="absolute top-1/2 left-1/2"
+                                initial={{
+                                  x: 0,
+                                  y: 0,
+                                  opacity: 1,
+                                  scale: 1,
+                                }}
+                                animate={{
+                                  x: x,
+                                  y: y,
+                                  opacity: 0,
+                                  scale: 0,
+                                }}
+                                transition={{
+                                  duration: 0.6,
+                                  ease: 'easeOut',
+                                }}
+                              >
+                                <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="p-6">

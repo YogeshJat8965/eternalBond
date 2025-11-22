@@ -5,7 +5,7 @@ import { Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function FloatingHearts() {
-  const hearts = Array.from({ length: 8 }, (_, i) => i);
+  const hearts = Array.from({ length: 15 }, (_, i) => i);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function FloatingHearts() {
   if (!mounted) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-[5]">
       {hearts.map((i) => (
         <motion.div
           key={i}
@@ -27,12 +27,12 @@ export default function FloatingHearts() {
           }}
           animate={{
             y: -100,
-            opacity: [0, 0.6, 0],
+            opacity: [0, 0.8, 0.8, 0],
           }}
           transition={{
-            duration: 10 + Math.random() * 10,
+            duration: 12 + Math.random() * 8,
             repeat: Infinity,
-            delay: i * 2,
+            delay: i * 1.5,
             ease: 'linear',
           }}
           style={{
@@ -40,10 +40,10 @@ export default function FloatingHearts() {
           }}
         >
           <Heart
-            className="text-rose-300 fill-rose-200"
+            className="text-rose-400 fill-rose-300 drop-shadow-lg"
             style={{
-              width: `${20 + Math.random() * 20}px`,
-              height: `${20 + Math.random() * 20}px`,
+              width: `${24 + Math.random() * 20}px`,
+              height: `${24 + Math.random() * 20}px`,
             }}
           />
         </motion.div>
