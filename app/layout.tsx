@@ -9,8 +9,13 @@ import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'KalyanautsavaMat - Find Your Perfect Match',
+  title: 'KalyanautsavaMat',
   description: 'Join thousands of happy couples who found love through KalyanautsavaMat matrimonial service.',
+  icons: {
+    icon: '/images/logo.png',
+    shortcut: '/images/logo.png',
+    apple: '/images/logo.png',
+  },
 };
 
 export default function RootLayout({
