@@ -6,6 +6,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function FindPartnerPage() {
+  const [showResults, setShowResults] = useState(false);
+  const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
+  const [burstingHeart, setBurstingHeart] = useState<number | null>(null);
   const [searchFilters, setSearchFilters] = useState({
     gender: '',
     ageFrom: '',
@@ -66,6 +69,49 @@ export default function FindPartnerPage() {
       matchScore: 90,
     },
   ];
+
+  const handleSearch = () => {
+    setShowResults(true);
+    // Scroll to results section
+    setTimeout(() => {
+      document.getElementById('search-results')?.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 100);
+  };
+
+  const handleClearFilters = () => {
+    setSearchFilters({
+      gender: '',
+      ageFrom: '',
+      ageTo: '',
+      religion: '',
+      location: '',
+      profession: '',
+      heightFrom: '',
+      heightTo: '',
+      maritalStatus: '',
+      education: '',
+      income: '',
+    });
+    setShowResults(false);
+  };
+
+  const toggleLike = (profileId: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Toggle like state
+    if (likedProfiles.includes(profileId)) {
+      setLikedProfiles(likedProfiles.filter(id => id !== profileId));
+    } else {
+      setLikedProfiles([...likedProfiles, profileId]);
+      // Trigger burst animation
+      setBurstingHeart(profileId);
+      setTimeout(() => setBurstingHeart(null), 600);
+    }
+  };
 
   return (
     <div className="min-h-screen pt-16 bg-gradient-to-b from-pink-50 to-white">
@@ -268,27 +314,14 @@ export default function FindPartnerPage() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={handleSearch}
               className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
             >
               <Search className="w-5 h-5" />
               <span>Search Partners</span>
             </motion.button>
             <button
-              onClick={() =>
-                setSearchFilters({
-                  gender: '',
-                  ageFrom: '',
-                  ageTo: '',
-                  religion: '',
-                  location: '',
-                  profession: '',
-                  heightFrom: '',
-                  heightTo: '',
-                  maritalStatus: '',
-                  education: '',
-                  income: '',
-                })
-              }
+              onClick={handleClearFilters}
               className="px-8 py-4 bg-pink-100 text-rose-500 rounded-lg font-semibold hover:bg-pink-200 transition-colors"
             >
               Clear Filters
@@ -296,73 +329,122 @@ export default function FindPartnerPage() {
           </div>
         </motion.div>
 
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Search Results{' '}
-            <span className="text-gray-500 font-normal text-lg">
-              ({searchResults.length} profiles found)
-            </span>
-          </h2>
-        </div>
+        {showResults && (
+          <>
+            <div id="search-results" className="mb-6">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-2xl font-bold text-gray-800"
+              >
+                Search Results{' '}
+                <span className="text-gray-500 font-normal text-lg">
+                  ({searchResults.length} profiles found)
+                </span>
+              </motion.h2>
+            </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {searchResults.map((result, index) => (
-            <motion.div
-              key={result.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100"
-            >
-              <div className="relative h-72 overflow-hidden group">
-                <img
-                  src={result.image}
-                  alt={result.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <div className="absolute top-4 left-4 bg-rose-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  {result.matchScore}% Match
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg"
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {searchResults.map((result, index) => (
+                <motion.div
+                  key={result.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100"
                 >
-                  <Heart className="w-5 h-5 text-rose-500" />
-                </motion.button>
-              </div>
+                  <div className="relative h-72 overflow-hidden group">
+                    <img
+                      src={result.image}
+                      alt={result.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute top-4 left-4 bg-rose-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      {result.matchScore}% Match
+                    </div>
+                    
+                    {/* Heart Button with Burst Animation */}
+                    <div className="absolute top-4 right-4">
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={(e) => toggleLike(result.id, e)}
+                        className="relative bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg transition-colors"
+                      >
+                        <Heart 
+                          className={`w-5 h-5 transition-colors ${
+                            likedProfiles.includes(result.id) 
+                              ? 'text-rose-500 fill-rose-500' 
+                              : 'text-rose-500'
+                          }`} 
+                        />
+                      </motion.button>
 
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-1">
-                  {result.name}, {result.age}
-                </h3>
-                <p className="text-gray-600 text-sm mb-3">{result.height}</p>
-
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                    <Briefcase className="w-4 h-4 text-rose-500" />
-                    <span>{result.profession}</span>
+                      {/* Burst Animation Hearts */}
+                      {burstingHeart === result.id && (
+                        <>
+                          {[...Array(12)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{
+                                x: 0,
+                                y: 0,
+                                scale: 1,
+                                opacity: 1,
+                              }}
+                              animate={{
+                                x: Math.cos((i * 30) * Math.PI / 180) * (60 + Math.random() * 40),
+                                y: Math.sin((i * 30) * Math.PI / 180) * (60 + Math.random() * 40),
+                                scale: 0,
+                                opacity: 0,
+                              }}
+                              transition={{
+                                duration: 0.6,
+                                ease: 'easeOut',
+                              }}
+                              className="absolute top-2 right-2 pointer-events-none"
+                            >
+                              <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
+                            </motion.div>
+                          ))}
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                    <MapPin className="w-4 h-4 text-rose-500" />
-                    <span>{result.location}</span>
-                  </div>
-                </div>
 
-                <Link href={`/members/${result.id}`}>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
-                  >
-                    View Full Profile
-                  </motion.button>
-                </Link>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-1">
+                      {result.name}, {result.age}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-3">{result.height}</p>
+
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center space-x-2 text-gray-600 text-sm">
+                        <Briefcase className="w-4 h-4 text-rose-500" />
+                        <span>{result.profession}</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-gray-600 text-sm">
+                        <MapPin className="w-4 h-4 text-rose-500" />
+                        <span>{result.location}</span>
+                      </div>
+                    </div>
+
+                    <Link href={`/members/${result.id}`}>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
+                      >
+                        View Full Profile
+                      </motion.button>
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

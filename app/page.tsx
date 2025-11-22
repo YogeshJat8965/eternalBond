@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, Users, Award, ArrowRight, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -11,6 +11,9 @@ import CounterAnimation from '@/components/animations/CounterAnimation';
 import emmaAndDavid from './images/ama&david.jpg';
 import sophiaAndRyan from './images/sophia&ryan.jpg';
 import aishaAndOmar from './images/aisha&romar.jpg';
+import priyaAndArjun from './images/priya&arjun.jpg';
+import isabellaAndLucas from './images/isabella&lucas.jpg';
+import yukiAndTakeshi from './images/yuki&takesi.jpg';
 
 export default function Home() {
   const [searchData, setSearchData] = useState({
@@ -94,53 +97,72 @@ export default function Home() {
       story: 'A perfect match made through perfect service. Highly recommended!',
       image: aishaAndOmar,
     },
+    {
+      couple: 'Priya & Arjun',
+      story: 'Our families are thrilled! We found our perfect match through EternalBond.',
+      image: priyaAndArjun,
+    },
+    {
+      couple: 'Isabella & Lucas',
+      story: 'Distance was no barrier with EternalBond. Now we\'re building our future together!',
+      image: isabellaAndLucas,
+    },
+    {
+      couple: 'Yuki & Takeshi',
+      story: 'From skeptics to believers! EternalBond gave us our happily ever after.',
+      image: yukiAndTakeshi,
+    },
   ];
 
   return (
     <div className="relative">
-      <FloatingHearts />
+      {/* Hide floating hearts on mobile for better performance */}
+      <div className="hidden md:block">
+        <FloatingHearts />
+      </div>
 
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-lavender-50 to-rose-50 pt-16 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-lavender-50 to-rose-50 pt-16 pb-8 md:pb-0 overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZWNkZDMiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAgMTBjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-40"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
+              className="order-1 lg:order-1"
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center space-x-2 bg-rose-100 px-4 py-2 rounded-full mb-6"
+                className="inline-flex items-center space-x-2 bg-rose-100 px-3 py-1.5 md:px-4 md:py-2 rounded-full mb-4 md:mb-6"
               >
-                <Sparkles className="w-4 h-4 text-rose-500" />
-                <span className="text-rose-600 text-sm font-medium">
+                <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-rose-500" />
+                <span className="text-rose-600 text-xs md:text-sm font-medium">
                   Trusted by thousands of happy couples
                 </span>
               </motion.div>
 
-              <h1 className="text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight">
                 Find Your{' '}
                 <RotatingWords 
                   className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent"
                   words={['Perfect Match', 'True Love', 'Soulmate', 'Forever Partner']}
                 />
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="text-base md:text-lg lg:text-xl text-gray-600 mb-6 md:mb-8 leading-relaxed">
                 Discover meaningful connections and begin your journey to eternal
                 happiness with someone special.
               </p>
 
-              <div className="bg-white p-6 rounded-2xl shadow-xl border border-pink-100">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              <div className="bg-white p-4 md:p-6 rounded-2xl shadow-xl border border-pink-100">
+                <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">
                   Quick Partner Search
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                   <select
-                    className="px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="px-3 py-2 md:px-4 md:py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm md:text-base"
                     value={searchData.gender}
                     onChange={(e) =>
                       setSearchData({ ...searchData, gender: e.target.value })
@@ -151,7 +173,7 @@ export default function Home() {
                     <option value="female">Female</option>
                   </select>
                   <select
-                    className="px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="px-3 py-2 md:px-4 md:py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm md:text-base"
                     value={searchData.religion}
                     onChange={(e) =>
                       setSearchData({ ...searchData, religion: e.target.value })
@@ -167,7 +189,7 @@ export default function Home() {
                   <input
                     type="number"
                     placeholder="Age From"
-                    className="px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="px-3 py-2 md:px-4 md:py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm md:text-base"
                     value={searchData.ageFrom}
                     onChange={(e) =>
                       setSearchData({ ...searchData, ageFrom: e.target.value })
@@ -176,7 +198,7 @@ export default function Home() {
                   <input
                     type="number"
                     placeholder="Age To"
-                    className="px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="px-3 py-2 md:px-4 md:py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm md:text-base"
                     value={searchData.ageTo}
                     onChange={(e) =>
                       setSearchData({ ...searchData, ageTo: e.target.value })
@@ -184,19 +206,20 @@ export default function Home() {
                   />
                 </div>
                 <Link href="/find-partner">
-                  <button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2">
-                    <Search className="w-5 h-5" />
+                  <button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2.5 md:py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base">
+                    <Search className="w-4 h-4 md:w-5 md:h-5" />
                     <span>Search Now</span>
                   </button>
                 </Link>
               </div>
             </motion.div>
 
+            {/* Show hero image slider on all screens, but below content on mobile */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
+              className="relative order-2 lg:order-2"
             >
               <HeroImageSlider />
             </motion.div>
@@ -204,9 +227,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-white relative z-10">
+      <section className="py-12 md:py-20 bg-white relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
@@ -214,43 +237,43 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="text-center p-8 rounded-2xl bg-gradient-to-br from-pink-50 to-lavender-50 hover:shadow-lg transition-shadow"
+                className="text-center p-6 md:p-8 rounded-2xl bg-gradient-to-br from-pink-50 to-lavender-50 hover:shadow-lg transition-shadow"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full mb-4">
-                  <stat.icon className="w-8 h-8 text-white" />
+                <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full mb-3 md:mb-4">
+                  <stat.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                 </div>
-                <h3 className="text-4xl font-bold text-gray-800 mb-2">
+                <h3 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
                   <CounterAnimation 
                     end={stat.value} 
                     suffix={stat.suffix}
                     duration={2000}
                   />
                 </h3>
-                <p className="text-gray-600">{stat.label}</p>
+                <p className="text-sm md:text-base text-gray-600">{stat.label}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-b from-white to-pink-50 relative z-10">
+      <section className="py-12 md:py-20 bg-gradient-to-b from-white to-pink-50 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8 md:mb-12"
           >
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
               Featured Profiles
             </h2>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 text-base md:text-lg">
               Meet some of our amazing members
             </p>
           </motion.div>
 
-          {/* Auto-scrolling carousel */}
-          <div className="relative overflow-hidden">
+          {/* Auto-scrolling carousel - hidden on mobile, use static grid instead */}
+          <div className="hidden md:block relative overflow-hidden">
             <motion.div
               className="flex gap-6"
               animate={{
@@ -300,38 +323,77 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <div className="text-center mt-12">
+          {/* Static grid for mobile */}
+          <div className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {featuredProfiles.slice(0, 4).map((profile, index) => (
+              <motion.div
+                key={profile.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-2xl overflow-hidden shadow-lg border border-pink-100"
+              >
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={profile.image}
+                    alt={profile.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full">
+                    <Heart className="w-4 h-4 text-rose-500" />
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                    {profile.name}, {profile.age}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">
+                    {profile.profession}
+                  </p>
+                  <p className="text-gray-500 text-xs mb-3">{profile.location}</p>
+                  <Link href="/members">
+                    <button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 text-sm rounded-lg hover:shadow-md transition-all duration-200">
+                      View Profile
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-8 md:mt-12">
             <Link href="/members">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2"
+                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2 text-sm md:text-base"
               >
                 <span>View All Members</span>
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </motion.button>
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-pink-50 relative z-10">
+      <section className="py-12 md:py-20 bg-pink-50 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8 md:mb-12"
           >
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
               Success Stories
             </h2>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 text-base md:text-lg">
               Real couples, real happiness
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {successStories.map((story, index) => (
               <motion.div
                 key={index}
@@ -339,26 +401,32 @@ export default function Home() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
+                animate={{
+                  y: hoveredStory === index ? -20 : 0,
+                  scale: hoveredStory === index ? 1.08 : 1,
+                  rotateZ: hoveredStory === index ? (index % 2 === 0 ? 2 : -2) : 0,
+                }}
                 whileHover={{ 
-                  y: -15,
-                  scale: 1.05,
-                  rotateZ: index % 2 === 0 ? 2 : -2,
-                  transition: { duration: 0.3, type: "spring", stiffness: 300 }
+                  transition: { duration: 0.4, type: "spring", stiffness: 200, damping: 15 }
                 }}
                 onHoverStart={() => setHoveredStory(index)}
                 onHoverEnd={() => setHoveredStory(null)}
-                className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer"
+                className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-500 group cursor-pointer"
               >
-                {/* Animated gradient border effect */}
+                {/* Animated gradient border effect - hide on mobile */}
                 <motion.div 
-                  className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className="hidden md:block absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 transition-opacity duration-500"
                   animate={{
+                    opacity: hoveredStory === index ? 1 : 0,
                     backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
                   }}
                   transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear"
+                    opacity: { duration: 0.5 },
+                    backgroundPosition: {
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }
                   }}
                   style={{ 
                     backgroundSize: '200% 200%',
@@ -368,180 +436,303 @@ export default function Home() {
                   <div className="w-full h-full bg-white rounded-2xl" />
                 </motion.div>
 
-                {/* Continuous bursting hearts on hover - WHOLE CARD */}
-                {hoveredStory === index && (
-                  <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
-                    {[...Array(12)].map((_, i) => {
-                      const startX = Math.random() * 100;
-                      const startY = Math.random() * 100;
-                      const endX = startX + (Math.random() - 0.5) * 60;
-                      const endY = startY - 40 - Math.random() * 40;
-                      const delay = (i * 0.15) % 1.8;
-                      
-                      return (
-                        <motion.div
-                          key={`burst-${i}`}
-                          className="absolute"
-                          style={{
-                            left: `${startX}%`,
-                            top: `${startY}%`,
-                          }}
-                          initial={{
-                            opacity: 0,
-                            scale: 0,
-                            rotate: 0,
-                          }}
-                          animate={{
-                            opacity: [0, 1, 1, 0],
-                            scale: [0, 1, 1.2, 0.8],
-                            x: [`0%`, `${endX - startX}%`],
-                            y: [`0%`, `${endY - startY}%`],
-                            rotate: [0, 360],
-                          }}
-                          transition={{
-                            duration: 1.8,
-                            delay: delay,
-                            repeat: Infinity,
-                            ease: "easeOut",
-                          }}
-                        >
-                          <Heart className="w-3 h-3 text-rose-400 fill-rose-400" />
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                )}
+                {/* Bursting hearts animation on hover - only on desktop */}
+                <AnimatePresence>
+                  {hoveredStory === index && (
+                    <motion.div 
+                      className="hidden md:block absolute inset-0 pointer-events-none overflow-hidden z-20 rounded-2xl"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {[...Array(20)].map((_, i) => {
+                        // Randomly position hearts across the entire card
+                        const startX = Math.random() * 100;
+                        const startY = Math.random() * 100;
+                        
+                        // Random direction for burst effect
+                        const angle = Math.random() * 360;
+                        const distance = 30 + Math.random() * 40;
+                        const endX = startX + Math.cos((angle * Math.PI) / 180) * distance;
+                        const endY = startY + Math.sin((angle * Math.PI) / 180) * distance;
+                        const delay = i * 0.05;
+                        
+                        return (
+                          <motion.div
+                            key={`burst-${i}`}
+                            className="absolute"
+                            style={{
+                              left: `${startX}%`,
+                              top: `${startY}%`,
+                            }}
+                            initial={{
+                              opacity: 0,
+                              scale: 0,
+                              rotate: 0,
+                            }}
+                            animate={{
+                              opacity: [0, 1, 1, 0],
+                              scale: [0, 1.2, 1.5, 0],
+                              x: [`0%`, `${endX - startX}%`],
+                              y: [`0%`, `${endY - startY}%`],
+                              rotate: [0, 360 + Math.random() * 180],
+                            }}
+                            transition={{
+                              duration: 1.8,
+                              delay: delay,
+                              repeat: Infinity,
+                              ease: "easeOut",
+                              repeatDelay: 0.3,
+                            }}
+                          >
+                            <Heart className="w-4 h-4 text-rose-400 fill-rose-400 drop-shadow-lg" />
+                          </motion.div>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Content wrapper */}
                 <div className="relative z-10">
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-48 md:h-64 overflow-hidden">
                     <motion.img
                       src={story.image.src}
                       alt={story.couple}
                       className="w-full h-full object-cover"
-                      whileHover={{ 
-                        scale: 1.15,
-                        transition: { duration: 0.4 }
+                      animate={{
+                        scale: hoveredStory === index ? 1.15 : 1,
+                      }}
+                      transition={{ 
+                        duration: 0.6,
+                        ease: "easeInOut"
                       }}
                     />
                     
-                    {/* Floating hearts on hover */}
-                    <motion.div
-                      className="absolute inset-0 pointer-events-none"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                    >
-                      {[...Array(5)].map((_, i) => (
+                    {/* Shimmer effect overlay - hide on mobile */}
+                    <AnimatePresence>
+                      {hoveredStory === index && (
                         <motion.div
-                          key={i}
-                          className="absolute"
-                          initial={{ 
-                            bottom: "10%",
-                            left: `${20 + i * 15}%`,
-                            opacity: 0 
+                          className="hidden md:block absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                          initial={{ x: '-100%' }}
+                          animate={{ x: '200%' }}
+                          exit={{ x: '200%' }}
+                          transition={{ 
+                            duration: 1.2, 
+                            ease: "easeInOut",
+                            repeat: Infinity,
+                            repeatDelay: 0.5
                           }}
-                          whileHover={{
-                            bottom: "90%",
-                            opacity: [0, 1, 0],
-                            transition: {
-                              duration: 2,
-                              delay: i * 0.2,
-                              repeat: Infinity,
-                            }
-                          }}
-                        >
-                          <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
-                        </motion.div>
-                      ))}
-                    </motion.div>
-
-                    {/* Shimmer effect overlay */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                      initial={{ x: '-100%' }}
-                      whileHover={{
-                        x: '100%',
-                        transition: { duration: 0.8, ease: "easeInOut" }
-                      }}
-                    />
+                        />
+                      )}
+                    </AnimatePresence>
                   </div>
 
-                  <div className="p-6 bg-white">
+                  <motion.div 
+                    className="p-4 md:p-6 bg-white"
+                    animate={{
+                      backgroundColor: hoveredStory === index ? 'rgb(255, 250, 250)' : 'rgb(255, 255, 255)',
+                    }}
+                    transition={{ duration: 0.4 }}
+                  >
                     <motion.h3 
-                      className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-rose-500 transition-colors duration-300"
-                      whileHover={{ scale: 1.05, x: 5 }}
+                      className="text-lg md:text-xl font-semibold mb-2 transition-colors duration-400"
+                      animate={{
+                        color: hoveredStory === index ? 'rgb(244, 63, 94)' : 'rgb(31, 41, 55)',
+                        x: hoveredStory === index ? 5 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
                     >
                       {story.couple}
                     </motion.h3>
                     <motion.p 
-                      className="text-gray-600 italic"
-                      initial={{ opacity: 0.8 }}
-                      whileHover={{ 
-                        opacity: 1,
-                        transition: { duration: 0.2 }
+                      className="text-sm md:text-base text-gray-600 italic"
+                      animate={{
+                        opacity: hoveredStory === index ? 1 : 0.8,
+                        y: hoveredStory === index ? -2 : 0,
                       }}
+                      transition={{ duration: 0.3 }}
                     >
                       {story.story}
                     </motion.p>
-                  </div>
+                  </motion.div>
                 </div>
 
-                {/* Sparkle effect on corners */}
-                <motion.div
-                  className="absolute top-2 right-2 text-yellow-400"
-                  initial={{ opacity: 0, scale: 0, rotate: 0 }}
-                  whileHover={{
-                    opacity: [0, 1, 1, 0],
-                    scale: [0, 1.2, 1, 0],
-                    rotate: [0, 180, 360],
-                    transition: {
-                      duration: 1.5,
-                      repeat: Infinity,
-                      repeatDelay: 0.5
-                    }
-                  }}
-                >
-                  <Sparkles className="w-6 h-6" />
-                </motion.div>
+                {/* Sparkle effect on corners - hide on mobile */}
+                <AnimatePresence>
+                  {hoveredStory === index && (
+                    <motion.div
+                      className="hidden md:block absolute top-2 right-2 text-yellow-400"
+                      initial={{ opacity: 0, scale: 0, rotate: 0 }}
+                      animate={{
+                        opacity: [0, 1, 1, 0],
+                        scale: [0, 1.2, 1, 0],
+                        rotate: [0, 180, 360],
+                      }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        repeatDelay: 0.3
+                      }}
+                    >
+                      <Sparkles className="w-6 h-6" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-8 md:mt-12">
             <Link href="/stories">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2"
+                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2 text-sm md:text-base"
               >
                 <span>Read More Stories</span>
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </motion.button>
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-r from-rose-500 to-pink-500 relative z-10">
+      <section className="py-12 md:py-20 bg-gradient-to-r from-rose-500 to-pink-500 relative z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 md:mb-6">
               Ready to Find Your Soulmate?
             </h2>
-            <p className="text-white/90 text-lg mb-8">
+            <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8">
               Join thousands of happy couples who found love through EternalBond
             </p>
             <Link href="/register">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-white text-rose-500 px-8 py-4 rounded-full font-semibold hover:shadow-2xl transition-all duration-200 text-lg"
+                className="bg-white text-rose-500 px-6 py-3 md:px-8 md:py-4 rounded-full font-semibold hover:shadow-2xl transition-all duration-200 text-base md:text-lg"
               >
                 Get Started Now
+              </motion.button>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-12 md:py-20 bg-gradient-to-br from-gray-50 to-rose-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-8 md:mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-gray-600 text-base md:text-lg">
+              Everything you need to know about EternalBond
+            </p>
+          </motion.div>
+
+          <div className="space-y-3 md:space-y-4">
+            {[
+              {
+                question: "How does EternalBond work?",
+                answer: "EternalBond uses advanced matching algorithms to connect compatible individuals based on their preferences, values, interests, and lifestyle. Simply create a profile, set your preferences, and start connecting with potential matches."
+              },
+              {
+                question: "Is EternalBond free to use?",
+                answer: "Yes! We offer a free basic membership that allows you to create a profile, browse matches, and send limited messages. For unlimited messaging, advanced search filters, and premium features, you can upgrade to our Premium or VIP plans."
+              },
+              {
+                question: "How do I ensure my profile stands out?",
+                answer: "Upload clear, recent photos, write a genuine and detailed bio, be honest about your interests and values, and regularly update your profile. Premium members also get priority visibility in search results."
+              },
+              {
+                question: "Is my information safe and secure?",
+                answer: "Absolutely! We use bank-level encryption to protect your data. Your personal information is never shared without your consent. We have strict privacy policies and verification processes to ensure a safe environment for all members."
+              },
+              {
+                question: "How long does it take to find a match?",
+                answer: "While success varies for each individual, many of our members report meaningful connections within the first few weeks. Stay active, keep your profile updated, and be patient - the right person is worth the wait!"
+              },
+              {
+                question: "Can I cancel my subscription anytime?",
+                answer: "Yes, you can cancel your premium subscription at any time from your account settings. You'll continue to have access to premium features until the end of your billing period."
+              },
+              {
+                question: "What makes EternalBond different from other platforms?",
+                answer: "We focus on meaningful relationships, not casual dating. Our verification process ensures authentic profiles, and our matching algorithm considers values, compatibility, and long-term potential. Plus, we provide personalized support throughout your journey."
+              },
+              {
+                question: "How do I verify my profile?",
+                answer: "Profile verification is simple! Upload a government-issued ID and take a selfie. Our team reviews and approves verifications within 24 hours. Verified profiles get a special badge and higher visibility."
+              }
+            ].map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+              >
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-4 md:p-6 font-semibold text-gray-800 text-base md:text-lg list-none">
+                    <span className="flex items-center gap-2 md:gap-3 pr-4">
+                      <span className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-rose-100 text-rose-500 font-bold text-xs md:text-sm flex-shrink-0">
+                        {index + 1}
+                      </span>
+                      <span className="text-left">{faq.question}</span>
+                    </span>
+                    <motion.span
+                      className="text-rose-500 text-2xl flex-shrink-0"
+                      animate={{ rotate: 0 }}
+                      whileHover={{ rotate: 180 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <svg className="w-5 h-5 md:w-6 md:h-6 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </motion.span>
+                  </summary>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="px-4 md:px-6 pb-4 md:pb-6 pt-2 text-gray-600 leading-relaxed text-sm md:text-base"
+                  >
+                    {faq.answer}
+                  </motion.div>
+                </details>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Still have questions CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mt-8 md:mt-12"
+          >
+            <p className="text-gray-600 mb-4 text-sm md:text-base">Still have questions?</p>
+            <Link href="/contact">
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-xl transition-all duration-300 text-sm md:text-base"
+              >
+                Contact Support
               </motion.button>
             </Link>
           </motion.div>

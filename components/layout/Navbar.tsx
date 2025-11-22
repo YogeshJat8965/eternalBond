@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Heart, Menu, X, LogOut, LayoutDashboard } from 'lucide-react';
+import { Heart, Menu, X, LogOut, LayoutDashboard, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
@@ -75,6 +75,15 @@ export default function Navbar() {
               </Link>
             ))}
             
+            {/* Admin Link */}
+            <Link
+              href="/admin/login"
+              className="flex items-center space-x-2 text-amber-600 hover:text-amber-700 transition-colors duration-200 font-medium"
+            >
+              <Shield className="w-4 h-4" />
+              <span>Admin</span>
+            </Link>
+            
             {isRegistered ? (
               <>
                 <Link
@@ -138,6 +147,16 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              
+              {/* Admin Link - Mobile */}
+              <Link
+                href="/admin/login"
+                className="flex items-center space-x-2 text-amber-600 hover:text-amber-700 py-2"
+                onClick={() => setIsOpen(false)}
+              >
+                <Shield className="w-4 h-4" />
+                <span>Admin</span>
+              </Link>
               
               {isRegistered ? (
                 <>

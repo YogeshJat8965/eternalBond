@@ -3,13 +3,86 @@
 import { motion } from 'framer-motion';
 import { Users, Heart, MessageSquare, TrendingUp, DollarSign, UserCheck, Mail, Star, Settings, HelpCircle, FileText, CreditCard, Database, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
+
+// Animated Counter Component with Intersection Observer
+function AnimatedCounter({ value, duration = 2000, inView }: { value: string; duration?: number; inView: boolean }) {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    if (!inView) {
+      setCount(0);
+      return;
+    }
+
+    // Parse the numeric value from the string
+    const numericValue = parseFloat(value.replace(/[^0-9.]/g, ''));
+    
+    let start = 0;
+    const increment = numericValue / (duration / 16); // 60fps
+    
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= numericValue) {
+        setCount(numericValue);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
+    }, 16);
+    
+    return () => clearInterval(timer);
+  }, [value, duration, inView]);
+  
+  // Determine format from original value
+  const displayValue = () => {
+    const numValue = Math.floor(count);
+    if (value.includes('%')) {
+      return `${numValue}%`;
+    } else if (value.includes('$')) {
+      return `$${numValue.toLocaleString()}`;
+    } else if (value.includes(',')) {
+      return numValue.toLocaleString();
+    }
+    return numValue.toString();
+  };
+  
+  return <span>{displayValue()}</span>;
+}
 
 export default function AdminDashboard() {
+  const [isStatsInView, setIsStatsInView] = useState(false);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer to detect when stats section is in viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsStatsInView(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.3, // Trigger when 30% of the element is visible
+      }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => {
+      if (statsRef.current) {
+        observer.unobserve(statsRef.current);
+      }
+    };
+  }, []);
+
   const stats = [
-    { icon: Users, label: 'Total Users', value: '2,543', change: '+12.5%', color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-50' },
-    { icon: Heart, label: 'Active Matches', value: '1,234', change: '+8.2%', color: 'from-rose-500 to-pink-500', bgColor: 'bg-rose-50' },
+    { icon: Users, label: 'Total Users', value: '2543', change: '+12.5%', color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-50' },
+    { icon: Heart, label: 'Active Matches', value: '1234', change: '+8.2%', color: 'from-rose-500 to-pink-500', bgColor: 'bg-rose-50' },
     { icon: MessageSquare, label: 'Testimonials', value: '456', change: '+15.3%', color: 'from-purple-500 to-pink-500', bgColor: 'bg-purple-50' },
-    { icon: DollarSign, label: 'Revenue', value: '$45,678', change: '+22.1%', color: 'from-green-500 to-emerald-500', bgColor: 'bg-green-50' },
+    { icon: DollarSign, label: 'Revenue', value: '$45678', change: '+22.1%', color: 'from-green-500 to-emerald-500', bgColor: 'bg-green-50' },
     { icon: UserCheck, label: 'Premium Users', value: '892', change: '+18.7%', color: 'from-amber-500 to-orange-500', bgColor: 'bg-amber-50' },
     { icon: Mail, label: 'Contact Forms', value: '234', change: '+5.4%', color: 'from-indigo-500 to-purple-500', bgColor: 'bg-indigo-50' },
     { icon: Star, label: 'Success Stories', value: '89', change: '+10.2%', color: 'from-yellow-500 to-amber-500', bgColor: 'bg-yellow-50' },
@@ -43,38 +116,11 @@ export default function AdminDashboard() {
         <p className="text-gray-600 mt-2">Welcome back! Here's what's happening today.</p>
       </motion.div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            whileHover={{ y: -5 }}
-            className={`${stat.bgColor} rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100`}
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center`}>
-                <stat.icon className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-green-600 text-sm font-semibold bg-green-100 px-2 py-1 rounded">
-                {stat.change}
-              </span>
-            </div>
-            <h3 className="text-3xl font-bold text-gray-800 mb-1">
-              {stat.value}
-            </h3>
-            <p className="text-gray-600 text-sm font-medium">{stat.label}</p>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Quick Actions Section */}
+      {/* Quick Actions Section - MOVED TO TOP */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.1 }}
         className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
       >
         <h3 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
@@ -227,82 +273,33 @@ export default function AdminDashboard() {
         </div>
       </motion.div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Dummy Chart 1 */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
-        >
-          <h3 className="text-xl font-bold text-gray-800 mb-4">User Growth</h3>
-          <div className="h-64 flex items-end justify-between space-x-2">
-            {[65, 45, 75, 85, 55, 90, 70, 80, 95, 60, 85, 100].map((height, index) => (
-              <motion.div
-                key={index}
-                initial={{ height: 0 }}
-                animate={{ height: `${height}%` }}
-                transition={{ delay: 0.5 + index * 0.05, duration: 0.5 }}
-                className="flex-1 bg-gradient-to-t from-rose-500 to-pink-500 rounded-t-lg"
-              />
-            ))}
-          </div>
-          <div className="flex justify-between mt-4 text-sm text-gray-600">
-            <span>Jan</span>
-            <span>Jun</span>
-            <span>Dec</span>
-          </div>
-        </motion.div>
-
-        {/* Dummy Chart 2 */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
-        >
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Revenue Overview</h3>
-          <div className="h-64 flex items-center justify-center">
-            <div className="relative w-48 h-48">
-              {[
-                { percentage: 35, color: 'from-blue-500 to-cyan-500', label: 'Basic', delay: 0.6 },
-                { percentage: 40, color: 'from-rose-500 to-pink-500', label: 'Premium', delay: 0.7 },
-                { percentage: 25, color: 'from-purple-500 to-pink-500', label: 'Enterprise', delay: 0.8 },
-              ].map((segment, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: segment.delay, duration: 0.5 }}
-                  className={`absolute inset-0 rounded-full bg-gradient-to-br ${segment.color}`}
-                  style={{
-                    clipPath: `polygon(50% 50%, 50% 0%, ${50 + 50 * Math.cos((segment.percentage * 3.6 - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((segment.percentage * 3.6 - 90) * Math.PI / 180)}%, 50% 50%)`,
-                    transform: `rotate(${index * 120}deg)`,
-                  }}
-                />
-              ))}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-32 h-32 bg-white rounded-full"></div>
+      {/* Stats Grid with Animated Numbers - MOVED AFTER QUICK ACTIONS */}
+      <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + index * 0.05 }}
+            whileHover={{ y: -5 }}
+            className={`${stat.bgColor} rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100`}
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center`}>
+                <stat.icon className="w-6 h-6 text-white" />
               </div>
+              <span className="text-green-600 text-sm font-semibold bg-green-100 px-2 py-1 rounded">
+                {stat.change}
+              </span>
             </div>
-          </div>
-          <div className="flex justify-center space-x-4 mt-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"></div>
-              <span className="text-sm text-gray-600">Basic 35%</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-rose-500 to-pink-500"></div>
-              <span className="text-sm text-gray-600">Premium 40%</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
-              <span className="text-sm text-gray-600">Enterprise 25%</span>
-            </div>
-          </div>
-        </motion.div>
+            <h3 className="text-3xl font-bold text-gray-800 mb-1">
+              <AnimatedCounter value={stat.value} inView={isStatsInView} />
+            </h3>
+            <p className="text-gray-600 text-sm font-medium">{stat.label}</p>
+          </motion.div>
+        ))}
       </div>
+
 
       {/* Recent Activity Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
