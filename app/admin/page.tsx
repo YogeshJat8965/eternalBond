@@ -80,8 +80,8 @@ export default function AdminDashboard() {
 
   const stats = [
     { icon: Users, label: 'Total Users', value: '2543', change: '+12.5%', color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-50' },
-    { icon: Heart, label: 'Active Matches', value: '1234', change: '+8.2%', color: 'from-rose-500 to-pink-500', bgColor: 'bg-rose-50' },
-    { icon: MessageSquare, label: 'Testimonials', value: '456', change: '+15.3%', color: 'from-purple-500 to-pink-500', bgColor: 'bg-purple-50' },
+    { icon: Heart, label: 'Active Matches', value: '1234', change: '+8.2%', color: 'from-golden-500 to-golden-500', bgColor: 'bg-rose-50' },
+    { icon: MessageSquare, label: 'Testimonials', value: '456', change: '+15.3%', color: 'from-purple-500 to-golden-500', bgColor: 'bg-purple-50' },
     { icon: DollarSign, label: 'Revenue', value: '$45678', change: '+22.1%', color: 'from-green-500 to-emerald-500', bgColor: 'bg-green-50' },
     { icon: UserCheck, label: 'Premium Users', value: '892', change: '+18.7%', color: 'from-amber-500 to-orange-500', bgColor: 'bg-amber-50' },
     { icon: Mail, label: 'Contact Forms', value: '234', change: '+5.4%', color: 'from-indigo-500 to-purple-500', bgColor: 'bg-indigo-50' },
@@ -150,10 +150,10 @@ export default function AdminDashboard() {
             <motion.div
               whileHover={{ scale: 1.02, y: -4 }}
               whileTap={{ scale: 0.98 }}
-              className="group p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 hover:border-purple-300 cursor-pointer transition-all hover:shadow-lg"
+              className="group p-4 bg-gradient-to-br from-purple-50 to-golden-50 rounded-xl border border-purple-200 hover:border-purple-300 cursor-pointer transition-all hover:shadow-lg"
             >
               <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-golden-500 rounded-lg flex items-center justify-center">
                   <HelpCircle className="w-6 h-6 text-white" />
                 </div>
                 <ArrowRight className="w-5 h-5 text-purple-500 group-hover:translate-x-1 transition-transform" />
@@ -168,13 +168,13 @@ export default function AdminDashboard() {
             <motion.div
               whileHover={{ scale: 1.02, y: -4 }}
               whileTap={{ scale: 0.98 }}
-              className="group p-4 bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl border border-rose-200 hover:border-rose-300 cursor-pointer transition-all hover:shadow-lg"
+              className="group p-4 bg-gradient-to-br from-golden-50 to-golden-50 rounded-xl border border-rose-200 hover:border-rose-300 cursor-pointer transition-all hover:shadow-lg"
             >
               <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-golden-500 to-golden-500 rounded-lg flex items-center justify-center">
                   <MessageSquare className="w-6 h-6 text-white" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-rose-500 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 text-golden-600 group-hover:translate-x-1 transition-transform" />
               </div>
               <h4 className="font-semibold text-gray-800 mb-1">Testimonials</h4>
               <p className="text-sm text-gray-600">Manage customer reviews</p>
@@ -320,7 +320,7 @@ export default function AdminDashboard() {
                 transition={{ delay: 0.7 + index * 0.05 }}
                 className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                <div className="w-12 h-12 bg-gradient-to-r from-golden-500 to-golden-500 rounded-full flex items-center justify-center text-white font-bold">
                   {user.avatar}
                 </div>
                 <div className="flex-1">

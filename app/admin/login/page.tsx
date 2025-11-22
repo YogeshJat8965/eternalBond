@@ -43,7 +43,7 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-golden-50 flex items-center justify-center p-4">
       {/* Background Animation */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div

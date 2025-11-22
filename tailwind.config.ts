@@ -22,6 +22,19 @@ const config: Config = {
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        golden: {
+          DEFAULT: '#EEC900',
+          50: '#FFF9E6',
+          100: '#FFF3CC',
+          200: '#FFE799',
+          300: '#FFDB66',
+          400: '#FFCF33',
+          500: '#EEC900',
+          600: '#BFA000',
+          700: '#8F7800',
+          800: '#5F5000',
+          900: '#2F2800',
+        },
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',

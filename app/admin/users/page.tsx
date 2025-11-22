@@ -127,7 +127,7 @@ export default function UserManagement() {
                 placeholder="Search by name or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
               />
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function UserManagement() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 appearance-none bg-white"
+                className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 appearance-none bg-white"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
@@ -182,7 +182,7 @@ export default function UserManagement() {
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
+                      <div className="w-10 h-10 bg-gradient-to-r from-golden-500 to-golden-500 rounded-full flex items-center justify-center text-white font-semibold">
                         {user.name.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>
@@ -269,7 +269,7 @@ export default function UserManagement() {
                 onClick={() => setCurrentPage(i + 1)}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   currentPage === i + 1
-                    ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white'
+                    ? 'bg-gradient-to-r from-golden-500 to-golden-500 text-white'
                     : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
                 }`}
               >

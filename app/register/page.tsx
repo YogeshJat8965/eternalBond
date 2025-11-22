@@ -53,7 +53,7 @@ export default function RegisterPage() {
     <div className="min-h-screen pt-16 relative overflow-hidden">
       <PetalAnimation />
 
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-lavender-50 to-rose-50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-golden-50 via-lavender-50 to-golden-50" />
 
       {/* Success Animation Modal */}
       <AnimatePresence>
@@ -126,7 +126,7 @@ export default function RegisterPage() {
                     Registration Successful!
                   </h2>
                   <p className="text-gray-600 mb-4">
-                    Welcome to EternalBond, {formData.name}!
+                    Welcome to KalyanautsavaMat, {formData.name}!
                   </p>
                   <div className="flex items-center justify-center space-x-2 text-green-600">
                     <Sparkles className="w-5 h-5" />
@@ -173,14 +173,14 @@ export default function RegisterPage() {
           transition={{ duration: 0.5 }}
           className="max-w-2xl w-full"
         >
-          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-pink-100">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-golden-100">
             <div className="text-center mb-8">
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 className="inline-block mb-4"
               >
-                <Heart className="w-16 h-16 text-rose-500 fill-rose-500 mx-auto" />
+                <Heart className="w-16 h-16 text-red-500 fill-red-500 mx-auto" />
               </motion.div>
 
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
@@ -201,7 +201,7 @@ export default function RegisterPage() {
                     }}
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
                       step >= s
-                        ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white'
+                        ? 'bg-gradient-to-r from-golden-500 to-golden-500 text-white'
                         : 'bg-pink-100 text-gray-400'
                     }`}
                   >
@@ -241,7 +241,7 @@ export default function RegisterPage() {
                         <input
                           type="text"
                           required
-                          className="w-full pl-12 pr-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="w-full pl-12 pr-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                           placeholder="John Doe"
                           value={formData.name}
                           onChange={(e) =>
@@ -260,7 +260,7 @@ export default function RegisterPage() {
                         <input
                           type="email"
                           required
-                          className="w-full pl-12 pr-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="w-full pl-12 pr-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                           placeholder="your@email.com"
                           value={formData.email}
                           onChange={(e) =>
@@ -277,7 +277,7 @@ export default function RegisterPage() {
                         </label>
                         <select
                           required
-                          className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                           value={formData.gender}
                           onChange={(e) =>
                             setFormData({ ...formData, gender: e.target.value })
@@ -296,7 +296,7 @@ export default function RegisterPage() {
                         <input
                           type="date"
                           required
-                          className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                           value={formData.dateOfBirth}
                           onChange={(e) =>
                             setFormData({
@@ -331,7 +331,7 @@ export default function RegisterPage() {
                         <input
                           type="password"
                           required
-                          className="w-full pl-12 pr-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="w-full pl-12 pr-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                           placeholder="••••••••"
                           value={formData.password}
                           onChange={(e) =>
@@ -353,7 +353,7 @@ export default function RegisterPage() {
                         <input
                           type="password"
                           required
-                          className="w-full pl-12 pr-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                          className="w-full pl-12 pr-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                           placeholder="••••••••"
                           value={formData.confirmPassword}
                           onChange={(e) =>
@@ -391,8 +391,8 @@ export default function RegisterPage() {
                       Verify Your Email
                     </h2>
 
-                    <div className="bg-pink-50 border border-pink-200 rounded-lg p-6 text-center">
-                      <Mail className="w-12 h-12 text-rose-500 mx-auto mb-4" />
+                    <div className="bg-golden-50 border border-golden-200 rounded-lg p-6 text-center">
+                      <Mail className="w-12 h-12 text-golden-600 mx-auto mb-4" />
                       <p className="text-gray-700 mb-2">
                         We&apos;ve sent a verification code to
                       </p>
@@ -409,7 +409,7 @@ export default function RegisterPage() {
                         type="text"
                         maxLength={6}
                         required
-                        className="w-full px-4 py-4 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-center text-2xl font-semibold tracking-widest"
+                        className="w-full px-4 py-4 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-center text-2xl font-semibold tracking-widest"
                         placeholder="000000"
                         value={formData.otp}
                         onChange={(e) =>
@@ -422,7 +422,7 @@ export default function RegisterPage() {
                       Didn&apos;t receive the code?{' '}
                       <button
                         type="button"
-                        className="text-rose-500 hover:text-rose-600 font-semibold"
+                        className="text-golden-600 hover:text-golden-700 font-semibold"
                       >
                         Resend
                       </button>
@@ -438,7 +438,7 @@ export default function RegisterPage() {
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={handleBack}
-                    className="flex-1 bg-pink-100 text-rose-500 py-4 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200 flex items-center justify-center space-x-2"
+                    className="flex-1 bg-pink-100 text-golden-600 py-4 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200 flex items-center justify-center space-x-2"
                   >
                     <ArrowLeft className="w-5 h-5" />
                     <span>Back</span>
@@ -451,7 +451,7 @@ export default function RegisterPage() {
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={handleNext}
-                    className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                    className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
                   >
                     <span>Continue</span>
                     <ArrowRight className="w-5 h-5" />
@@ -461,7 +461,7 @@ export default function RegisterPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                    className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
                   >
                     <Check className="w-5 h-5" />
                     <span>Complete Registration</span>
@@ -474,7 +474,7 @@ export default function RegisterPage() {
               Already have an account?{' '}
               <Link
                 href="/login"
-                className="text-rose-500 hover:text-rose-600 font-semibold"
+                className="text-golden-600 hover:text-golden-700 font-semibold"
               >
                 Sign in
               </Link>

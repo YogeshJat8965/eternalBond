@@ -21,11 +21,11 @@ export default function SuccessStoriesManagement() {
   });
 
   const [stories, setStories] = useState([
-    { id: 1, coupleName: 'Emma & David', weddingDate: '2024-06-15', story: 'We met on EternalBond and instantly connected. After 6 months of wonderful conversations, we knew we were meant for each other. Our wedding was a dream come true!', location: 'New York, USA', image: '💑', featured: true },
-    { id: 2, coupleName: 'Sophia & Ryan', weddingDate: '2024-08-20', story: 'EternalBond helped us find each other despite living in different cities. The matching algorithm was spot on! We are now happily married and planning our future together.', location: 'Los Angeles, USA', image: '💕', featured: true },
-    { id: 3, coupleName: 'Michael & Priya', weddingDate: '2024-05-10', story: 'A cross-cultural love story made possible by EternalBond. We overcame all barriers and celebrated our love with family and friends from both sides.', location: 'London, UK', image: '💖', featured: false },
-    { id: 4, coupleName: 'James & Maria', weddingDate: '2024-09-03', story: 'After years of unsuccessful searching, EternalBond brought us together. We connected on so many levels and our relationship blossomed naturally.', location: 'Chicago, USA', image: '❤️', featured: false },
-    { id: 5, coupleName: 'Alex & Sarah', weddingDate: '2024-07-12', story: 'We were both skeptical about online matrimonial sites, but EternalBond changed our perspective. Found my soulmate and best friend for life!', location: 'Toronto, Canada', image: '💗', featured: true },
+    { id: 1, coupleName: 'Emma & David', weddingDate: '2024-06-15', story: 'We met on KalyanautsavaMat and instantly connected. After 6 months of wonderful conversations, we knew we were meant for each other. Our wedding was a dream come true!', location: 'New York, USA', image: '💑', featured: true },
+    { id: 2, coupleName: 'Sophia & Ryan', weddingDate: '2024-08-20', story: 'KalyanautsavaMat helped us find each other despite living in different cities. The matching algorithm was spot on! We are now happily married and planning our future together.', location: 'Los Angeles, USA', image: '💕', featured: true },
+    { id: 3, coupleName: 'Michael & Priya', weddingDate: '2024-05-10', story: 'A cross-cultural love story made possible by KalyanautsavaMat. We overcame all barriers and celebrated our love with family and friends from both sides.', location: 'London, UK', image: '💖', featured: false },
+    { id: 4, coupleName: 'James & Maria', weddingDate: '2024-09-03', story: 'After years of unsuccessful searching, KalyanautsavaMat brought us together. We connected on so many levels and our relationship blossomed naturally.', location: 'Chicago, USA', image: '❤️', featured: false },
+    { id: 5, coupleName: 'Alex & Sarah', weddingDate: '2024-07-12', story: 'We were both skeptical about online matrimonial sites, but KalyanautsavaMat changed our perspective. Found my soulmate and best friend for life!', location: 'Toronto, Canada', image: '💗', featured: true },
   ]);
 
   const filteredStories = stories.filter(story =>
@@ -142,7 +142,7 @@ export default function SuccessStoriesManagement() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleAddStory}
-          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
         >
           <Plus className="w-5 h-5" />
           <span>Add Story</span>
@@ -163,7 +163,7 @@ export default function SuccessStoriesManagement() {
             placeholder="Search stories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
           />
         </div>
       </motion.div>
@@ -198,7 +198,7 @@ export default function SuccessStoriesManagement() {
                   className="hover:bg-gray-50 transition-colors"
                 >
                   <td className="px-6 py-4">
-                    <div className="w-16 h-16 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg flex items-center justify-center text-3xl">
+                    <div className="w-16 h-16 bg-gradient-to-r from-golden-500 to-golden-500 rounded-lg flex items-center justify-center text-3xl">
                       {story.image}
                     </div>
                   </td>
@@ -286,7 +286,7 @@ export default function SuccessStoriesManagement() {
                     value={formData.coupleName}
                     onChange={(e) => setFormData({ ...formData, coupleName: e.target.value })}
                     placeholder="e.g., Emma & David"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                   />
                 </div>
 
@@ -297,7 +297,7 @@ export default function SuccessStoriesManagement() {
                       type="date"
                       value={formData.weddingDate}
                       onChange={(e) => setFormData({ ...formData, weddingDate: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     />
                   </div>
 
@@ -308,7 +308,7 @@ export default function SuccessStoriesManagement() {
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                       placeholder="e.g., New York, USA"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     />
                   </div>
                 </div>
@@ -320,7 +320,7 @@ export default function SuccessStoriesManagement() {
                     onChange={(e) => setFormData({ ...formData, story: e.target.value })}
                     placeholder="Enter their love story..."
                     rows={5}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 resize-none"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 resize-none"
                   />
                 </div>
 
@@ -332,9 +332,9 @@ export default function SuccessStoriesManagement() {
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                       placeholder="💑 (Enter emoji)"
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     />
-                    <button className="flex items-center space-x-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-rose-500 transition-colors">
+                    <button className="flex items-center space-x-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-golden-500 transition-colors">
                       <Upload className="w-5 h-5 text-gray-400" />
                       <span className="text-sm text-gray-600">Upload Image</span>
                     </button>
@@ -351,7 +351,7 @@ export default function SuccessStoriesManagement() {
                 </button>
                 <button
                   onClick={showAddModal ? submitAdd : submitEdit}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg font-medium hover:shadow-lg"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-medium hover:shadow-lg"
                 >
                   {showAddModal ? 'Add Story' : 'Update Story'}
                 </button>

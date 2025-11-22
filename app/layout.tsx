@@ -8,8 +8,8 @@ import LoadingProvider from '@/components/LoadingProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'EternalBond - Find Your Perfect Match',
-  description: 'Join thousands of happy couples who found love through EternalBond matrimonial service.',
+  title: 'KalyanautsavaMat - Find Your Perfect Match',
+  description: 'Join thousands of happy couples who found love through KalyanautsavaMat matrimonial service.',
 };
 
 export default function RootLayout({

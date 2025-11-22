@@ -38,7 +38,7 @@ export default function PlansPage() {
         'Priority Support',
         'Profile Highlighted',
       ],
-      color: 'from-rose-400 to-pink-500',
+      color: 'from-rose-400 to-golden-500',
       popular: true,
     },
     {
@@ -66,7 +66,7 @@ export default function PlansPage() {
     <div className="min-h-screen pt-16 relative">
       <PetalAnimation />
 
-      <div className="relative z-10 bg-gradient-to-br from-pink-50 via-lavender-50 to-rose-50 py-20">
+      <div className="relative z-10 bg-gradient-to-br from-golden-50 via-lavender-50 to-golden-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -77,17 +77,17 @@ export default function PlansPage() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center space-x-2 bg-rose-100 px-4 py-2 rounded-full mb-6"
+              className="inline-flex items-center space-x-2 bg-golden-100 px-4 py-2 rounded-full mb-6"
             >
-              <Sparkles className="w-4 h-4 text-rose-500" />
-              <span className="text-rose-600 text-sm font-medium">
+              <Sparkles className="w-4 h-4 text-golden-600" />
+              <span className="text-golden-700 text-sm font-medium">
                 Choose Your Perfect Plan
               </span>
             </motion.div>
 
             <h1 className="text-5xl font-bold text-gray-800 mb-4">
               Find Love with the{' '}
-              <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
                 Right Plan
               </span>
             </h1>
@@ -105,11 +105,11 @@ export default function PlansPage() {
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -10, scale: 1.02 }}
                 className={`relative bg-white rounded-3xl shadow-xl border-2 overflow-hidden ${
-                  plan.popular ? 'border-rose-500 scale-105' : 'border-pink-100'
+                  plan.popular ? 'border-rose-500 scale-105' : 'border-golden-100'
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute top-0 right-0 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 text-sm font-semibold rounded-bl-2xl">
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-golden-500 to-golden-500 text-white px-6 py-2 text-sm font-semibold rounded-bl-2xl">
                     Most Popular
                   </div>
                 )}
@@ -139,8 +139,8 @@ export default function PlansPage() {
                       whileTap={{ scale: 0.95 }}
                       className={`w-full py-3 rounded-full font-semibold transition-all duration-200 ${
                         plan.popular
-                          ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg hover:shadow-xl'
-                          : 'bg-pink-100 text-rose-500 hover:bg-pink-200'
+                          ? 'bg-gradient-to-r from-golden-500 to-golden-500 text-white shadow-lg hover:shadow-xl'
+                          : 'bg-pink-100 text-golden-600 hover:bg-pink-200'
                       }`}
                     >
                       Get Started
@@ -150,7 +150,7 @@ export default function PlansPage() {
                   <div className="mt-8 space-y-4">
                     {plan.features.map((feature, idx) => (
                       <div key={idx} className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                        <Check className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                         <span className="text-gray-700">{feature}</span>
                       </div>
                     ))}
@@ -173,7 +173,7 @@ export default function PlansPage() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-white text-rose-500 px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-rose-500"
+                className="bg-white text-golden-600 px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-rose-500"
               >
                 Contact Us
               </motion.button>
@@ -220,7 +220,7 @@ export default function PlansPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-pink-50 to-lavender-50 p-6 rounded-2xl"
+                className="bg-gradient-to-br from-golden-50 to-lavender-50 p-6 rounded-2xl"
               >
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   {faq.q}

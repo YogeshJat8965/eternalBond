@@ -100,7 +100,7 @@ export default function ContactFormManagement() {
                 placeholder="Search by name, email, or subject..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function ContactFormManagement() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 appearance-none bg-white"
+              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 appearance-none bg-white"
             >
               <option value="all">All Status</option>
               <option value="new">New</option>
@@ -167,7 +167,7 @@ export default function ContactFormManagement() {
                     <select
                       value={contact.status}
                       onChange={(e) => updateStatus(contact.id, e.target.value)}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold border-0 focus:ring-2 focus:ring-rose-500 ${
+                      className={`px-3 py-1 rounded-full text-xs font-semibold border-0 focus:ring-2 focus:ring-golden-500 ${
                         contact.status === 'New' ? 'bg-blue-100 text-blue-700' :
                         contact.status === 'In Progress' ? 'bg-yellow-100 text-yellow-700' :
                         'bg-green-100 text-green-700'
@@ -287,7 +287,7 @@ export default function ContactFormManagement() {
                   Close
                 </button>
                 <button
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg font-medium hover:shadow-lg"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-medium hover:shadow-lg"
                 >
                   Reply via Email
                 </button>

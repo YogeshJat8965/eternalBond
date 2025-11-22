@@ -84,7 +84,7 @@ export default function Home() {
   const successStories = [
     {
       couple: 'Emma & David',
-      story: 'We found each other through EternalBond and it was love at first sight!',
+      story: 'We found each other through KalyanautsavaMat and it was love at first sight!',
       image: emmaAndDavid,
     },
     {
@@ -99,17 +99,17 @@ export default function Home() {
     },
     {
       couple: 'Priya & Arjun',
-      story: 'Our families are thrilled! We found our perfect match through EternalBond.',
+      story: 'Our families are thrilled! We found our perfect match through KalyanautsavaMat.',
       image: priyaAndArjun,
     },
     {
       couple: 'Isabella & Lucas',
-      story: 'Distance was no barrier with EternalBond. Now we\'re building our future together!',
+      story: 'Distance was no barrier with KalyanautsavaMat. Now we\'re building our future together!',
       image: isabellaAndLucas,
     },
     {
       couple: 'Yuki & Takeshi',
-      story: 'From skeptics to believers! EternalBond gave us our happily ever after.',
+      story: 'From skeptics to believers! KalyanautsavaMat gave us our happily ever after.',
       image: yukiAndTakeshi,
     },
   ];
@@ -121,7 +121,7 @@ export default function Home() {
         <FloatingHearts />
       </div>
 
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-lavender-50 to-rose-50 pt-16 pb-8 md:pb-0 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-golden-50 via-lavender-50 to-golden-50 pt-16 pb-8 md:pb-0 overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZWNkZDMiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAgMTBjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-40"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -136,10 +136,10 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center space-x-2 bg-rose-100 px-3 py-1.5 md:px-4 md:py-2 rounded-full mb-4 md:mb-6"
+                className="inline-flex items-center space-x-2 bg-golden-100 px-3 py-1.5 md:px-4 md:py-2 rounded-full mb-4 md:mb-6"
               >
-                <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-rose-500" />
-                <span className="text-rose-600 text-xs md:text-sm font-medium">
+                <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-golden-600" />
+                <span className="text-golden-700 text-xs md:text-sm font-medium">
                   Trusted by thousands of happy couples
                 </span>
               </motion.div>
@@ -147,7 +147,7 @@ export default function Home() {
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight">
                 Find Your{' '}
                 <RotatingWords 
-                  className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent"
+                  className="bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent"
                   words={['Perfect Match', 'True Love', 'Soulmate', 'Forever Partner']}
                 />
               </h1>
@@ -156,13 +156,13 @@ export default function Home() {
                 happiness with someone special.
               </p>
 
-              <div className="bg-white p-4 md:p-6 rounded-2xl shadow-xl border border-pink-100">
+              <div className="bg-white p-4 md:p-6 rounded-2xl shadow-xl border border-golden-100">
                 <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">
                   Quick Partner Search
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                   <select
-                    className="px-3 py-2 md:px-4 md:py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm md:text-base"
+                    className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
                     value={searchData.gender}
                     onChange={(e) =>
                       setSearchData({ ...searchData, gender: e.target.value })
@@ -173,7 +173,7 @@ export default function Home() {
                     <option value="female">Female</option>
                   </select>
                   <select
-                    className="px-3 py-2 md:px-4 md:py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm md:text-base"
+                    className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
                     value={searchData.religion}
                     onChange={(e) =>
                       setSearchData({ ...searchData, religion: e.target.value })
@@ -189,7 +189,7 @@ export default function Home() {
                   <input
                     type="number"
                     placeholder="Age From"
-                    className="px-3 py-2 md:px-4 md:py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm md:text-base"
+                    className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
                     value={searchData.ageFrom}
                     onChange={(e) =>
                       setSearchData({ ...searchData, ageFrom: e.target.value })
@@ -198,7 +198,7 @@ export default function Home() {
                   <input
                     type="number"
                     placeholder="Age To"
-                    className="px-3 py-2 md:px-4 md:py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm md:text-base"
+                    className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
                     value={searchData.ageTo}
                     onChange={(e) =>
                       setSearchData({ ...searchData, ageTo: e.target.value })
@@ -206,7 +206,7 @@ export default function Home() {
                   />
                 </div>
                 <Link href="/find-partner">
-                  <button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2.5 md:py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base">
+                  <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2.5 md:py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base">
                     <Search className="w-4 h-4 md:w-5 md:h-5" />
                     <span>Search Now</span>
                   </button>
@@ -237,9 +237,9 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="text-center p-6 md:p-8 rounded-2xl bg-gradient-to-br from-pink-50 to-lavender-50 hover:shadow-lg transition-shadow"
+                className="text-center p-6 md:p-8 rounded-2xl bg-gradient-to-br from-golden-50 to-lavender-50 hover:shadow-lg transition-shadow"
               >
-                <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full mb-3 md:mb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-golden-500 to-golden-500 rounded-full mb-3 md:mb-4">
                   <stat.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                 </div>
                 <h3 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
@@ -256,7 +256,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 md:py-20 bg-gradient-to-b from-white to-pink-50 relative z-10">
+      <section className="py-12 md:py-20 bg-gradient-to-b from-white to-golden-50 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -292,7 +292,7 @@ export default function Home() {
               {[...featuredProfiles, ...featuredProfiles].map((profile, index) => (
                 <div
                   key={`${profile.id}-${index}`}
-                  className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100"
+                  className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-golden-100"
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
@@ -301,7 +301,7 @@ export default function Home() {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full">
-                      <Heart className="w-5 h-5 text-rose-500" />
+                      <Heart className="w-5 h-5 text-red-500 fill-red-500" />
                     </div>
                   </div>
                   <div className="p-6">
@@ -313,7 +313,7 @@ export default function Home() {
                     </p>
                     <p className="text-gray-500 text-sm">{profile.location}</p>
                     <Link href="/members">
-                      <button className="mt-4 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200">
+                      <button className="mt-4 w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200">
                         View Profile
                       </button>
                     </Link>
@@ -332,7 +332,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg border border-pink-100"
+                className="bg-white rounded-2xl overflow-hidden shadow-lg border border-golden-100"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -341,7 +341,7 @@ export default function Home() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full">
-                    <Heart className="w-4 h-4 text-rose-500" />
+                    <Heart className="w-4 h-4 text-red-500 fill-red-500" />
                   </div>
                 </div>
                 <div className="p-4">
@@ -353,7 +353,7 @@ export default function Home() {
                   </p>
                   <p className="text-gray-500 text-xs mb-3">{profile.location}</p>
                   <Link href="/members">
-                    <button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 text-sm rounded-lg hover:shadow-md transition-all duration-200">
+                    <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 text-sm rounded-lg hover:shadow-md transition-all duration-200">
                       View Profile
                     </button>
                   </Link>
@@ -367,7 +367,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2 text-sm md:text-base"
+                className="bg-gradient-to-r from-golden-500 to-golden-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2 text-sm md:text-base"
               >
                 <span>View All Members</span>
                 <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
@@ -377,7 +377,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 md:py-20 bg-pink-50 relative z-10">
+      <section className="py-12 md:py-20 bg-golden-50 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -486,7 +486,7 @@ export default function Home() {
                               repeatDelay: 0.3,
                             }}
                           >
-                            <Heart className="w-4 h-4 text-rose-400 fill-rose-400 drop-shadow-lg" />
+                            <Heart className="w-4 h-4 text-red-500 fill-red-500 drop-shadow-lg" />
                           </motion.div>
                         );
                       })}
@@ -590,7 +590,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2 text-sm md:text-base"
+                className="bg-gradient-to-r from-golden-500 to-golden-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2 text-sm md:text-base"
               >
                 <span>Read More Stories</span>
                 <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
@@ -600,7 +600,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 md:py-20 bg-gradient-to-r from-rose-500 to-pink-500 relative z-10">
+      <section className="py-12 md:py-20 bg-gradient-to-r from-golden-500 to-golden-500 relative z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -611,13 +611,13 @@ export default function Home() {
               Ready to Find Your Soulmate?
             </h2>
             <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8">
-              Join thousands of happy couples who found love through EternalBond
+              Join thousands of happy couples who found love through KalyanautsavaMat
             </p>
             <Link href="/register">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-white text-rose-500 px-6 py-3 md:px-8 md:py-4 rounded-full font-semibold hover:shadow-2xl transition-all duration-200 text-base md:text-lg"
+                className="bg-white text-golden-600 px-6 py-3 md:px-8 md:py-4 rounded-full font-semibold hover:shadow-2xl transition-all duration-200 text-base md:text-lg"
               >
                 Get Started Now
               </motion.button>
@@ -627,7 +627,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-br from-gray-50 to-rose-50">
+      <section className="py-12 md:py-20 bg-gradient-to-br from-gray-50 to-golden-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -639,18 +639,18 @@ export default function Home() {
               Frequently Asked Questions
             </h2>
             <p className="text-gray-600 text-base md:text-lg">
-              Everything you need to know about EternalBond
+              Everything you need to know about KalyanautsavaMat
             </p>
           </motion.div>
 
           <div className="space-y-3 md:space-y-4">
             {[
               {
-                question: "How does EternalBond work?",
-                answer: "EternalBond uses advanced matching algorithms to connect compatible individuals based on their preferences, values, interests, and lifestyle. Simply create a profile, set your preferences, and start connecting with potential matches."
+                question: "How does KalyanautsavaMat work?",
+                answer: "KalyanautsavaMat uses advanced matching algorithms to connect compatible individuals based on their preferences, values, interests, and lifestyle. Simply create a profile, set your preferences, and start connecting with potential matches."
               },
               {
-                question: "Is EternalBond free to use?",
+                question: "Is KalyanautsavaMat free to use?",
                 answer: "Yes! We offer a free basic membership that allows you to create a profile, browse matches, and send limited messages. For unlimited messaging, advanced search filters, and premium features, you can upgrade to our Premium or VIP plans."
               },
               {
@@ -670,7 +670,7 @@ export default function Home() {
                 answer: "Yes, you can cancel your premium subscription at any time from your account settings. You'll continue to have access to premium features until the end of your billing period."
               },
               {
-                question: "What makes EternalBond different from other platforms?",
+                question: "What makes KalyanautsavaMat different from other platforms?",
                 answer: "We focus on meaningful relationships, not casual dating. Our verification process ensures authentic profiles, and our matching algorithm considers values, compatibility, and long-term potential. Plus, we provide personalized support throughout your journey."
               },
               {
@@ -689,13 +689,13 @@ export default function Home() {
                 <details className="group">
                   <summary className="flex justify-between items-center cursor-pointer p-4 md:p-6 font-semibold text-gray-800 text-base md:text-lg list-none">
                     <span className="flex items-center gap-2 md:gap-3 pr-4">
-                      <span className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-rose-100 text-rose-500 font-bold text-xs md:text-sm flex-shrink-0">
+                      <span className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-golden-100 text-golden-600 font-bold text-xs md:text-sm flex-shrink-0">
                         {index + 1}
                       </span>
                       <span className="text-left">{faq.question}</span>
                     </span>
                     <motion.span
-                      className="text-rose-500 text-2xl flex-shrink-0"
+                      className="text-golden-600 text-2xl flex-shrink-0"
                       animate={{ rotate: 0 }}
                       whileHover={{ rotate: 180 }}
                       transition={{ duration: 0.3 }}
@@ -730,7 +730,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-xl transition-all duration-300 text-sm md:text-base"
+                className="bg-gradient-to-r from-golden-500 to-golden-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-xl transition-all duration-300 text-sm md:text-base"
               >
                 Contact Support
               </motion.button>

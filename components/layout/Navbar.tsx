@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Heart, Menu, X, LogOut, LayoutDashboard, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,6 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: '/', label: 'Home' },
     { href: '/members', label: 'Members' },
     { href: '/find-partner', label: 'Find Partner' },
     { href: '/stories', label: 'Success Stories' },
@@ -49,18 +49,20 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-pink-100">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-golden-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16 gap-12">
           <Link href="/" className="flex items-center space-x-2">
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-            >
-              <Heart className="w-8 h-8 text-rose-500 fill-rose-500" />
-            </motion.div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
-              EternalBond
+            <Image 
+              src="/images/logo.png" 
+              alt="KalyanautsavaMat Logo" 
+              width={130} 
+              height={130}
+              className="object-contain"
+              priority
+            />
+            <span className="text-2xl font-bold text-transparent bg-clip-text whitespace-nowrap" style={{ backgroundImage: 'linear-gradient(to right, #EEC900, #EEC900)' }}>
+              KalyanautsavaMat
             </span>
           </Link>
 
@@ -69,33 +71,24 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-700 hover:text-rose-500 transition-colors duration-200 font-medium"
+                className="text-gray-700 hover:text-golden-600 transition-colors duration-200 font-medium"
               >
                 {link.label}
               </Link>
             ))}
             
-            {/* Admin Link */}
-            <Link
-              href="/admin/login"
-              className="flex items-center space-x-2 text-amber-600 hover:text-amber-700 transition-colors duration-200 font-medium"
-            >
-              <Shield className="w-4 h-4" />
-              <span>Admin</span>
-            </Link>
-            
             {isRegistered ? (
               <>
                 <Link
                   href="/dashboard"
-                  className="flex items-center space-x-2 text-gray-700 hover:text-rose-500 transition-colors duration-200 font-medium"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-golden-600 transition-colors duration-200 font-medium"
                 >
                   <LayoutDashboard className="w-4 h-4" />
                   <span>Dashboard</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
+                  className="flex items-center space-x-2 bg-golden-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>
@@ -105,13 +98,14 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-rose-500 hover:text-rose-600 font-medium"
+                  className="text-golden-600 hover:text-golden-700 font-medium"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
+                  className="text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
+                  style={{ backgroundColor: '#EEC900' }}
                 >
                   Register
                 </Link>
@@ -134,35 +128,25 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-pink-100"
+            className="md:hidden bg-white border-t border-golden-100"
           >
             <div className="px-4 py-4 space-y-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block text-gray-700 hover:text-rose-500 transition-colors duration-200 py-2"
+                  className="block text-gray-700 hover:text-golden-600 transition-colors duration-200 py-2"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.label}
                 </Link>
               ))}
               
-              {/* Admin Link - Mobile */}
-              <Link
-                href="/admin/login"
-                className="flex items-center space-x-2 text-amber-600 hover:text-amber-700 py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                <Shield className="w-4 h-4" />
-                <span>Admin</span>
-              </Link>
-              
               {isRegistered ? (
                 <>
                   <Link
                     href="/dashboard"
-                    className="flex items-center space-x-2 text-gray-700 hover:text-rose-500 py-2"
+                    className="flex items-center space-x-2 text-gray-700 hover:text-golden-600 py-2"
                     onClick={() => setIsOpen(false)}
                   >
                     <LayoutDashboard className="w-4 h-4" />
@@ -173,7 +157,7 @@ export default function Navbar() {
                       handleLogout();
                       setIsOpen(false);
                     }}
-                    className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full"
+                    className="w-full flex items-center justify-center space-x-2 bg-golden-500 text-white px-6 py-2 rounded-full"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
@@ -183,14 +167,15 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/login"
-                    className="block text-rose-500 py-2"
+                    className="block text-golden-600 py-2"
                     onClick={() => setIsOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     href="/register"
-                    className="block bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full text-center"
+                    className="block text-white px-6 py-2 rounded-full text-center"
+                    style={{ backgroundColor: '#EEC900' }}
                     onClick={() => setIsOpen(false)}
                   >
                     Register

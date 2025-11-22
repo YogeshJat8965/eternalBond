@@ -23,7 +23,7 @@ export default function FirebaseSettings() {
       color: 'from-red-500 to-orange-500',
       clientId: 'google-client-id-************************',
       clientSecret: '************************',
-      callbackUrl: 'https://eternalbond.com/auth/google/callback'
+      callbackUrl: 'https://kalyanautsavamat.com/auth/google/callback'
     },
     {
       id: 2,
@@ -33,7 +33,7 @@ export default function FirebaseSettings() {
       color: 'from-blue-600 to-blue-700',
       clientId: 'facebook-app-id-************************',
       clientSecret: '************************',
-      callbackUrl: 'https://eternalbond.com/auth/facebook/callback'
+      callbackUrl: 'https://kalyanautsavamat.com/auth/facebook/callback'
     },
     {
       id: 3,
@@ -43,7 +43,7 @@ export default function FirebaseSettings() {
       color: 'from-sky-400 to-blue-500',
       clientId: 'twitter-api-key-************************',
       clientSecret: '************************',
-      callbackUrl: 'https://eternalbond.com/auth/twitter/callback'
+      callbackUrl: 'https://kalyanautsavamat.com/auth/twitter/callback'
     },
   ]);
 
@@ -75,7 +75,7 @@ export default function FirebaseSettings() {
         transition={{ delay: 0.1 }}
         className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden"
       >
-        <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6">
+        <div className="bg-gradient-to-r from-purple-500 to-golden-500 p-6">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
               <MessageCircle className="w-6 h-6 text-white" />
@@ -186,7 +186,7 @@ export default function FirebaseSettings() {
                 value={chatSettings.maxFileSize}
                 onChange={(e) => setChatSettings({ ...chatSettings, maxFileSize: parseInt(e.target.value) })}
                 disabled={!chatSettings.enabled || !chatSettings.fileSharing}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 disabled:bg-gray-100"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 disabled:bg-gray-100"
               />
             </div>
             <div>
@@ -198,7 +198,7 @@ export default function FirebaseSettings() {
                 value={chatSettings.messageHistory}
                 onChange={(e) => setChatSettings({ ...chatSettings, messageHistory: parseInt(e.target.value) })}
                 disabled={!chatSettings.enabled}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 disabled:bg-gray-100"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 disabled:bg-gray-100"
               />
             </div>
           </div>
@@ -351,7 +351,7 @@ export default function FirebaseSettings() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Auth Domain</label>
             <input
               type="text"
-              value="eternalbond-app.firebaseapp.com"
+              value="kalyanautsavamat-app.firebaseapp.com"
               readOnly
               className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm"
             />
@@ -361,7 +361,7 @@ export default function FirebaseSettings() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Project ID</label>
               <input
                 type="text"
-                value="eternalbond-app"
+                value="kalyanautsavamat-app"
                 readOnly
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm"
               />
@@ -370,7 +370,7 @@ export default function FirebaseSettings() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Storage Bucket</label>
               <input
                 type="text"
-                value="eternalbond-app.appspot.com"
+                value="kalyanautsavamat-app.appspot.com"
                 readOnly
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm"
               />

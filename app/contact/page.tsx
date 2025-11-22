@@ -23,7 +23,7 @@ export default function ContactPage() {
     <div className="min-h-screen pt-16 relative">
       <PetalAnimation />
 
-      <div className="relative z-10 bg-gradient-to-br from-pink-50 via-lavender-50 to-rose-50 py-20">
+      <div className="relative z-10 bg-gradient-to-br from-golden-50 via-lavender-50 to-golden-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -32,7 +32,7 @@ export default function ContactPage() {
           >
             <h1 className="text-5xl font-bold text-gray-800 mb-4">
               Get In{' '}
-              <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
                 Touch
               </span>
             </h1>
@@ -47,7 +47,7 @@ export default function ContactPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <div className="bg-white rounded-3xl shadow-xl p-8 border border-pink-100">
+              <div className="bg-white rounded-3xl shadow-xl p-8 border border-golden-100">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">
                   Send Us a Message
                 </h2>
@@ -60,7 +60,7 @@ export default function ContactPage() {
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                       value={formData.name}
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
@@ -76,7 +76,7 @@ export default function ContactPage() {
                     <input
                       type="email"
                       required
-                      className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
@@ -92,7 +92,7 @@ export default function ContactPage() {
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                       value={formData.subject}
                       onChange={(e) =>
                         setFormData({ ...formData, subject: e.target.value })
@@ -108,7 +108,7 @@ export default function ContactPage() {
                     <textarea
                       required
                       rows={6}
-                      className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 resize-none"
+                      className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 resize-none"
                       value={formData.message}
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
@@ -121,7 +121,7 @@ export default function ContactPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                    className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
                   >
                     <Send className="w-5 h-5" />
                     <span>Send Message</span>
@@ -136,28 +136,28 @@ export default function ContactPage() {
               transition={{ delay: 0.3 }}
               className="space-y-6"
             >
-              <div className="bg-white rounded-3xl shadow-xl p-8 border border-pink-100">
+              <div className="bg-white rounded-3xl shadow-xl p-8 border border-golden-100">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">
                   Contact Information
                 </h2>
 
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="bg-rose-100 p-3 rounded-full">
-                      <Mail className="w-6 h-6 text-rose-500" />
+                    <div className="bg-golden-100 p-3 rounded-full">
+                      <Mail className="w-6 h-6 text-golden-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800 mb-1">
                         Email Us
                       </h3>
-                      <p className="text-gray-600">support@eternalbond.com</p>
-                      <p className="text-gray-600">info@eternalbond.com</p>
+                      <p className="text-gray-600">support@kalyanautsavamat.com</p>
+                      <p className="text-gray-600">info@kalyanautsavamat.com</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="bg-rose-100 p-3 rounded-full">
-                      <Phone className="w-6 h-6 text-rose-500" />
+                    <div className="bg-golden-100 p-3 rounded-full">
+                      <Phone className="w-6 h-6 text-golden-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800 mb-1">
@@ -169,8 +169,8 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="bg-rose-100 p-3 rounded-full">
-                      <MapPin className="w-6 h-6 text-rose-500" />
+                    <div className="bg-golden-100 p-3 rounded-full">
+                      <MapPin className="w-6 h-6 text-golden-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800 mb-1">
@@ -188,7 +188,7 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-rose-500 to-pink-500 rounded-3xl shadow-xl p-8 text-white">
+              <div className="bg-gradient-to-br from-golden-500 to-golden-500 rounded-3xl shadow-xl p-8 text-white">
                 <h3 className="text-2xl font-bold mb-4">Business Hours</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between">

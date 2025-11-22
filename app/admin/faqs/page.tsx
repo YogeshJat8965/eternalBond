@@ -130,7 +130,7 @@ export default function FAQManagement() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleAddFAQ}
-          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
         >
           <Plus className="w-5 h-5" />
           <span>Add FAQ</span>
@@ -151,7 +151,7 @@ export default function FAQManagement() {
             placeholder="Search FAQs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
           />
         </div>
       </motion.div>
@@ -242,7 +242,7 @@ export default function FAQManagement() {
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                   >
                     {categories.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -257,7 +257,7 @@ export default function FAQManagement() {
                     value={formData.question}
                     onChange={(e) => setFormData({ ...formData, question: e.target.value })}
                     placeholder="Enter the question"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                   />
                 </div>
 
@@ -268,7 +268,7 @@ export default function FAQManagement() {
                     onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
                     placeholder="Enter the answer"
                     rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 resize-none"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 resize-none"
                   />
                 </div>
               </div>
@@ -282,7 +282,7 @@ export default function FAQManagement() {
                 </button>
                 <button
                   onClick={submitAdd}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg font-medium hover:shadow-lg"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-medium hover:shadow-lg"
                 >
                   Add FAQ
                 </button>
@@ -322,7 +322,7 @@ export default function FAQManagement() {
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                   >
                     {categories.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -337,7 +337,7 @@ export default function FAQManagement() {
                     value={formData.question}
                     onChange={(e) => setFormData({ ...formData, question: e.target.value })}
                     placeholder="Enter the question"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                   />
                 </div>
 
@@ -348,7 +348,7 @@ export default function FAQManagement() {
                     onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
                     placeholder="Enter the answer"
                     rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 resize-none"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 resize-none"
                   />
                 </div>
               </div>
@@ -362,7 +362,7 @@ export default function FAQManagement() {
                 </button>
                 <button
                   onClick={submitEdit}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg font-medium hover:shadow-lg"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-medium hover:shadow-lg"
                 >
                   Update FAQ
                 </button>

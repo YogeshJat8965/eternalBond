@@ -3,22 +3,25 @@
 import Link from 'next/link';
 import { Heart, Facebook, Twitter, Instagram, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-pink-50 to-white border-t border-pink-100">
+    <footer className="bg-gradient-to-b from-golden-50 to-white border-t border-golden-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-              >
-                <Heart className="w-8 h-8 text-rose-500 fill-rose-500" />
-              </motion.div>
-              <span className="text-xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
-                EternalBond
+              <Image 
+                src="/images/logo.png" 
+                alt="KalyanautsavaMat Logo" 
+                width={48} 
+                height={48}
+                className="object-contain"
+                priority
+              />
+              <span className="text-xl font-bold text-golden-500">
+                KalyanautsavaMat
               </span>
             </div>
             <p className="text-gray-600 text-sm">
@@ -30,22 +33,22 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-800 mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-600 hover:text-rose-500 text-sm">
+                <Link href="/" className="text-gray-600 hover:text-golden-600 text-sm">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/members" className="text-gray-600 hover:text-rose-500 text-sm">
+                <Link href="/members" className="text-gray-600 hover:text-golden-600 text-sm">
                   Members
                 </Link>
               </li>
               <li>
-                <Link href="/stories" className="text-gray-600 hover:text-rose-500 text-sm">
+                <Link href="/stories" className="text-gray-600 hover:text-golden-600 text-sm">
                   Success Stories
                 </Link>
               </li>
               <li>
-                <Link href="/plans" className="text-gray-600 hover:text-rose-500 text-sm">
+                <Link href="/plans" className="text-gray-600 hover:text-golden-600 text-sm">
                   Pricing
                 </Link>
               </li>
@@ -56,17 +59,17 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-800 mb-4">Support</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/contact" className="text-gray-600 hover:text-rose-500 text-sm">
+                <Link href="/contact" className="text-gray-600 hover:text-golden-600 text-sm">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-gray-600 hover:text-rose-500 text-sm">
+                <Link href="/privacy" className="text-gray-600 hover:text-golden-600 text-sm">
                   Privacy Policy
                 </Link>
               </li>
               {/* <li>
-                <Link href="/terms" className="text-gray-600 hover:text-rose-500 text-sm">
+                <Link href="/terms" className="text-gray-600 hover:text-golden-600 text-sm">
                   Terms of Service
                 </Link>
               </li> */}
@@ -76,26 +79,26 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-gray-800 mb-4">Connect With Us</h3>
             <div className="flex space-x-4 mb-4">
-              <a href="#" className="text-gray-600 hover:text-rose-500 transition-colors">
+              <a href="#" className="text-gray-600 hover:text-golden-600 transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-rose-500 transition-colors">
+              <a href="#" className="text-gray-600 hover:text-golden-600 transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-rose-500 transition-colors">
+              <a href="#" className="text-gray-600 hover:text-golden-600 transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-rose-500 transition-colors">
+              <a href="#" className="text-gray-600 hover:text-golden-600 transition-colors">
                 <Mail className="w-5 h-5" />
               </a>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-pink-100 mt-8 pt-8 text-center">
+        <div className="border-t border-golden-100 mt-8 pt-8 text-center">
           <p className="text-gray-600 text-sm">
-            © 2025 EternalBond. All rights reserved. Made with{' '}
-            <Heart className="w-4 h-4 inline text-rose-500 fill-rose-500" /> for you.
+            © 2025 KalyanautsavaMat. All rights reserved. Made with{' '}
+            <Heart className="w-4 h-4 inline text-golden-500 fill-golden-500" /> for you.
           </p>
         </div>
       </div>

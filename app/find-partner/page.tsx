@@ -114,7 +114,7 @@ export default function FindPartnerPage() {
   };
 
   return (
-    <div className="min-h-screen pt-16 bg-gradient-to-b from-pink-50 to-white">
+    <div className="min-h-screen pt-16 bg-gradient-to-b from-golden-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -125,17 +125,17 @@ export default function FindPartnerPage() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center space-x-2 bg-rose-100 px-4 py-2 rounded-full mb-6"
+            className="inline-flex items-center space-x-2 bg-golden-100 px-4 py-2 rounded-full mb-6"
           >
-            <Sparkles className="w-4 h-4 text-rose-500" />
-            <span className="text-rose-600 text-sm font-medium">
+            <Sparkles className="w-4 h-4 text-golden-600" />
+            <span className="text-golden-700 text-sm font-medium">
               Advanced Partner Search
             </span>
           </motion.div>
 
           <h1 className="text-5xl font-bold text-gray-800 mb-4">
             Find Your{' '}
-            <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
               Perfect Partner
             </span>
           </h1>
@@ -148,10 +148,10 @@ export default function FindPartnerPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-3xl shadow-xl p-8 mb-12 border border-pink-100"
+          className="bg-white rounded-3xl shadow-xl p-8 mb-12 border border-golden-100"
         >
           <div className="flex items-center space-x-2 mb-6">
-            <Filter className="w-5 h-5 text-rose-500" />
+            <Filter className="w-5 h-5 text-golden-600" />
             <h2 className="text-2xl font-bold text-gray-800">Search Filters</h2>
           </div>
 
@@ -161,7 +161,7 @@ export default function FindPartnerPage() {
                 Looking For
               </label>
               <select
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.gender}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, gender: e.target.value })
@@ -180,7 +180,7 @@ export default function FindPartnerPage() {
               <input
                 type="number"
                 placeholder="18"
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.ageFrom}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, ageFrom: e.target.value })
@@ -195,7 +195,7 @@ export default function FindPartnerPage() {
               <input
                 type="number"
                 placeholder="50"
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.ageTo}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, ageTo: e.target.value })
@@ -208,7 +208,7 @@ export default function FindPartnerPage() {
                 Religion
               </label>
               <select
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.religion}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, religion: e.target.value })
@@ -230,7 +230,7 @@ export default function FindPartnerPage() {
               <input
                 type="text"
                 placeholder="City, Country"
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.location}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, location: e.target.value })
@@ -245,7 +245,7 @@ export default function FindPartnerPage() {
               <input
                 type="text"
                 placeholder="e.g., Engineer"
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.profession}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, profession: e.target.value })
@@ -258,7 +258,7 @@ export default function FindPartnerPage() {
                 Marital Status
               </label>
               <select
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.maritalStatus}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, maritalStatus: e.target.value })
@@ -276,7 +276,7 @@ export default function FindPartnerPage() {
                 Education Level
               </label>
               <select
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.education}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, education: e.target.value })
@@ -295,7 +295,7 @@ export default function FindPartnerPage() {
                 Annual Income
               </label>
               <select
-                className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.income}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, income: e.target.value })
@@ -315,14 +315,14 @@ export default function FindPartnerPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSearch}
-              className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+              className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
             >
               <Search className="w-5 h-5" />
               <span>Search Partners</span>
             </motion.button>
             <button
               onClick={handleClearFilters}
-              className="px-8 py-4 bg-pink-100 text-rose-500 rounded-lg font-semibold hover:bg-pink-200 transition-colors"
+              className="px-8 py-4 bg-pink-100 text-golden-600 rounded-lg font-semibold hover:bg-pink-200 transition-colors"
             >
               Clear Filters
             </button>
@@ -352,7 +352,7 @@ export default function FindPartnerPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
-                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100"
+                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-golden-100"
                 >
                   <div className="relative h-72 overflow-hidden group">
                     <img
@@ -375,8 +375,8 @@ export default function FindPartnerPage() {
                         <Heart 
                           className={`w-5 h-5 transition-colors ${
                             likedProfiles.includes(result.id) 
-                              ? 'text-rose-500 fill-rose-500' 
-                              : 'text-rose-500'
+                              ? 'text-red-500 fill-red-500' 
+                              : 'text-gray-400'
                           }`} 
                         />
                       </motion.button>
@@ -405,7 +405,7 @@ export default function FindPartnerPage() {
                               }}
                               className="absolute top-2 right-2 pointer-events-none"
                             >
-                              <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
+                              <Heart className="w-3 h-3 text-red-500 fill-red-500" />
                             </motion.div>
                           ))}
                         </>
@@ -421,11 +421,11 @@ export default function FindPartnerPage() {
 
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                        <Briefcase className="w-4 h-4 text-rose-500" />
+                        <Briefcase className="w-4 h-4 text-golden-600" />
                         <span>{result.profession}</span>
                       </div>
                       <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                        <MapPin className="w-4 h-4 text-rose-500" />
+                        <MapPin className="w-4 h-4 text-golden-600" />
                         <span>{result.location}</span>
                       </div>
                     </div>
@@ -434,7 +434,7 @@ export default function FindPartnerPage() {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
+                        className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
                       >
                         View Full Profile
                       </motion.button>

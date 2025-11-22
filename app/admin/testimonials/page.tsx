@@ -22,11 +22,11 @@ export default function TestimonialManagement() {
   });
 
   const [testimonials, setTestimonials] = useState([
-    { id: 1, name: 'Sarah Johnson', position: 'Marketing Manager', company: 'Tech Corp', rating: 5, message: 'EternalBond helped me find my perfect match! The platform is incredibly easy to use and the matches are very accurate.', image: 'SJ', date: '2024-10-15' },
-    { id: 2, name: 'Michael Chen', position: 'Software Engineer', company: 'StartupXYZ', rating: 5, message: 'I was skeptical at first, but EternalBond exceeded all my expectations. Met my soulmate within 3 months!', image: 'MC', date: '2024-09-22' },
+    { id: 1, name: 'Sarah Johnson', position: 'Marketing Manager', company: 'Tech Corp', rating: 5, message: 'KalyanautsavaMat helped me find my perfect match! The platform is incredibly easy to use and the matches are very accurate.', image: 'SJ', date: '2024-10-15' },
+    { id: 2, name: 'Michael Chen', position: 'Software Engineer', company: 'StartupXYZ', rating: 5, message: 'I was skeptical at first, but KalyanautsavaMat exceeded all my expectations. Met my soulmate within 3 months!', image: 'MC', date: '2024-09-22' },
     { id: 3, name: 'Emma Wilson', position: 'Designer', company: 'Creative Studio', rating: 4, message: 'Great platform with genuine profiles. The customer service is outstanding and very helpful.', image: 'EW', date: '2024-11-01' },
     { id: 4, name: 'David Brown', position: 'Business Owner', company: 'Brown Enterprises', rating: 5, message: 'The best matrimonial site I have used. Found my life partner here. Highly recommended!', image: 'DB', date: '2024-08-10' },
-    { id: 5, name: 'Lisa Anderson', position: 'Doctor', company: 'City Hospital', rating: 5, message: 'Professional, secure, and effective. EternalBond made my search for a life partner so much easier.', image: 'LA', date: '2024-10-28' },
+    { id: 5, name: 'Lisa Anderson', position: 'Doctor', company: 'City Hospital', rating: 5, message: 'Professional, secure, and effective. KalyanautsavaMat made my search for a life partner so much easier.', image: 'LA', date: '2024-10-28' },
     { id: 6, name: 'James Taylor', position: 'Teacher', company: 'Central School', rating: 4, message: 'Good experience overall. The matching algorithm is smart and the interface is user-friendly.', image: 'JT', date: '2024-09-05' },
   ]);
 
@@ -145,7 +145,7 @@ export default function TestimonialManagement() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleAddTestimonial}
-          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
         >
           <Plus className="w-5 h-5" />
           <span>Add Testimonial</span>
@@ -166,7 +166,7 @@ export default function TestimonialManagement() {
             placeholder="Search testimonials..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
           />
         </div>
       </motion.div>
@@ -183,7 +183,7 @@ export default function TestimonialManagement() {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                <div className="w-16 h-16 bg-gradient-to-r from-golden-500 to-golden-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
                   {testimonial.image}
                 </div>
                 <div>
@@ -261,7 +261,7 @@ export default function TestimonialManagement() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Enter name"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     />
                   </div>
 
@@ -272,7 +272,7 @@ export default function TestimonialManagement() {
                       value={formData.position}
                       onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                       placeholder="Enter position"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     />
                   </div>
                 </div>
@@ -284,7 +284,7 @@ export default function TestimonialManagement() {
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     placeholder="Enter company"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                   />
                 </div>
 
@@ -314,7 +314,7 @@ export default function TestimonialManagement() {
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Enter testimonial message"
                     rows={5}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 resize-none"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 resize-none"
                   />
                 </div>
               </div>
@@ -328,7 +328,7 @@ export default function TestimonialManagement() {
                 </button>
                 <button
                   onClick={showAddModal ? submitAdd : submitEdit}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg font-medium hover:shadow-lg"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-medium hover:shadow-lg"
                 >
                   {showAddModal ? 'Add Testimonial' : 'Update Testimonial'}
                 </button>

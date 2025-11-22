@@ -5,7 +5,7 @@ import { Shield, Lock, Eye, CheckCircle } from 'lucide-react';
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen pt-16 bg-gradient-to-b from-pink-50 to-white">
+    <div className="min-h-screen pt-16 bg-gradient-to-b from-golden-50 to-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -16,14 +16,14 @@ export default function PrivacyPage() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full mb-6"
+            className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-golden-500 to-golden-500 rounded-full mb-6"
           >
             <Shield className="w-8 h-8 text-white" />
           </motion.div>
 
           <h1 className="text-5xl font-bold text-gray-800 mb-4">
             Privacy{' '}
-            <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
               Policy
             </span>
           </h1>
@@ -34,12 +34,12 @@ export default function PrivacyPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-pink-100"
+          className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-golden-100"
         >
           <div className="prose prose-lg max-w-none">
             <div className="mb-8">
               <p className="text-gray-700 leading-relaxed">
-                At EternalBond, we take your privacy seriously. This Privacy Policy explains
+                At KalyanautsavaMat, we take your privacy seriously. This Privacy Policy explains
                 how we collect, use, disclose, and safeguard your information when you use
                 our matrimonial service. Please read this privacy policy carefully.
               </p>
@@ -48,8 +48,8 @@ export default function PrivacyPage() {
             <div className="space-y-8">
               <div>
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="bg-rose-100 p-2 rounded-full">
-                    <Eye className="w-5 h-5 text-rose-500" />
+                  <div className="bg-golden-100 p-2 rounded-full">
+                    <Eye className="w-5 h-5 text-golden-600" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-800">
                     Information We Collect
@@ -61,23 +61,23 @@ export default function PrivacyPage() {
                   </p>
                   <ul className="space-y-2 text-gray-700">
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Personal details (name, age, gender, contact information)</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Profile information (photos, bio, preferences)</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Educational and professional background</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Communication data (messages, interactions)</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Payment and billing information</span>
                     </li>
                   </ul>
@@ -86,8 +86,8 @@ export default function PrivacyPage() {
 
               <div>
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="bg-rose-100 p-2 rounded-full">
-                    <Lock className="w-5 h-5 text-rose-500" />
+                  <div className="bg-golden-100 p-2 rounded-full">
+                    <Lock className="w-5 h-5 text-golden-600" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-800">
                     How We Use Your Information
@@ -99,27 +99,27 @@ export default function PrivacyPage() {
                   </p>
                   <ul className="space-y-2 text-gray-700">
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Provide, maintain, and improve our services</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Match you with compatible partners</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Process your transactions and subscriptions</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Send you updates, notifications, and promotional materials</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Respond to your inquiries and provide customer support</span>
                     </li>
                     <li className="flex items-start space-x-2">
-                      <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                       <span>Ensure security and prevent fraud</span>
                     </li>
                   </ul>
@@ -149,19 +149,19 @@ export default function PrivacyPage() {
                 </p>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start space-x-2">
-                    <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                     <span>With your explicit consent</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                     <span>With service providers who assist us in operations</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                     <span>When required by law or legal process</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                     <span>To protect the rights and safety of our users</span>
                   </li>
                 </ul>
@@ -174,19 +174,19 @@ export default function PrivacyPage() {
                 </p>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start space-x-2">
-                    <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                     <span>Access and update your personal information</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                     <span>Request deletion of your account and data</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                     <span>Opt-out of marketing communications</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <CheckCircle className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-golden-600 flex-shrink-0 mt-0.5" />
                     <span>Request a copy of your data</span>
                   </li>
                 </ul>
@@ -223,7 +223,7 @@ export default function PrivacyPage() {
                 </p>
                 <div className="mt-4 p-4 bg-rose-50 rounded-lg">
                   <p className="text-gray-700">
-                    <strong>Email:</strong> privacy@eternalbond.com
+                    <strong>Email:</strong> privacy@kalyanautsavamat.com
                     <br />
                     <strong>Phone:</strong> +1 (555) 123-4567
                     <br />

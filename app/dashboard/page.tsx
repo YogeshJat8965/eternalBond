@@ -89,11 +89,11 @@ export default function DashboardPage() {
   };
 
   const stats = [
-    { icon: Heart, label: 'Remaining Interests', value: '50', color: 'from-pink-400 to-pink-500', bgColor: 'bg-pink-50', textColor: 'text-pink-600' },
+    { icon: Heart, label: 'Remaining Interests', value: '50', color: 'from-golden-400 to-golden-500', bgColor: 'bg-golden-50', textColor: 'text-golden-600' },
     { icon: Eye, label: 'Remaining Contact View', value: '20', color: 'from-orange-400 to-orange-500', bgColor: 'bg-orange-50', textColor: 'text-orange-600' },
     { icon: ImageIcon, label: 'Remaining Image Upload', value: '20', color: 'from-green-400 to-green-500', bgColor: 'bg-green-50', textColor: 'text-green-600' },
     { icon: List, label: 'Total Shortlisted', value: '0', color: 'from-purple-400 to-purple-500', bgColor: 'bg-purple-50', textColor: 'text-purple-600' },
-    { icon: Heart, label: 'Interest Sent', value: '0', color: 'from-rose-400 to-rose-500', bgColor: 'bg-rose-50', textColor: 'text-rose-600' },
+    { icon: Heart, label: 'Interest Sent', value: '0', color: 'from-golden-400 to-rose-500', bgColor: 'bg-golden-50', textColor: 'text-golden-600' },
     { icon: Heart, label: 'Interest Requests', value: '0', color: 'from-amber-400 to-amber-500', bgColor: 'bg-amber-50', textColor: 'text-amber-600' },
   ];
 
@@ -140,7 +140,7 @@ export default function DashboardPage() {
                       key={step}
                       className={`h-2 flex-1 rounded-full transition-all duration-300 ${
                         step <= onboardingStep
-                          ? 'bg-gradient-to-r from-rose-500 to-pink-500'
+                          ? 'bg-gradient-to-r from-golden-500 to-golden-500'
                           : 'bg-gray-200'
                       }`}
                     />
@@ -259,7 +259,7 @@ export default function DashboardPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleSkip}
-                    className="flex-1 py-3 rounded-lg font-semibold bg-pink-100 text-rose-600 hover:bg-pink-200 transition-all"
+                    className="flex-1 py-3 rounded-lg font-semibold bg-golden-100 text-golden-600 hover:bg-golden-200 transition-all"
                   >
                     Skip
                   </motion.button>
@@ -268,7 +268,7 @@ export default function DashboardPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleNext}
-                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-semibold bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:shadow-lg transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-semibold bg-gradient-to-r from-golden-500 to-golden-500 text-white hover:shadow-lg transition-all"
                   >
                     {onboardingStep === 3 ? 'Complete' : 'Next'}
                     {onboardingStep < 3 && <ArrowRight className="w-5 h-5" />}
@@ -292,17 +292,17 @@ export default function DashboardPage() {
               {/* Profile Section */}
               <div className="text-center mb-6 pb-6 border-b border-pink-100">
                 <div className="relative inline-block mb-4">
-                  <div className="w-24 h-24 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center">
+                  <div className="w-24 h-24 bg-gradient-to-br from-golden-400 to-golden-500 rounded-full flex items-center justify-center">
                     <User className="w-12 h-12 text-white" />
                   </div>
-                  <button className="absolute bottom-0 right-0 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center shadow-lg hover:bg-pink-600 transition-colors">
+                  <button className="absolute bottom-0 right-0 w-8 h-8 bg-golden-500 rounded-full flex items-center justify-center shadow-lg hover:bg-pink-600 transition-colors">
                     <Camera className="w-4 h-4 text-white" />
                   </button>
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-1">{userName}</h3>
                 <p className="text-sm text-gray-600 mb-3">ID : 43723062</p>
                 <Link href="/profile">
-                  <button className="w-full bg-pink-50 text-rose-500 py-2 rounded-lg font-medium hover:bg-pink-100 transition-colors">
+                  <button className="w-full bg-golden-50 text-rose-500 py-2 rounded-lg font-medium hover:bg-golden-100 transition-colors">
                     Public Profile
                   </button>
                 </Link>
@@ -322,8 +322,8 @@ export default function DashboardPage() {
                     }}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                       activeMenu === item.label
-                        ? 'bg-pink-50 text-rose-500'
-                        : 'text-gray-600 hover:bg-pink-50 hover:text-rose-500'
+                        ? 'bg-golden-50 text-rose-500'
+                        : 'text-gray-600 hover:bg-golden-50 hover:text-rose-500'
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
@@ -378,7 +378,7 @@ export default function DashboardPage() {
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Current Package</h2>
               
               <div className="mb-6">
-                <h3 className="text-3xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent mb-4">
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent mb-4">
                   Free
                 </h3>
                 <div className="space-y-3">
@@ -415,7 +415,7 @@ export default function DashboardPage() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200"
+                  className="bg-gradient-to-r from-golden-500 to-golden-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200"
                 >
                   Upgrade Package
                 </motion.button>
@@ -433,8 +433,8 @@ export default function DashboardPage() {
               
               <div className="flex items-center justify-center py-12">
                 <div className="text-center">
-                  <div className="w-24 h-24 bg-pink-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Heart className="w-12 h-12 text-rose-300" />
+                  <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Heart className="w-12 h-12 text-golden-300" />
                   </div>
                   <p className="text-gray-500 font-medium">No interests yet</p>
                   <p className="text-gray-400 text-sm mt-2">Start browsing members to send interests</p>

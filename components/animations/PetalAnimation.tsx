@@ -21,7 +21,7 @@ export default function PetalAnimation() {
           className="absolute w-3 h-3 rounded-full"
           style={{
             background: `radial-gradient(circle, ${
-              i % 2 === 0 ? '#fce7f3' : '#fae8ff'
+              i % 2 === 0 ? '#FFF3CC' : '#FFE799'
             }, transparent)`,
             left: `${Math.random() * 100}%`,
           }}

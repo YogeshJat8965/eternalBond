@@ -114,7 +114,7 @@ export default function MembersPage() {
   ];
 
   return (
-    <div className="min-h-screen pt-16 bg-gradient-to-b from-pink-50 to-white">
+    <div className="min-h-screen pt-16 bg-gradient-to-b from-golden-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -123,7 +123,7 @@ export default function MembersPage() {
         >
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
             Browse{' '}
-            <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
               Members
             </span>
           </h1>
@@ -138,10 +138,10 @@ export default function MembersPage() {
             animate={{ opacity: 1, x: 0 }}
             className={`lg:w-80 ${showFilters ? 'block' : 'hidden lg:block'}`}
           >
-            <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24 border border-pink-100">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24 border border-golden-100">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-2">
-                  <Filter className="w-5 h-5 text-rose-500" />
+                  <Filter className="w-5 h-5 text-golden-600" />
                   <h2 className="text-xl font-semibold text-gray-800">Filters</h2>
                 </div>
                 <button
@@ -158,7 +158,7 @@ export default function MembersPage() {
                     Gender
                   </label>
                   <select
-                    className="w-full px-4 py-2 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.gender}
                     onChange={(e) =>
                       setFilters({ ...filters, gender: e.target.value })
@@ -178,7 +178,7 @@ export default function MembersPage() {
                     <input
                       type="number"
                       placeholder="From"
-                      className="px-4 py-2 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                       value={filters.ageFrom}
                       onChange={(e) =>
                         setFilters({ ...filters, ageFrom: e.target.value })
@@ -187,7 +187,7 @@ export default function MembersPage() {
                     <input
                       type="number"
                       placeholder="To"
-                      className="px-4 py-2 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                       value={filters.ageTo}
                       onChange={(e) =>
                         setFilters({ ...filters, ageTo: e.target.value })
@@ -201,7 +201,7 @@ export default function MembersPage() {
                     Religion
                   </label>
                   <select
-                    className="w-full px-4 py-2 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.religion}
                     onChange={(e) =>
                       setFilters({ ...filters, religion: e.target.value })
@@ -223,7 +223,7 @@ export default function MembersPage() {
                   <input
                     type="text"
                     placeholder="City, Country"
-                    className="w-full px-4 py-2 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.location}
                     onChange={(e) =>
                       setFilters({ ...filters, location: e.target.value })
@@ -238,7 +238,7 @@ export default function MembersPage() {
                   <input
                     type="text"
                     placeholder="e.g., Engineer"
-                    className="w-full px-4 py-2 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.profession}
                     onChange={(e) =>
                       setFilters({ ...filters, profession: e.target.value })
@@ -251,7 +251,7 @@ export default function MembersPage() {
                     Marital Status
                   </label>
                   <select
-                    className="w-full px-4 py-2 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.maritalStatus}
                     onChange={(e) =>
                       setFilters({ ...filters, maritalStatus: e.target.value })
@@ -264,7 +264,7 @@ export default function MembersPage() {
                   </select>
                 </div>
 
-                <button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200">
+                <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200">
                   Apply Filters
                 </button>
                 <button
@@ -280,7 +280,7 @@ export default function MembersPage() {
                       maritalStatus: '',
                     })
                   }
-                  className="w-full bg-pink-100 text-rose-500 py-3 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200"
+                  className="w-full bg-pink-100 text-golden-600 py-3 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200"
                 >
                   Clear All
                 </button>
@@ -292,9 +292,9 @@ export default function MembersPage() {
             <div className="lg:hidden mb-4">
               <button
                 onClick={() => setShowFilters(true)}
-                className="w-full bg-white border border-pink-200 px-4 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-pink-50 transition-colors"
+                className="w-full bg-white border border-golden-200 px-4 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-golden-50 transition-colors"
               >
-                <Filter className="w-5 h-5 text-rose-500" />
+                <Filter className="w-5 h-5 text-golden-600" />
                 <span className="font-medium text-gray-700">Show Filters</span>
               </button>
             </div>
@@ -307,7 +307,7 @@ export default function MembersPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ y: -5 }}
-                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100"
+                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-golden-100"
                 >
                   <div className="relative h-72 overflow-hidden group">
                     <img
@@ -338,8 +338,8 @@ export default function MembersPage() {
                           <Heart
                             className={`w-5 h-5 transition-colors duration-200 ${
                               likedProfiles.includes(member.id)
-                                ? 'text-rose-500 fill-rose-500'
-                                : 'text-rose-500'
+                                ? 'text-red-500 fill-red-500'
+                                : 'text-gray-400'
                             }`}
                           />
                         </motion.div>
@@ -374,7 +374,7 @@ export default function MembersPage() {
                                   ease: 'easeOut',
                                 }}
                               >
-                                <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
+                                <Heart className="w-3 h-3 text-red-500 fill-red-500" />
                               </motion.div>
                             );
                           })}
@@ -391,11 +391,11 @@ export default function MembersPage() {
 
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                        <Briefcase className="w-4 h-4 text-rose-500" />
+                        <Briefcase className="w-4 h-4 text-golden-600" />
                         <span>{member.profession}</span>
                       </div>
                       <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                        <MapPin className="w-4 h-4 text-rose-500" />
+                        <MapPin className="w-4 h-4 text-golden-600" />
                         <span>{member.location}</span>
                       </div>
                     </div>
@@ -404,7 +404,7 @@ export default function MembersPage() {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
+                        className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
                       >
                         View Profile
                       </motion.button>
@@ -421,19 +421,19 @@ export default function MembersPage() {
               className="mt-12 flex justify-center"
             >
               <div className="flex items-center space-x-2">
-                <button className="px-4 py-2 bg-pink-100 text-rose-500 rounded-lg hover:bg-pink-200 transition-colors">
+                <button className="px-4 py-2 bg-pink-100 text-golden-600 rounded-lg hover:bg-pink-200 transition-colors">
                   Previous
                 </button>
-                <button className="px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg">
+                <button className="px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg">
                   1
                 </button>
-                <button className="px-4 py-2 bg-pink-100 text-rose-500 rounded-lg hover:bg-pink-200 transition-colors">
+                <button className="px-4 py-2 bg-pink-100 text-golden-600 rounded-lg hover:bg-pink-200 transition-colors">
                   2
                 </button>
-                <button className="px-4 py-2 bg-pink-100 text-rose-500 rounded-lg hover:bg-pink-200 transition-colors">
+                <button className="px-4 py-2 bg-pink-100 text-golden-600 rounded-lg hover:bg-pink-200 transition-colors">
                   3
                 </button>
-                <button className="px-4 py-2 bg-pink-100 text-rose-500 rounded-lg hover:bg-pink-200 transition-colors">
+                <button className="px-4 py-2 bg-pink-100 text-golden-600 rounded-lg hover:bg-pink-200 transition-colors">
                   Next
                 </button>
               </div>

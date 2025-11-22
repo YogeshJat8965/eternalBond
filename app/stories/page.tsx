@@ -18,7 +18,7 @@ export default function StoriesPage() {
       id: 1,
       couple: 'Emma & David',
       date: 'Married: June 2024',
-      story: 'We met on EternalBond in early 2023, and from our very first conversation, we knew there was something special. David\'s sense of humor and Emma\'s warm personality clicked instantly. After months of video calls and meeting in person, we realized we had found our soulmate. Thank you EternalBond for bringing us together!',
+      story: 'We met on KalyanautsavaMat in early 2023, and from our very first conversation, we knew there was something special. David\'s sense of humor and Emma\'s warm personality clicked instantly. After months of video calls and meeting in person, we realized we had found our soulmate. Thank you KalyanautsavaMat for bringing us together!',
       image: emmaAndDavid,
       location: 'New York, USA',
     },
@@ -26,7 +26,7 @@ export default function StoriesPage() {
       id: 2,
       couple: 'Sophia & Ryan',
       date: 'Married: March 2024',
-      story: 'Finding love felt impossible until we found EternalBond. The platform\'s detailed matching system helped us discover each other despite living in different cities. Our first date was magical, and we haven\'t looked back since. We\'re now happily married and expecting our first child!',
+      story: 'Finding love felt impossible until we found KalyanautsavaMat. The platform\'s detailed matching system helped us discover each other despite living in different cities. Our first date was magical, and we haven\'t looked back since. We\'re now happily married and expecting our first child!',
       image: sophiaAndRyan,
       location: 'Los Angeles, USA',
     },
@@ -34,7 +34,7 @@ export default function StoriesPage() {
       id: 3,
       couple: 'Aisha & Omar',
       date: 'Married: December 2023',
-      story: 'As busy professionals, we struggled to find time for dating. EternalBond made it easy to connect with like-minded individuals. Omar\'s profile stood out immediately, and after our first coffee date, we knew we were meant to be. The journey from strangers to soulmates was beautiful.',
+      story: 'As busy professionals, we struggled to find time for dating. KalyanautsavaMat made it easy to connect with like-minded individuals. Omar\'s profile stood out immediately, and after our first coffee date, we knew we were meant to be. The journey from strangers to soulmates was beautiful.',
       image: aishaAndOmar,
       location: 'Dubai, UAE',
     },
@@ -42,7 +42,7 @@ export default function StoriesPage() {
       id: 4,
       couple: 'Priya & Arjun',
       date: 'Married: August 2024',
-      story: 'Our families had been searching for the perfect match for us for years. When we both joined EternalBond independently, we found each other within weeks. It felt like destiny. Our similar values, dreams, and aspirations aligned perfectly. We couldn\'t be happier!',
+      story: 'Our families had been searching for the perfect match for us for years. When we both joined KalyanautsavaMat independently, we found each other within weeks. It felt like destiny. Our similar values, dreams, and aspirations aligned perfectly. We couldn\'t be happier!',
       image: priyaAndArjun,
       location: 'Mumbai, India',
     },
@@ -50,7 +50,7 @@ export default function StoriesPage() {
       id: 5,
       couple: 'Isabella & Lucas',
       date: 'Married: February 2024',
-      story: 'Long-distance relationships are challenging, but EternalBond gave us the tools to make it work. We video chatted for months before meeting in person, and when we finally did, it exceeded all expectations. Now we\'re building our life together in the same city!',
+      story: 'Long-distance relationships are challenging, but KalyanautsavaMat gave us the tools to make it work. We video chatted for months before meeting in person, and when we finally did, it exceeded all expectations. Now we\'re building our life together in the same city!',
       image: isabellaAndLucas,
       location: 'Barcelona, Spain',
     },
@@ -58,7 +58,7 @@ export default function StoriesPage() {
       id: 6,
       couple: 'Yuki & Takeshi',
       date: 'Married: May 2024',
-      story: 'Both of us were skeptical about online matrimonial services, but EternalBond changed our minds. The platform\'s emphasis on compatibility and shared values helped us find each other. Our wedding was a beautiful blend of tradition and modern love. Thank you for everything!',
+      story: 'Both of us were skeptical about online matrimonial services, but KalyanautsavaMat changed our minds. The platform\'s emphasis on compatibility and shared values helped us find each other. Our wedding was a beautiful blend of tradition and modern love. Thank you for everything!',
       image: yukiAndTakeshi,
       location: 'Tokyo, Japan',
     },
@@ -68,7 +68,7 @@ export default function StoriesPage() {
     <div className="min-h-screen pt-16 relative">
       <PetalAnimation />
 
-      <div className="relative z-10 bg-gradient-to-br from-pink-50 via-lavender-50 to-rose-50 py-20">
+      <div className="relative z-10 bg-gradient-to-br from-golden-50 via-lavender-50 to-golden-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -80,17 +80,17 @@ export default function StoriesPage() {
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
               className="inline-block mb-6"
             >
-              <Heart className="w-16 h-16 text-rose-500 fill-rose-500 mx-auto" />
+              <Heart className="w-16 h-16 text-red-500 fill-red-500 mx-auto" />
             </motion.div>
 
             <h1 className="text-5xl font-bold text-gray-800 mb-4">
               Love Stories That{' '}
-              <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
                 Inspire Us
               </span>
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Real couples, real love stories. Discover how EternalBond helped thousands
+              Real couples, real love stories. Discover how KalyanautsavaMat helped thousands
               find their perfect match and begin their journey to eternal happiness.
             </p>
           </motion.div>
@@ -111,11 +111,11 @@ export default function StoriesPage() {
                 }}
                 onHoverStart={() => setHoveredStory(story.id)}
                 onHoverEnd={() => setHoveredStory(null)}
-                className="relative bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-pink-100 group cursor-pointer"
+                className="relative bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-golden-100 group cursor-pointer"
               >
                 {/* Animated gradient border effect on hover */}
                 <motion.div 
-                  className="absolute inset-0 rounded-3xl bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className="absolute inset-0 rounded-3xl bg-gradient-to-r from-golden-400 via-golden-400 to-golden-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   animate={{
                     backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
                   }}
@@ -169,7 +169,7 @@ export default function StoriesPage() {
                             ease: "easeOut",
                           }}
                         >
-                          <Heart className="w-4 h-4 text-rose-400 fill-rose-400 drop-shadow-lg" />
+                          <Heart className="w-4 h-4 text-red-500 fill-red-500 drop-shadow-lg" />
                         </motion.div>
                       );
                     })}
@@ -205,20 +205,20 @@ export default function StoriesPage() {
                       whileHover={{ x: 5 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <h3 className="text-3xl font-bold mb-2 group-hover:text-rose-200 transition-colors duration-300">
+                      <h3 className="text-3xl font-bold mb-2 group-hover:text-golden-200 transition-colors duration-300">
                         {story.couple}
                       </h3>
                       <p className="text-white/90 text-sm">{story.location}</p>
                     </motion.div>
                     <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                      <p className="text-rose-500 text-sm font-semibold">
+                      <p className="text-golden-600 text-sm font-semibold">
                         {story.date}
                       </p>
                     </div>
                   </div>
 
                   <div className="p-8 bg-white">
-                    <Quote className="w-8 h-8 text-rose-300 mb-4 group-hover:text-rose-400 transition-colors duration-300" />
+                    <Quote className="w-8 h-8 text-golden-300 mb-4 group-hover:text-golden-400 transition-colors duration-300" />
                     <p className="text-gray-700 leading-relaxed italic group-hover:text-gray-900 transition-colors duration-300">
                       {story.story}
                     </p>
@@ -230,7 +230,7 @@ export default function StoriesPage() {
         </div>
       </div>
 
-      <div className="relative z-10 bg-gradient-to-r from-rose-500 to-pink-500 py-20">
+      <div className="relative z-10 bg-gradient-to-r from-golden-500 to-golden-500 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -241,13 +241,13 @@ export default function StoriesPage() {
               Want to Share Your Story?
             </h2>
             <p className="text-white/90 text-lg mb-8">
-              If you found love through EternalBond, we would love to hear from you!
+              If you found love through KalyanautsavaMat, we would love to hear from you!
               Share your journey and inspire others.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-white text-rose-500 px-8 py-4 rounded-full font-semibold hover:shadow-2xl transition-all duration-200 text-lg"
+              className="bg-white text-golden-600 px-8 py-4 rounded-full font-semibold hover:shadow-2xl transition-all duration-200 text-lg"
             >
               Share Your Story
             </motion.button>

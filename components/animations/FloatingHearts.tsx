@@ -40,7 +40,7 @@ export default function FloatingHearts() {
           }}
         >
           <Heart
-            className="text-rose-400 fill-rose-300 drop-shadow-lg"
+            className={i % 3 === 0 ? "text-red-400 fill-red-300 drop-shadow-lg" : "text-golden-400 fill-golden-300 drop-shadow-lg"}
             style={{
               width: `${24 + Math.random() * 20}px`,
               height: `${24 + Math.random() * 20}px`,
