@@ -2,11 +2,11 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, Users, Award, ArrowRight, Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import FloatingHearts from '@/components/animations/FloatingHearts';
 import RotatingWords from '@/components/animations/RotatingWords';
-import HeroImageSlider from '@/components/animations/HeroImageSlider';
 import CounterAnimation from '@/components/animations/CounterAnimation';
 import emmaAndDavid from './images/ama&david.jpg';
 import sophiaAndRyan from './images/sophia&ryan.jpg';
@@ -14,6 +14,9 @@ import aishaAndOmar from './images/aisha&romar.jpg';
 import priyaAndArjun from './images/priya&arjun.jpg';
 import isabellaAndLucas from './images/isabella&lucas.jpg';
 import yukiAndTakeshi from './images/yuki&takesi.jpg';
+import heroSection1 from './images/heroSection1.jpg';
+import heroSection2 from './images/heroSection2.jpg';
+import heroSection3 from './images/heroSection3.jpg';
 
 export default function Home() {
   const [searchData, setSearchData] = useState({
@@ -23,6 +26,17 @@ export default function Home() {
     religion: '',
   });
   const [hoveredStory, setHoveredStory] = useState<number | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const heroImages = [heroSection1, heroSection2, heroSection3];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const featuredProfiles = [
     {
@@ -121,30 +135,47 @@ export default function Home() {
         <FloatingHearts />
       </div>
 
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-8 md:pb-0">
-        {/* Background Video */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/images/togetherVideo.mp4" type="video/mp4" />
-        </video>
-        
-        {/* Subtle overlay for text readability - reduced opacity to show more video */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-golden-50/20 to-white/30"></div>
+      <section className="relative min-h-screen flex items-center justify-center pt-16 pb-8 md:pb-0 overflow-hidden">
+        {/* Animated Background Images */}
+        <div className="absolute inset-0 w-full h-full">
+          {heroImages.map((image, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: index === 0 ? 1 : 0 }}
+              animate={{ 
+                opacity: index === currentImageIndex ? 1 : 0,
+                scale: index === currentImageIndex ? 1 : 1.05
+              }}
+              transition={{ 
+                duration: 2, 
+                ease: "easeInOut" 
+              }}
+              className="absolute inset-0 w-full h-full"
+            >
+              <Image
+                src={image}
+                alt={`Hero background ${index + 1}`}
+                fill
+                className="object-cover"
+                priority={index === 0}
+                quality={90}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/30 to-black/40"></div>
         
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZWNkZDMiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAgMTBjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-10"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid lg:grid-cols-1 gap-8 lg:gap-12 items-center justify-center">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="order-1 lg:order-1"
+              className="max-w-3xl mx-auto text-center"
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -158,19 +189,19 @@ export default function Home() {
                 </span>
               </motion.div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-800 mb-4 md:mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight drop-shadow-lg">
                 Find Your{' '}
                 <RotatingWords 
-                  className="bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent"
+                  className="bg-gradient-to-r from-pink-400 to-pink-500 bg-clip-text text-transparent"
                   words={['Perfect Match', 'True Love', 'Soulmate', 'Forever Partner']}
                 />
               </h1>
-              <p className="text-base md:text-lg lg:text-xl text-white mb-6 md:mb-8 leading-relaxed">
+              <p className="text-lg md:text-xl lg:text-2xl text-white mb-6 md:mb-8 leading-relaxed drop-shadow-md">
                 Discover meaningful connections and begin your journey to eternal
                 happiness with someone special.
               </p>
 
-              <div className="bg-white p-4 md:p-6 rounded-2xl shadow-xl border border-golden-100">
+              <div className="bg-white/95 backdrop-blur-sm p-4 md:p-6 rounded-2xl shadow-xl border border-golden-100 max-w-2xl mx-auto">
                 <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">
                   Quick Partner Search
                 </h3>
@@ -226,16 +257,6 @@ export default function Home() {
                   </button>
                 </Link>
               </div>
-            </motion.div>
-
-            {/* Show hero image slider on all screens, but below content on mobile */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative order-2 lg:order-2"
-            >
-              <HeroImageSlider />
             </motion.div>
           </div>
         </div>
