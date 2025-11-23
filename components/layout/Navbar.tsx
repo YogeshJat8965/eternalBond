@@ -174,7 +174,7 @@ export default function Navbar() {
               </div>
 
               {/* Navigation Links */}
-              <div className="px-6 py-8 space-y-1">
+              <div className="px-6 py-6 space-y-1">
                 <Link
                   href="/"
                   className="block text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-3 px-4 rounded-lg font-medium"
@@ -204,18 +204,10 @@ export default function Navbar() {
                     <span>Dashboard</span>
                   </Link>
                 )}
-
-                <Link
-                  href="/contact"
-                  className="block text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-3 px-4 rounded-lg font-medium"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Contact
-                </Link>
               </div>
 
-              {/* Bottom Action Buttons */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-golden-100 bg-gradient-to-t from-golden-50 to-white">
+              {/* Action Buttons - Placed after navigation */}
+              <div className="px-6 pb-6">
                 {isRegistered ? (
                   <button
                     onClick={() => {
