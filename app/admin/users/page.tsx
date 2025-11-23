@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, UserX, Trash2, Eye, MoreVertical, X } from 'lucide-react';
 import { useState } from 'react';
 import Toast from '@/components/admin/Toast';
+import BackButton from '@/components/admin/BackButton';
 
 export default function UserManagement() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -82,7 +83,10 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-7xl px-4 space-y-6" style={{ marginLeft: '-8%' }}>
+        <BackButton />
+      
       {/* Toast Notification */}
       <AnimatePresence>
         {toast && (
@@ -162,12 +166,11 @@ export default function UserManagement() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">S.No</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">User</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Contact</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Plan</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Joined</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Last Active</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -180,6 +183,9 @@ export default function UserManagement() {
                   transition={{ delay: 0.3 + index * 0.05 }}
                   className="hover:bg-gray-50 transition-colors"
                 >
+                  <td className="px-6 py-4 text-sm font-semibold text-gray-700">
+                    {(currentPage - 1) * usersPerPage + index + 1}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-golden-500 to-golden-500 rounded-full flex items-center justify-center text-white font-semibold">
@@ -208,8 +214,6 @@ export default function UserManagement() {
                       {user.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{user.joined}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{user.lastActive}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
                       <motion.button
@@ -384,6 +388,7 @@ export default function UserManagement() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }

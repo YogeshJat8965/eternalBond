@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Eye, X, Trash2, Filter } from 'lucide-react';
 import { useState } from 'react';
 import Toast from '@/components/admin/Toast';
+import BackButton from '@/components/admin/BackButton';
 
 export default function ContactFormManagement() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,23 +56,26 @@ export default function ContactFormManagement() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Toast Notification */}
-      <AnimatePresence>
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </AnimatePresence>
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-7xl px-4 space-y-6" style={{ marginLeft: '-8%' }}>
+        <BackButton />
+        
+        {/* Toast Notification */}
+        <AnimatePresence>
+          {toast && (
+            <Toast
+              message={toast.message}
+              type={toast.type}
+              onClose={() => setToast(null)}
+            />
+          )}
+        </AnimatePresence>
 
-      {/* Page Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-center"
+        {/* Page Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center"
       >
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Contact Form Management</h1>
@@ -133,6 +137,7 @@ export default function ContactFormManagement() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">S.No</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Contact</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Subject</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Message Preview</th>
@@ -150,6 +155,9 @@ export default function ContactFormManagement() {
                   transition={{ delay: 0.3 + index * 0.05 }}
                   className="hover:bg-gray-50 transition-colors"
                 >
+                  <td className="px-6 py-4 text-sm font-semibold text-gray-700">
+                    {index + 1}
+                  </td>
                   <td className="px-6 py-4">
                     <div>
                       <p className="font-semibold text-gray-800">{contact.name}</p>
@@ -296,6 +304,7 @@ export default function ContactFormManagement() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit, Trash2, X, Search } from 'lucide-react';
 import { useState } from 'react';
 import Toast from '@/components/admin/Toast';
+import BackButton from '@/components/admin/BackButton';
 
 export default function FAQManagement() {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -105,6 +106,8 @@ export default function FAQManagement() {
 
   return (
     <div className="space-y-6">
+      <BackButton />
+      
       {/* Toast Notification */}
       <AnimatePresence>
         {toast && (

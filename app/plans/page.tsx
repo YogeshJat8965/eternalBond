@@ -77,10 +77,10 @@ export default function PlansPage() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center space-x-2 bg-golden-100 px-4 py-2 rounded-full mb-6"
+              className="inline-flex items-center space-x-2 bg-red-50 px-4 py-2 rounded-full mb-6"
             >
-              <Sparkles className="w-4 h-4 text-golden-600" />
-              <span className="text-golden-700 text-sm font-medium">
+              <Sparkles className="w-4 h-4 text-red-700" />
+              <span className="text-red-700 text-sm font-medium">
                 Choose Your Perfect Plan
               </span>
             </motion.div>
@@ -156,76 +156,6 @@ export default function PlansPage() {
                     ))}
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-16 text-center"
-          >
-            <p className="text-gray-600 mb-4">
-              Not sure which plan to choose? Our team is here to help!
-            </p>
-            <Link href="/contact">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-white text-golden-600 px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-rose-500"
-              >
-                Contact Us
-              </motion.button>
-            </Link>
-          </motion.div>
-        </div>
-      </div>
-
-      <div className="relative z-10 bg-white py-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Frequently Asked Questions
-            </h2>
-          </motion.div>
-
-          <div className="space-y-6">
-            {[
-              {
-                q: 'Can I upgrade or downgrade my plan?',
-                a: 'Yes, you can change your plan anytime. Upgrades are immediate, and downgrades take effect at the end of your current billing cycle.',
-              },
-              {
-                q: 'Is my payment information secure?',
-                a: 'Absolutely. We use industry-standard encryption and never store your complete payment details.',
-              },
-              {
-                q: 'What happens if I cancel my subscription?',
-                a: 'You can cancel anytime. You will continue to have access until the end of your paid period.',
-              },
-              {
-                q: 'Do you offer refunds?',
-                a: 'Yes, we offer a 7-day money-back guarantee if you are not satisfied with our service.',
-              },
-            ].map((faq, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-gradient-to-br from-golden-50 to-lavender-50 p-6 rounded-2xl"
-              >
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  {faq.q}
-                </h3>
-                <p className="text-gray-600">{faq.a}</p>
               </motion.div>
             ))}
           </div>

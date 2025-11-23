@@ -400,14 +400,15 @@ export default function MembersPage() {
                       </div>
                     </div>
 
-                    <motion.button
-                      onClick={(e) => e.preventDefault()}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium cursor-default"
-                    >
-                      View Profile
-                    </motion.button>
+                    <Link href={`/profile/${member.id}`}>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
+                      >
+                        View Profile
+                      </motion.button>
+                    </Link>
                   </div>
                 </motion.div>
               ))}

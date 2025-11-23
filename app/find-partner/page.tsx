@@ -125,10 +125,10 @@ export default function FindPartnerPage() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center space-x-2 bg-golden-100 px-4 py-2 rounded-full mb-6"
+            className="inline-flex items-center space-x-2 bg-red-50 px-4 py-2 rounded-full mb-6"
           >
-            <Sparkles className="w-4 h-4 text-golden-600" />
-            <span className="text-golden-700 text-sm font-medium">
+            <Sparkles className="w-4 h-4 text-red-600" />
+            <span className="text-red-700 text-sm font-medium">
               Advanced Partner Search
             </span>
           </motion.div>

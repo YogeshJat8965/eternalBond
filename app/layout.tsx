@@ -1,35 +1,30 @@
+'use client';
+
 import './globals.css';
-import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LoadingProvider from '@/components/LoadingProvider';
 import { Toaster } from '@/components/ui/toaster';
+import { usePathname } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export const metadata: Metadata = {
-  title: 'KalyanautsavaMat',
-  description: 'Join thousands of happy couples who found love through KalyanautsavaMat matrimonial service.',
-  icons: {
-    icon: '/images/logo.png',
-    shortcut: '/images/logo.png',
-    apple: '/images/logo.png',
-  },
-};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isAdminPage = pathname?.startsWith('/admin');
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <LoadingProvider>
-          <Navbar />
+          {!isAdminPage && <Navbar />}
           <main>{children}</main>
-          <Footer />
+          {!isAdminPage && <Footer />}
         </LoadingProvider>
         <Toaster />
       </body>

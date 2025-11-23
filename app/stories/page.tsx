@@ -13,6 +13,7 @@ import { useState } from 'react';
 
 export default function StoriesPage() {
   const [hoveredStory, setHoveredStory] = useState<number | null>(null);
+  
   const stories = [
     {
       id: 1,
@@ -230,30 +231,7 @@ export default function StoriesPage() {
         </div>
       </div>
 
-      <div className="relative z-10 bg-gradient-to-r from-golden-500 to-golden-500 py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Want to Share Your Story?
-            </h2>
-            <p className="text-white/90 text-lg mb-8">
-              If you found love through KalyanautsavaMat, we would love to hear from you!
-              Share your journey and inspire others.
-            </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-golden-600 px-8 py-4 rounded-full font-semibold hover:shadow-2xl transition-all duration-200 text-lg"
-            >
-              Share Your Story
-            </motion.button>
-          </motion.div>
-        </div>
-      </div>
+
     </div>
   );
 }

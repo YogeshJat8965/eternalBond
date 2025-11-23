@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Heart, Users, Award, ArrowRight, Sparkles } from 'lucide-react';
+import { Search, Heart, Users, Award, ArrowRight, Sparkles, Quote, ChevronLeft, ChevronRight, Star, Shield } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -27,6 +27,67 @@ export default function Home() {
   });
   const [hoveredStory, setHoveredStory] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const testimonials = [
+    {
+      id: 1,
+      name: 'Sarah Mitchell',
+      content: 'KalyanautsavaMat changed my life! The platform is so easy to use, and the matches were spot-on. I met my husband within 3 months of joining. The verification process made me feel safe throughout my journey.',
+      rating: 5,
+      role: 'Marketing Manager',
+    },
+    {
+      id: 2,
+      name: 'Rahul Sharma',
+      content: 'After trying several matrimonial sites, KalyanautsavaMat stood out with its genuine profiles and excellent customer support. The video call feature helped us connect before meeting in person. Highly recommended!',
+      rating: 5,
+      role: 'Software Engineer',
+    },
+    {
+      id: 3,
+      name: 'Maria Garcia',
+      content: 'I was skeptical at first, but the detailed personality matching and compatibility tests really work! Found someone who shares my values and dreams. Thank you for making the search so meaningful and stress-free.',
+      rating: 5,
+      role: 'Teacher',
+    },
+    {
+      id: 4,
+      name: 'Ahmed Hassan',
+      content: 'The privacy features and family involvement options made this the perfect platform for our community. My parents were able to participate in the process, which was very important to us. Excellent service!',
+      rating: 5,
+      role: 'Business Owner',
+    },
+    {
+      id: 5,
+      name: 'Emily Chen',
+      content: 'Best investment I ever made! The premium features are worth every penny. The personalized matchmaking service understood exactly what I was looking for. Met my soulmate and couldn\'t be happier!',
+      rating: 5,
+      role: 'Doctor',
+    },
+    {
+      id: 6,
+      name: 'James Wilson',
+      content: 'Clean interface, real people, and great success rate. What more could you ask for? The team is responsive and genuinely cares about helping people find love. This platform exceeded all my expectations!',
+      rating: 5,
+      role: 'Architect',
+    },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
 
   const heroImages = [heroSection1, heroSection2, heroSection3];
 
@@ -46,6 +107,29 @@ export default function Home() {
       profession: 'Software Engineer',
       location: 'New York, USA',
       image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
+      gender: 'Female',
+      height: '5\'6"',
+      religion: 'Christian',
+      caste: 'Not Specified',
+      motherTongue: 'English',
+      maritalStatus: 'Never Married',
+      education: 'Master\'s in Computer Science',
+      college: 'Stanford University',
+      employedIn: 'Private Sector',
+      income: '$120,000 per year',
+      familyType: 'Nuclear Family',
+      fatherOccupation: 'Business Owner',
+      motherOccupation: 'Homemaker',
+      siblings: '1 Sister',
+      bio: 'Passionate about technology and innovation. Love traveling, reading, and trying new cuisines. Looking for someone who shares similar values and has a good sense of humor.',
+      hobbies: ['Reading', 'Traveling', 'Cooking', 'Yoga'],
+      email: 'sarah.j@email.com',
+      phone: '+1-555-0101',
+      gallery: [
+        'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=400',
+      ],
     },
     {
       id: 2,
@@ -54,6 +138,29 @@ export default function Home() {
       profession: 'Doctor',
       location: 'Los Angeles, USA',
       image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+      gender: 'Male',
+      height: '5\'10"',
+      religion: 'Buddhist',
+      caste: 'Not Applicable',
+      motherTongue: 'Mandarin',
+      maritalStatus: 'Never Married',
+      education: 'MD - Cardiology',
+      college: 'UCLA Medical School',
+      employedIn: 'Government/Public Sector',
+      income: '$150,000 per year',
+      familyType: 'Nuclear Family',
+      fatherOccupation: 'Professor',
+      motherOccupation: 'Doctor',
+      siblings: '1 Brother',
+      bio: 'Dedicated medical professional with a passion for helping others. Enjoy hiking, photography, and spending time with family. Seeking a life partner who values health, family, and personal growth.',
+      hobbies: ['Hiking', 'Photography', 'Music', 'Volunteering'],
+      email: 'michael.chen@email.com',
+      phone: '+1-555-0102',
+      gallery: [
+        'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1484810/pexels-photo-1484810.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=400',
+      ],
     },
     {
       id: 3,
@@ -62,6 +169,29 @@ export default function Home() {
       profession: 'Teacher',
       location: 'Mumbai, India',
       image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
+      gender: 'Female',
+      height: '5\'4"',
+      religion: 'Hindu',
+      caste: 'Brahmin',
+      motherTongue: 'Hindi',
+      maritalStatus: 'Never Married',
+      education: 'Bachelor of Education',
+      college: 'Delhi University',
+      employedIn: 'Private Sector',
+      income: '₹6,00,000 per year',
+      familyType: 'Joint Family',
+      fatherOccupation: 'Retired Government Officer',
+      motherOccupation: 'Homemaker',
+      siblings: '2 Brothers',
+      bio: 'Educator with a love for literature and arts. Believe in traditional values with a modern outlook. Looking for someone who respects family and values education.',
+      hobbies: ['Dancing', 'Painting', 'Reading', 'Gardening'],
+      email: 'priya.sharma@email.com',
+      phone: '+91-9876543210',
+      gallery: [
+        'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysrgb&w=400',
+      ],
     },
     {
       id: 4,
@@ -70,6 +200,29 @@ export default function Home() {
       profession: 'Architect',
       location: 'London, UK',
       image: 'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=400',
+      gender: 'Male',
+      height: '6\'0"',
+      religion: 'Christian',
+      caste: 'Not Specified',
+      motherTongue: 'English',
+      maritalStatus: 'Never Married',
+      education: 'Master\'s in Architecture',
+      college: 'University of Cambridge',
+      employedIn: 'Private Sector',
+      income: '£85,000 per year',
+      familyType: 'Nuclear Family',
+      fatherOccupation: 'Engineer',
+      motherOccupation: 'Teacher',
+      siblings: '1 Sister',
+      bio: 'Creative architect passionate about sustainable design. Love exploring new cultures and cuisines. Seeking an intelligent and caring partner to share life\'s adventures.',
+      hobbies: ['Sketching', 'Travel', 'Cycling', 'Photography'],
+      email: 'james.wilson@email.com',
+      phone: '+44-7700-900123',
+      gallery: [
+        'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
+      ],
     },
     {
       id: 5,
@@ -78,6 +231,29 @@ export default function Home() {
       profession: 'Marketing Manager',
       location: 'Toronto, Canada',
       image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
+      gender: 'Female',
+      height: '5\'5"',
+      religion: 'Catholic',
+      caste: 'Not Applicable',
+      motherTongue: 'Spanish',
+      maritalStatus: 'Never Married',
+      education: 'MBA in Marketing',
+      college: 'University of Toronto',
+      employedIn: 'Private Sector',
+      income: 'CAD 95,000 per year',
+      familyType: 'Nuclear Family',
+      fatherOccupation: 'Business Owner',
+      motherOccupation: 'Social Worker',
+      siblings: '1 Brother, 1 Sister',
+      bio: 'Dynamic professional with a creative mindset. Love fitness, fashion, and meaningful conversations. Looking for an ambitious partner who values family and personal growth.',
+      hobbies: ['Fitness', 'Fashion', 'Cooking', 'Traveling'],
+      email: 'emily.rodriguez@email.com',
+      phone: '+1-416-555-0105',
+      gallery: [
+        'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1070945/pexels-photo-1070945.jpeg?auto=compress&cs=tinysrgb&w=400',
+      ],
     },
     {
       id: 6,
@@ -86,6 +262,29 @@ export default function Home() {
       profession: 'Business Analyst',
       location: 'Singapore',
       image: 'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
+      gender: 'Male',
+      height: '5\'9"',
+      religion: 'Christian',
+      caste: 'Not Applicable',
+      motherTongue: 'Korean',
+      maritalStatus: 'Never Married',
+      education: 'Master\'s in Business Analytics',
+      college: 'National University of Singapore',
+      employedIn: 'Private Sector',
+      income: 'SGD 110,000 per year',
+      familyType: 'Nuclear Family',
+      fatherOccupation: 'Businessman',
+      motherOccupation: 'Accountant',
+      siblings: 'Single Child',
+      bio: 'Analytical thinker with a passion for data and technology. Enjoy sports, music, and exploring new restaurants. Seeking a compatible partner who is understanding and supportive.',
+      hobbies: ['Sports', 'Music', 'Gaming', 'Traveling'],
+      email: 'david.kim@email.com',
+      phone: '+65-9123-4567',
+      gallery: [
+        'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
+        'https://images.pexels.com/photos/1484810/pexels-photo-1484810.jpeg?auto=compress&cs=tinysrgb&w=400',
+      ],
     },
   ];
 
@@ -170,12 +369,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZWNkZDMiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAgMTBjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-10"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid lg:grid-cols-1 gap-8 lg:gap-12 items-center justify-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left Side - Text Content */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-4xl mx-auto text-center space-y-4 md:space-y-6"
+              className="space-y-4 md:space-y-6"
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -183,13 +383,13 @@ export default function Home() {
                 transition={{ delay: 0.2 }}
                 className="inline-flex items-center justify-center space-x-2 bg-white/95 backdrop-blur-md px-4 py-2 md:px-5 md:py-2.5 rounded-full shadow-xl border border-golden-200"
               >
-                <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-golden-600 flex-shrink-0" />
-                <span className="text-golden-700 text-xs sm:text-sm md:text-base font-semibold">
+                <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-red-600 flex-shrink-0" />
+                <span className="text-red-700 text-xs sm:text-sm md:text-base font-semibold">
                   Trusted by thousands of happy couples
                 </span>
               </motion.div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight drop-shadow-2xl px-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-2xl">
                 Find Your{' '}
                 <span className="block mt-2">
                   <RotatingWords 
@@ -199,73 +399,202 @@ export default function Home() {
                 </span>
               </h1>
               
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white leading-relaxed drop-shadow-lg px-6 max-w-3xl mx-auto font-medium">
+              <p className="text-base sm:text-lg md:text-xl text-white leading-relaxed drop-shadow-lg max-w-2xl font-medium">
                 Discover meaningful connections and begin your journey to eternal
                 happiness with someone special.
               </p>
+            </motion.div>
 
-              <div className="bg-white/95 backdrop-blur-sm p-4 md:p-6 rounded-2xl shadow-xl border border-golden-100 max-w-2xl mx-auto">
-                <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">
-                  Quick Partner Search
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
-                  <select
-                    className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
-                    value={searchData.gender}
-                    onChange={(e) =>
-                      setSearchData({ ...searchData, gender: e.target.value })
-                    }
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                  <select
-                    className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
-                    value={searchData.religion}
-                    onChange={(e) =>
-                      setSearchData({ ...searchData, religion: e.target.value })
-                    }
-                  >
-                    <option value="">Select Religion</option>
-                    <option value="christianity">Christianity</option>
-                    <option value="islam">Islam</option>
-                    <option value="hinduism">Hinduism</option>
-                    <option value="buddhism">Buddhism</option>
-                    <option value="other">Other</option>
-                  </select>
-                  <input
-                    type="number"
-                    placeholder="Age From"
-                    className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
-                    value={searchData.ageFrom}
-                    onChange={(e) =>
-                      setSearchData({ ...searchData, ageFrom: e.target.value })
-                    }
-                  />
-                  <input
-                    type="number"
-                    placeholder="Age To"
-                    className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
-                    value={searchData.ageTo}
-                    onChange={(e) =>
-                      setSearchData({ ...searchData, ageTo: e.target.value })
-                    }
-                  />
+            {/* Right Side - Quick Partner Search Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="bg-white/95 backdrop-blur-sm p-4 md:p-6 lg:p-8 rounded-2xl shadow-2xl border border-golden-100"
+            >
+              <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-800 mb-3 md:mb-4 lg:mb-6">
+                Quick Partner Search
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4 lg:mb-6">
+                <select
+                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
+                  value={searchData.gender}
+                  onChange={(e) =>
+                    setSearchData({ ...searchData, gender: e.target.value })
+                  }
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <select
+                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
+                  value={searchData.religion}
+                  onChange={(e) =>
+                    setSearchData({ ...searchData, religion: e.target.value })
+                  }
+                >
+                  <option value="">Select Religion</option>
+                  <option value="christianity">Christianity</option>
+                  <option value="islam">Islam</option>
+                  <option value="hinduism">Hinduism</option>
+                  <option value="buddhism">Buddhism</option>
+                  <option value="other">Other</option>
+                </select>
+                <input
+                  type="number"
+                  placeholder="Age From"
+                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
+                  value={searchData.ageFrom}
+                  onChange={(e) =>
+                    setSearchData({ ...searchData, ageFrom: e.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  placeholder="Age To"
+                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
+                  value={searchData.ageTo}
+                  onChange={(e) =>
+                    setSearchData({ ...searchData, ageTo: e.target.value })
+                  }
+                />
+              </div>
+              <Link href="/find-partner">
+                <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2.5 md:py-3 lg:py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base">
+                  <Search className="w-4 h-4 md:w-5 md:h-5" />
+                  <span>Search Now</span>
+                </button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Us Section */}
+      <section className="py-16 md:py-20 pb-8 md:pb-10 bg-gradient-to-br from-white via-golden-50/30 to-lavender-50/30 relative z-10 overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-golden-400 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-lavender-400 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12 md:mb-16"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center space-x-3 md:space-x-4 bg-red-50 px-8 md:px-12 py-4 md:py-6 rounded-full mb-6"
+            >
+              <Heart className="w-8 h-8 md:w-10 md:h-10 text-red-700" />
+              <span className="text-xl md:text-2xl lg:text-3xl font-bold text-red-700">About KalyanautsavaMat</span>
+            </motion.div>
+            
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 md:mb-6">
+              Where True Love{' '}
+              <span className="bg-gradient-to-r from-golden-500 to-golden-600 bg-clip-text text-transparent">
+                Begins
+              </span>
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              We're not just a matrimonial platform - we're your trusted partner in finding lifelong happiness
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-12 md:mb-16">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="space-y-6"
+            >
+              <div className="prose prose-lg">
+                <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                  Founded with a vision to revolutionize the way people find their life partners, 
+                  <span className="font-semibold text-golden-600"> KalyanautsavaMat</span> combines 
+                  cutting-edge technology with traditional values to create meaningful connections.
+                </p>
+                <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                  With over <span className="font-bold text-golden-600">15 years of experience</span>, 
+                  we've helped thousands of individuals discover their perfect match. Our advanced 
+                  matching algorithms, verified profiles, and dedicated support team ensure your 
+                  journey to finding love is safe, secure, and successful.
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 pt-4">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white p-4 rounded-xl shadow-md border border-golden-100"
+                >
+                  <div className="text-2xl font-bold text-golden-600 mb-1">100%</div>
+                  <div className="text-sm text-gray-600">Verified Profiles</div>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white p-4 rounded-xl shadow-md border border-golden-100"
+                >
+                  <div className="text-2xl font-bold text-golden-600 mb-1">24/7</div>
+                  <div className="text-sm text-gray-600">Support Available</div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="space-y-4"
+            >
+              <div className="bg-gradient-to-br from-golden-50 to-lavender-50 p-6 rounded-2xl border border-golden-100 shadow-lg">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-golden-500 to-golden-600 rounded-xl flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">Privacy & Security</h3>
+                    <p className="text-gray-600 text-sm">Your data is protected with bank-level encryption and strict privacy controls.</p>
+                  </div>
                 </div>
-                <Link href="/find-partner">
-                  <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2.5 md:py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base">
-                    <Search className="w-4 h-4 md:w-5 md:h-5" />
-                    <span>Search Now</span>
-                  </button>
-                </Link>
+              </div>
+
+              <div className="bg-gradient-to-br from-lavender-50 to-golden-50 p-6 rounded-2xl border border-lavender-100 shadow-lg">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">Verified Profiles</h3>
+                    <p className="text-gray-600 text-sm">All profiles are thoroughly verified to ensure authenticity and genuine connections.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-golden-50 to-white p-6 rounded-2xl border border-golden-100 shadow-lg">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-pink-500 to-red-500 rounded-xl flex items-center justify-center">
+                    <Heart className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">Success Stories</h3>
+                    <p className="text-gray-600 text-sm">Join thousands of happy couples who found their perfect match through our platform.</p>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      <section className="py-12 md:py-20 bg-white relative z-10">
+      <section className="pt-0 pb-12 md:pb-20 bg-gradient-to-br from-white via-golden-50/30 to-lavender-50/30 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {stats.map((stat, index) => (
@@ -294,7 +623,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-12 md:py-20 bg-gradient-to-b from-white to-golden-50 relative z-10">
+      <section className="py-12 md:py-20 relative z-10" style={{ backgroundColor: '#FFF9E7' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -330,7 +659,7 @@ export default function Home() {
               {[...featuredProfiles, ...featuredProfiles].map((profile, index) => (
                 <div
                   key={`${profile.id}-${index}`}
-                  className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-golden-100"
+                  className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-golden-100"
                 >
                   <div className="relative h-64 overflow-hidden">
                     <img
@@ -350,12 +679,11 @@ export default function Home() {
                       {profile.profession}
                     </p>
                     <p className="text-gray-500 text-sm">{profile.location}</p>
-                    <button 
-                      onClick={(e) => e.preventDefault()} 
-                      className="mt-4 w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 cursor-default"
-                    >
-                      View Profile
-                    </button>
+                    <Link href={`/profile/${profile.id}`}>
+                      <button className="mt-4 w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200">
+                        View Profile
+                      </button>
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -371,7 +699,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg border border-golden-100"
+                className="bg-white rounded-2xl overflow-hidden border border-golden-100"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -391,12 +719,11 @@ export default function Home() {
                     {profile.profession}
                   </p>
                   <p className="text-gray-500 text-xs mb-3">{profile.location}</p>
-                  <button 
-                    onClick={(e) => e.preventDefault()} 
-                    className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 text-sm rounded-lg hover:shadow-md transition-all duration-200 cursor-default"
-                  >
-                    View Profile
-                  </button>
+                  <Link href={`/profile/${profile.id}`}>
+                    <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 text-sm rounded-lg hover:shadow-md transition-all duration-200">
+                      View Profile
+                    </button>
+                  </Link>
                 </div>
               </motion.div>
             ))}
@@ -640,6 +967,132 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-12 md:py-20 bg-gradient-to-br from-lavender-50 via-white to-golden-50 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12 md:mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+              What Our Members{' '}
+              <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
+                Say
+              </span>
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
+              Hear from thousands of happy members who found their perfect match
+            </p>
+          </motion.div>
+
+          {/* Testimonial Slider */}
+          <div className="relative max-w-4xl mx-auto">
+            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-white shadow-2xl border border-golden-100">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentTestimonial}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                  className="p-6 sm:p-8 md:p-12 lg:p-16"
+                >
+                  {/* Quote Icon */}
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className="flex justify-center mb-4 md:mb-6"
+                  >
+                    <div className="bg-gradient-to-br from-golden-400 to-golden-600 p-3 md:p-4 rounded-full">
+                      <Quote className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                    </div>
+                  </motion.div>
+
+                  {/* Stars */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex justify-center gap-1 md:gap-2 mb-4 md:mb-6"
+                  >
+                    {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.4 + i * 0.1 }}
+                      >
+                        <Star className="w-5 h-5 md:w-6 md:h-6 text-golden-500 fill-golden-500" />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+
+                  {/* Content */}
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-gray-700 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-center mb-6 md:mb-8 italic px-2"
+                  >
+                    "{testimonials[currentTestimonial].content}"
+                  </motion.p>
+
+                  {/* Name and Role */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="text-center"
+                  >
+                    <h4 className="text-xl md:text-2xl font-bold text-gray-800 mb-1">
+                      {testimonials[currentTestimonial].name}
+                    </h4>
+                    <p className="text-golden-600 font-medium text-sm md:text-base">
+                      {testimonials[currentTestimonial].role}
+                    </p>
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Navigation Arrows */}
+              <button
+                onClick={prevTestimonial}
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 group"
+                aria-label="Previous testimonial"
+              >
+                <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-golden-600 group-hover:text-golden-700" />
+              </button>
+              <button
+                onClick={nextTestimonial}
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 group"
+                aria-label="Next testimonial"
+              >
+                <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-golden-600 group-hover:text-golden-700" />
+              </button>
+            </div>
+
+            {/* Dots Indicator */}
+            <div className="flex justify-center gap-2 mt-6 md:mt-8">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`transition-all duration-300 rounded-full ${
+                    index === currentTestimonial
+                      ? 'bg-golden-500 w-8 h-3'
+                      : 'bg-golden-200 w-3 h-3 hover:bg-golden-300'
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-12 md:py-20 bg-gradient-to-r from-golden-500 to-golden-500 relative z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
@@ -668,7 +1121,7 @@ export default function Home() {
 
       {/* FAQ Section */}
       <section className="py-12 md:py-20 bg-gradient-to-br from-gray-50 to-golden-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -683,7 +1136,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="space-y-3 md:space-y-4">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
             {[
               {
                 question: "How does KalyanautsavaMat work?",

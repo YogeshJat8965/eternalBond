@@ -42,7 +42,6 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/members', label: 'Members' },
-    { href: '/find-partner', label: 'Find Partner' },
     { href: '/stories', label: 'Success Stories' },
     { href: '/plans', label: 'Plans' },
     { href: '/contact', label: 'Contact' },

@@ -80,41 +80,24 @@ export default function AdminDashboard() {
 
   const stats = [
     { icon: Users, label: 'Total Users', value: '2543', change: '+12.5%', color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-50' },
-    { icon: Heart, label: 'Active Matches', value: '1234', change: '+8.2%', color: 'from-golden-500 to-golden-500', bgColor: 'bg-rose-50' },
     { icon: MessageSquare, label: 'Testimonials', value: '456', change: '+15.3%', color: 'from-purple-500 to-golden-500', bgColor: 'bg-purple-50' },
-    { icon: DollarSign, label: 'Revenue', value: '$45678', change: '+22.1%', color: 'from-green-500 to-emerald-500', bgColor: 'bg-green-50' },
     { icon: UserCheck, label: 'Premium Users', value: '892', change: '+18.7%', color: 'from-amber-500 to-orange-500', bgColor: 'bg-amber-50' },
     { icon: Mail, label: 'Contact Forms', value: '234', change: '+5.4%', color: 'from-indigo-500 to-purple-500', bgColor: 'bg-indigo-50' },
     { icon: Star, label: 'Success Stories', value: '89', change: '+10.2%', color: 'from-yellow-500 to-amber-500', bgColor: 'bg-yellow-50' },
-    { icon: TrendingUp, label: 'Engagement Rate', value: '76%', change: '+3.8%', color: 'from-teal-500 to-cyan-500', bgColor: 'bg-teal-50' },
-  ];
-
-  const recentUsers = [
-    { id: 1, name: 'Sarah Johnson', email: 'sarah@example.com', status: 'Active', joined: '2 hours ago', avatar: 'SJ' },
-    { id: 2, name: 'Michael Chen', email: 'michael@example.com', status: 'Active', joined: '5 hours ago', avatar: 'MC' },
-    { id: 3, name: 'Emma Wilson', email: 'emma@example.com', status: 'Pending', joined: '1 day ago', avatar: 'EW' },
-    { id: 4, name: 'David Brown', email: 'david@example.com', status: 'Active', joined: '2 days ago', avatar: 'DB' },
-    { id: 5, name: 'Lisa Anderson', email: 'lisa@example.com', status: 'Active', joined: '3 days ago', avatar: 'LA' },
-  ];
-
-  const recentActivity = [
-    { id: 1, action: 'New user registration', user: 'Sarah Johnson', time: '2 hours ago', type: 'user' },
-    { id: 2, action: 'Premium subscription purchased', user: 'Michael Chen', time: '4 hours ago', type: 'payment' },
-    { id: 3, action: 'New testimonial submitted', user: 'Emma Wilson', time: '6 hours ago', type: 'testimonial' },
-    { id: 4, action: 'Contact form submitted', user: 'David Brown', time: '8 hours ago', type: 'contact' },
-    { id: 5, action: 'Success story published', user: 'Lisa Anderson', time: '1 day ago', type: 'story' },
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1 className="text-3xl font-bold text-gray-800">Dashboard Overview</h1>
-        <p className="text-gray-600 mt-2">Welcome back! Here's what's happening today.</p>
-      </motion.div>
+    <div className="w-full flex justify-center items-start">
+      <div className="w-full max-w-6xl mx-auto px-4 py-6 space-y-6" style={{ marginLeft: '5%' }}>
+        {/* Page Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
+        >
+          <h1 className="text-3xl font-bold text-gray-800">Dashboard Overview</h1>
+          <p className="text-gray-600 mt-2">Welcome back! Here's what's happening today.</p>
+        </motion.div>
 
       {/* Quick Actions Section - MOVED TO TOP */}
       <motion.div
@@ -217,8 +200,8 @@ export default function AdminDashboard() {
             </motion.div>
           </Link>
 
-          {/* Payment Gateway */}
-          <Link href="/admin/payments">
+          {/* Payment Gateway - Commented for future use */}
+          {/* <Link href="/admin/payments">
             <motion.div
               whileHover={{ scale: 1.02, y: -4 }}
               whileTap={{ scale: 0.98 }}
@@ -233,7 +216,7 @@ export default function AdminDashboard() {
               <h4 className="font-semibold text-gray-800 mb-1">Payment Gateway</h4>
               <p className="text-sm text-gray-600">Configure payment methods</p>
             </motion.div>
-          </Link>
+          </Link> */}
 
           {/* Firebase Settings */}
           <Link href="/admin/firebase">
@@ -299,85 +282,6 @@ export default function AdminDashboard() {
           </motion.div>
         ))}
       </div>
-
-
-      {/* Recent Activity Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Users */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
-        >
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Recent Users</h3>
-          <div className="space-y-4">
-            {recentUsers.map((user, index) => (
-              <motion.div
-                key={user.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 + index * 0.05 }}
-                className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="w-12 h-12 bg-gradient-to-r from-golden-500 to-golden-500 rounded-full flex items-center justify-center text-white font-bold">
-                  {user.avatar}
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-gray-800">{user.name}</p>
-                  <p className="text-sm text-gray-600">{user.email}</p>
-                </div>
-                <div className="text-right">
-                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                    user.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                  }`}>
-                    {user.status}
-                  </span>
-                  <p className="text-xs text-gray-500 mt-1">{user.joined}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Recent Activity */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
-        >
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Recent Activity</h3>
-          <div className="space-y-4">
-            {recentActivity.map((activity, index) => (
-              <motion.div
-                key={activity.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.8 + index * 0.05 }}
-                className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  activity.type === 'user' ? 'bg-blue-100' :
-                  activity.type === 'payment' ? 'bg-green-100' :
-                  activity.type === 'testimonial' ? 'bg-purple-100' :
-                  activity.type === 'contact' ? 'bg-orange-100' : 'bg-pink-100'
-                }`}>
-                  {activity.type === 'user' && <Users className="w-5 h-5 text-blue-600" />}
-                  {activity.type === 'payment' && <DollarSign className="w-5 h-5 text-green-600" />}
-                  {activity.type === 'testimonial' && <MessageSquare className="w-5 h-5 text-purple-600" />}
-                  {activity.type === 'contact' && <Mail className="w-5 h-5 text-orange-600" />}
-                  {activity.type === 'story' && <Heart className="w-5 h-5 text-pink-600" />}
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-800">{activity.action}</p>
-                  <p className="text-sm text-gray-600">{activity.user}</p>
-                </div>
-                <span className="text-xs text-gray-500">{activity.time}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </div>
   );
