@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Filter, Heart, MapPin, Briefcase, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Filter, Heart, MapPin, Briefcase, X, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -9,6 +9,11 @@ export default function MembersPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
   const [burstingHeart, setBurstingHeart] = useState<number | null>(null);
+  const [notification, setNotification] = useState<{ show: boolean; message: string; name: string }>({
+    show: false,
+    message: '',
+    name: ''
+  });
   const [filters, setFilters] = useState({
     gender: '',
     ageFrom: '',
@@ -20,12 +25,24 @@ export default function MembersPage() {
     maritalStatus: '',
   });
 
-  const toggleLike = (memberId: number) => {
+  const showNotification = (name: string) => {
+    setNotification({ 
+      show: true, 
+      message: `You liked`, 
+      name: name 
+    });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', name: '' });
+    }, 3000);
+  };
+
+  const toggleLike = (memberId: number, memberName: string) => {
     if (likedProfiles.includes(memberId)) {
       setLikedProfiles(likedProfiles.filter((id) => id !== memberId));
     } else {
       setLikedProfiles([...likedProfiles, memberId]);
       setBurstingHeart(memberId);
+      showNotification(memberName);
       setTimeout(() => setBurstingHeart(null), 600);
     }
   };
@@ -115,6 +132,31 @@ export default function MembersPage() {
 
   return (
     <div className="min-h-screen pt-16 bg-gradient-to-b from-golden-50 to-white">
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification.show && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -50, x: '-50%' }}
+            className="fixed top-20 left-1/2 z-50 bg-white rounded-2xl shadow-2xl p-4 border-2 border-pink-200 min-w-[300px]"
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-pink-100 p-2 rounded-full">
+                <Heart className="w-6 h-6 text-pink-600 fill-pink-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-800 font-semibold text-sm">
+                  {notification.message} <span className="text-golden-600">{notification.name}</span>! 💕
+                </p>
+                <p className="text-gray-500 text-xs mt-0.5">Interest sent successfully</p>
+              </div>
+              <CheckCircle className="w-5 h-5 text-green-500" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -320,7 +362,7 @@ export default function MembersPage() {
                     {/* Heart button with burst animation */}
                     <div className="absolute top-4 right-4">
                       <motion.button
-                        onClick={() => toggleLike(member.id)}
+                        onClick={() => toggleLike(member.id, member.name)}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         className="relative bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg z-10"

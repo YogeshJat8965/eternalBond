@@ -91,10 +91,6 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
                   alt={profile.name}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span className="text-sm font-semibold text-gray-700">Verified</span>
-                </div>
               </div>
 
               {/* Gallery Thumbnails */}
