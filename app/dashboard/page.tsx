@@ -866,6 +866,20 @@ export default function DashboardPage() {
                   ))}
                 </div>
 
+                {/* Upgrade Plan Button */}
+                <div className="mt-8 text-center">
+                  <Link href="/plans">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-gradient-to-r from-golden-500 to-golden-600 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 inline-flex items-center gap-2"
+                    >
+                      <ShoppingCart className="w-5 h-5" />
+                      Upgrade Plan
+                    </motion.button>
+                  </Link>
+                </div>
+
                 {/* Empty State - if no purchases */}
                 {/* Uncomment this if you want to show empty state when there are no purchases
                 <div className="flex items-center justify-center py-12">
@@ -1011,15 +1025,15 @@ export default function DashboardPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100"
+                className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-pink-100"
               >
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">My Interests</h2>
-                <p className="text-gray-600 mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">My Interests</h2>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                   Interests you have sent to other members
                 </p>
 
                 {/* Interest List */}
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {[
                     { id: 1, userId: 'user_001', name: 'Priya Sharma', age: 26, profession: 'Software Engineer', location: 'Mumbai', status: 'Pending', photo: '/app/images/hand1.jpeg' },
                     { id: 2, userId: 'user_002', name: 'Anjali Patel', age: 25, profession: 'Doctor', location: 'Delhi', status: 'Accepted', photo: '/app/images/hand2.jpeg' },
@@ -1030,19 +1044,21 @@ export default function DashboardPage() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-gradient-to-r from-pink-50 to-white border border-pink-100 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
+                      className="bg-gradient-to-r from-pink-50 to-white border border-pink-100 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-golden-400 to-golden-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <User className="w-8 h-8 text-white" />
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                        <div className="flex items-center gap-3 flex-1">
+                          <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-golden-400 to-golden-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <User className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{interest.name}</h3>
+                            <p className="text-gray-600 text-xs sm:text-sm truncate">{interest.age} years • {interest.profession}</p>
+                            <p className="text-gray-500 text-xs sm:text-sm truncate">{interest.location}</p>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-bold text-gray-800">{interest.name}</h3>
-                          <p className="text-gray-600 text-sm">{interest.age} years • {interest.profession}</p>
-                          <p className="text-gray-500 text-sm">{interest.location}</p>
-                        </div>
-                        <div className="flex flex-col items-end gap-2">
-                          <span className={`px-4 py-1 rounded-full text-sm font-semibold ${
+                        <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
+                          <span className={`px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap ${
                             interest.status === 'Accepted' ? 'bg-green-100 text-green-700' :
                             interest.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
                             'bg-red-100 text-red-700'
@@ -1053,7 +1069,7 @@ export default function DashboardPage() {
                             <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
-                              className="text-golden-600 hover:text-golden-700 text-sm font-medium underline"
+                              className="text-golden-600 hover:text-golden-700 text-xs sm:text-sm font-medium underline whitespace-nowrap"
                             >
                               View Profile
                             </motion.button>
@@ -1084,44 +1100,44 @@ export default function DashboardPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100"
+                className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-pink-100"
               >
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Interest Requests</h2>
-                <p className="text-gray-600 mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">Interest Requests</h2>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                   Members who have shown interest in your profile
                 </p>
 
                 {/* Request List */}
                 {interestRequests.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {interestRequests.map((request, index) => (
                     <motion.div
                       key={request.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-gradient-to-r from-golden-50 to-white border border-golden-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
+                      className="bg-gradient-to-r from-golden-50 to-white border border-golden-200 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-golden-400 to-golden-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <User className="w-8 h-8 text-white" />
+                      <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-golden-400 to-golden-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <User className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                         </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-bold text-gray-800">{request.name}</h3>
-                          <p className="text-gray-600 text-sm">{request.age} years • {request.profession}</p>
-                          <p className="text-gray-500 text-sm">{request.location}</p>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{request.name}</h3>
+                          <p className="text-gray-600 text-xs sm:text-sm truncate">{request.age} years • {request.profession}</p>
+                          <p className="text-gray-500 text-xs sm:text-sm truncate">{request.location}</p>
                           <p className="text-gray-400 text-xs mt-1 flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             {request.time}
                           </p>
                         </div>
                       </div>
-                      <div className="flex gap-3">
+                      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                         <motion.button
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => handleAcceptInterest(request.id, request.name)}
-                          className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                          className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-2 sm:py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                           <CheckCircle className="w-4 h-4" />
                           Accept
@@ -1130,16 +1146,16 @@ export default function DashboardPage() {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => handleDeclineInterest(request.id, request.name)}
-                          className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                          className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 sm:py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                           <XCircle className="w-4 h-4" />
                           Decline
                         </motion.button>
-                        <Link href={`/profile/${request.userId}`}>
+                        <Link href={`/profile/${request.userId}`} className="flex-1 sm:flex-none">
                           <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="px-6 bg-golden-100 text-golden-700 py-2 rounded-lg font-semibold hover:bg-golden-200 transition-all"
+                            className="w-full px-4 sm:px-6 bg-golden-100 text-golden-700 py-2 sm:py-2.5 rounded-lg font-semibold hover:bg-golden-200 transition-all text-sm sm:text-base"
                           >
                             View Profile
                           </motion.button>
@@ -1149,13 +1165,13 @@ export default function DashboardPage() {
                   ))}
                 </div>
                 ) : (
-                  <div className="flex items-center justify-center py-12">
+                  <div className="flex items-center justify-center py-8 sm:py-12">
                     <div className="text-center">
-                      <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Heart className="w-12 h-12 text-golden-300" />
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-golden-300" />
                       </div>
-                      <p className="text-gray-500 font-medium">No interest requests</p>
-                      <p className="text-gray-400 text-sm mt-2">You haven't received any interest requests yet</p>
+                      <p className="text-gray-500 font-medium text-sm sm:text-base">No interest requests</p>
+                      <p className="text-gray-400 text-xs sm:text-sm mt-2">You haven't received any interest requests yet</p>
                     </div>
                   </div>
                 )}
@@ -1167,40 +1183,42 @@ export default function DashboardPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100"
+                className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-pink-100"
               >
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Ignored Members</h2>
-                <p className="text-gray-600 mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">Ignored Members</h2>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                   Members you have chosen to ignore
                 </p>
 
                 {/* Ignored List */}
                 {ignoredMembers.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {ignoredMembers.map((ignored, index) => (
                       <motion.div
                         key={ignored.id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="bg-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
+                        className="bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300"
                       >
-                        <div className="flex items-center gap-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
-                            <UserX className="w-8 h-8 text-white" />
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                          <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full sm:w-auto">
+                            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
+                              <UserX className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{ignored.name}</h3>
+                              <p className="text-gray-600 text-xs sm:text-sm truncate">{ignored.age} years • {ignored.profession}</p>
+                              <p className="text-gray-500 text-xs sm:text-sm truncate">{ignored.location}</p>
+                              <p className="text-gray-400 text-xs mt-1">Ignored on: {ignored.ignoredDate}</p>
+                            </div>
                           </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold text-gray-800">{ignored.name}</h3>
-                            <p className="text-gray-600 text-sm">{ignored.age} years • {ignored.profession}</p>
-                            <p className="text-gray-500 text-sm">{ignored.location}</p>
-                            <p className="text-gray-400 text-xs mt-1">Ignored on: {ignored.ignoredDate}</p>
-                          </div>
-                          <div className="flex gap-2">
+                          <div className="w-full sm:w-auto">
                             <motion.button
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
                               onClick={() => handleUnignoreMember(ignored.userId, ignored.name)}
-                              className="px-6 py-2 bg-golden-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                              className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 bg-golden-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm sm:text-base"
                             >
                               Unignore
                             </motion.button>
@@ -1210,12 +1228,12 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center py-12">
+                  <div className="flex items-center justify-center py-8 sm:py-12">
                     <div className="text-center">
-                      <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Ban className="w-12 h-12 text-gray-400" />
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Ban className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
                       </div>
-                      <p className="text-gray-500 font-medium">No ignored members</p>
+                      <p className="text-gray-500 font-medium text-sm sm:text-base">No ignored members</p>
                       <p className="text-gray-400 text-sm mt-2">You haven't ignored anyone yet</p>
                     </div>
                   </div>

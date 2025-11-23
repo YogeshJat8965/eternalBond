@@ -135,68 +135,119 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile Menu - Slide in from Right */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-golden-100"
-          >
-            <div className="px-4 py-4 space-y-3">
-              {navLinks.map((link) => (
+          <>
+            {/* Backdrop Overlay - Full Screen */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] lg:hidden"
+              onClick={() => setIsOpen(false)}
+            />
+
+            {/* Slide-in Menu from Right - Full Height */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-screen w-[280px] sm:w-[320px] bg-white shadow-2xl z-[101] lg:hidden overflow-y-auto"
+            >
+              {/* Header with Close Button */}
+              <div className="flex items-center justify-between p-6 border-b border-golden-100">
+                <Link href="/" onClick={() => setIsOpen(false)}>
+                  <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-golden-500 to-golden-600">
+                    Doitrocket
+                  </span>
+                </Link>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X className="w-6 h-6 text-gray-700" />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="px-6 py-8 space-y-1">
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  className="block text-gray-700 hover:text-golden-600 transition-colors duration-200 py-2"
+                  href="/"
+                  className="block text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-3 px-4 rounded-lg font-medium"
                   onClick={() => setIsOpen(false)}
                 >
-                  {link.label}
+                  Home
                 </Link>
-              ))}
-              
-              {isRegistered ? (
-                <>
+                
+                {navLinks.map((link) => (
                   <Link
-                    href="/dashboard"
-                    className="flex items-center space-x-2 text-gray-700 hover:text-golden-600 py-2"
+                    key={link.href}
+                    href={link.href}
+                    className="block text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-3 px-4 rounded-lg font-medium"
                     onClick={() => setIsOpen(false)}
                   >
-                    <LayoutDashboard className="w-4 h-4" />
+                    {link.label}
+                  </Link>
+                ))}
+
+                {isRegistered && (
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center space-x-3 text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-3 px-4 rounded-lg font-medium"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <LayoutDashboard className="w-5 h-5" />
                     <span>Dashboard</span>
                   </Link>
+                )}
+
+                <Link
+                  href="/contact"
+                  className="block text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-3 px-4 rounded-lg font-medium"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Contact
+                </Link>
+              </div>
+
+              {/* Bottom Action Buttons */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-golden-100 bg-gradient-to-t from-golden-50 to-white">
+                {isRegistered ? (
                   <button
                     onClick={() => {
                       handleLogout();
                       setIsOpen(false);
                     }}
-                    className="w-full flex items-center justify-center space-x-2 bg-golden-500 text-white px-6 py-2 rounded-full"
+                    className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-5 h-5" />
                     <span>Logout</span>
                   </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="block text-golden-600 py-2"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="block text-white px-6 py-2 rounded-full text-center"
-                    style={{ backgroundColor: '#EEC900' }}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Register
-                  </Link>
-                </>
-              )}
-            </div>
-          </motion.div>
+                ) : (
+                  <div className="space-y-3">
+                    <Link
+                      href="/login"
+                      className="block w-full text-center text-golden-600 border-2 border-golden-500 px-6 py-3 rounded-full hover:bg-golden-50 transition-all duration-200 font-medium"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="block w-full text-center text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium bg-gradient-to-r from-golden-500 to-golden-600"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Register
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>

@@ -98,7 +98,15 @@ export default function Footer() {
         <div className="border-t border-golden-100 mt-8 pt-8 text-center">
           <p className="text-gray-600 text-sm">
             © 2025 KalyanautsavaMat. All rights reserved. Made with{' '}
-            <Heart className="w-4 h-4 inline text-golden-500 fill-golden-500" /> for you.
+            <a 
+              href="https://doitrocket.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-golden-600 hover:text-golden-700 font-semibold underline transition-colors"
+            >
+              doitrocket
+            </a>
+            {' '}for you.
           </p>
         </div>
       </div>
