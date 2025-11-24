@@ -56,8 +56,8 @@ export default function ContactFormManagement() {
   };
 
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-full max-w-7xl px-4 space-y-6" style={{ marginLeft: '-8%' }}>
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white pt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <BackButton />
         
         {/* Toast Notification */}

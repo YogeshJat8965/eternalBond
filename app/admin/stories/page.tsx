@@ -117,7 +117,10 @@ export default function SuccessStoriesManagement() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white pt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <BackButton />
+        
       {/* Toast Notification */}
       <AnimatePresence>
         {toast && (
@@ -180,6 +183,7 @@ export default function SuccessStoriesManagement() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">S.No</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Preview</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Couple</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Wedding Date</th>
@@ -198,6 +202,9 @@ export default function SuccessStoriesManagement() {
                   transition={{ delay: 0.3 + index * 0.05 }}
                   className="hover:bg-gray-50 transition-colors"
                 >
+                  <td className="px-6 py-4">
+                    <span className="font-semibold text-gray-700">{index + 1}</span>
+                  </td>
                   <td className="px-6 py-4">
                     <div className="w-16 h-16 bg-gradient-to-r from-golden-500 to-golden-500 rounded-lg flex items-center justify-center text-3xl">
                       {story.image}
@@ -406,6 +413,7 @@ export default function SuccessStoriesManagement() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }

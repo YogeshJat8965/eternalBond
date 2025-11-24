@@ -120,8 +120,9 @@ export default function TestimonialManagement() {
   };
 
   return (
-    <div className="space-y-6">
-      <BackButton />
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white pt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <BackButton />
       
       {/* Toast Notification */}
       <AnimatePresence>
@@ -385,6 +386,7 @@ export default function TestimonialManagement() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }
