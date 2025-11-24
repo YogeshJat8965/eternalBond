@@ -361,9 +361,6 @@ export default function DashboardPage() {
   };
 
   const stats = [
-    { icon: Heart, label: 'Remaining Interests', value: '50', color: 'from-golden-400 to-golden-500', bgColor: 'bg-golden-50', textColor: 'text-golden-600' },
-    { icon: Eye, label: 'Remaining Contact View', value: '20', color: 'from-orange-400 to-orange-500', bgColor: 'bg-orange-50', textColor: 'text-orange-600' },
-    { icon: ImageIcon, label: 'Remaining Image Upload', value: '20', color: 'from-green-400 to-green-500', bgColor: 'bg-green-50', textColor: 'text-green-600' },
     { icon: List, label: 'Total Shortlisted', value: '0', color: 'from-purple-400 to-purple-500', bgColor: 'bg-purple-50', textColor: 'text-purple-600' },
     { icon: Heart, label: 'Interest Sent', value: '0', color: 'from-golden-400 to-rose-500', bgColor: 'bg-golden-50', textColor: 'text-golden-600' },
     { icon: Heart, label: 'Interest Requests', value: '0', color: 'from-amber-400 to-amber-500', bgColor: 'bg-amber-50', textColor: 'text-amber-600' },
