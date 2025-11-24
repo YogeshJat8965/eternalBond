@@ -87,13 +87,13 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="w-full flex justify-center items-start">
-      <div className="w-full max-w-6xl mx-auto px-4 py-6 space-y-6" style={{ marginLeft: '5%' }}>
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white pt-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center"
+          className="text-center mb-8"
         >
           <h1 className="text-3xl font-bold text-gray-800">Dashboard Overview</h1>
           <p className="text-gray-600 mt-2">Welcome back! Here's what's happening today.</p>
@@ -219,7 +219,7 @@ export default function AdminDashboard() {
           </Link> */}
 
           {/* Firebase Settings */}
-          <Link href="/admin/firebase">
+          {/* <Link href="/admin/firebase">
             <motion.div
               whileHover={{ scale: 1.02, y: -4 }}
               whileTap={{ scale: 0.98 }}
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
               <h4 className="font-semibold text-gray-800 mb-1">Firebase Settings</h4>
               <p className="text-sm text-gray-600">Configure integrations</p>
             </motion.div>
-          </Link>
+          </Link> */}
 
           {/* View Website */}
           <Link href="/" target="_blank">
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
       </motion.div>
 
       {/* Stats Grid with Animated Numbers - MOVED AFTER QUICK ACTIONS */}
-      <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
         {stats.map((stat, index) => (
           <motion.div
             key={stat.label}
@@ -271,9 +271,6 @@ export default function AdminDashboard() {
               <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center`}>
                 <stat.icon className="w-6 h-6 text-white" />
               </div>
-              <span className="text-green-600 text-sm font-semibold bg-green-100 px-2 py-1 rounded">
-                {stat.change}
-              </span>
             </div>
             <h3 className="text-3xl font-bold text-gray-800 mb-1">
               <AnimatedCounter value={stat.value} inView={isStatsInView} />

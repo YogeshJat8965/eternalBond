@@ -582,7 +582,7 @@ export default function DashboardPage() {
       </AnimatePresence>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8 lg:justify-center">
           {/* Sidebar */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -654,7 +654,7 @@ export default function DashboardPage() {
           </motion.div>
 
           {/* Main Content */}
-          <div className="flex-1">
+          <div className="flex-1 lg:max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
