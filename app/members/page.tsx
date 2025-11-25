@@ -25,6 +25,8 @@ export default function MembersPage() {
     profession: '',
     height: '',
     maritalStatus: '',
+    caste: '',
+    education: '',
   });
 
   const showNotification = (name: string) => {
@@ -255,6 +257,7 @@ export default function MembersPage() {
                     <option value="islam">Islam</option>
                     <option value="hinduism">Hinduism</option>
                     <option value="buddhism">Buddhism</option>
+                    <option value="sikhism">Sikhism</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
@@ -291,6 +294,48 @@ export default function MembersPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Caste
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter Caste"
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                    value={filters.caste}
+                    onChange={(e) =>
+                      setFilters({ ...filters, caste: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Education
+                  </label>
+                  <select
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                    value={filters.education}
+                    onChange={(e) =>
+                      setFilters({ ...filters, education: e.target.value })
+                    }
+                  >
+                    <option value="">{t('ALL')}</option>
+                    <option value="bachelors">Bachelor's Degree</option>
+                    <option value="masters">Master's Degree</option>
+                    <option value="phd">PhD</option>
+                    <option value="mbbs">MBBS</option>
+                    <option value="md">MD</option>
+                    <option value="btech">B.Tech</option>
+                    <option value="mtech">M.Tech</option>
+                    <option value="ca">CA (Chartered Accountant)</option>
+                    <option value="cs">CS (Company Secretary)</option>
+                    <option value="diploma">Diploma</option>
+                    <option value="12th">12th Pass</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     {t('MARITAL_STATUS')}
                   </label>
                   <select
@@ -321,11 +366,14 @@ export default function MembersPage() {
                       profession: '',
                       height: '',
                       maritalStatus: '',
+                      caste: '',
+                      education: '',
                     })
                   }
                   className="w-full bg-pink-100 text-golden-600 py-3 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200"
                 >
-                  {t('CLEAR_ALL_FILTERS')}\n                </button>
+                  {t('CLEAR_ALL_FILTERS')}
+                </button>
               </div>
             </div>
           </motion.div>
