@@ -1514,6 +1514,92 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
+                  {/* Personal & Physical Details */}
+                  <div className="bg-gradient-to-r from-purple-50 to-white border border-purple-200 rounded-xl p-6">
+                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                      <User className="w-5 h-5 text-purple-600" />
+                      Personal & Physical Details
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">Caste</label>
+                        <input
+                          type="text"
+                          placeholder="Enter Caste"
+                          className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">Sub Caste</label>
+                        <input
+                          type="text"
+                          placeholder="Enter Sub Caste"
+                          className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">Annual Income (₹)</label>
+                        <input
+                          type="text"
+                          placeholder="e.g., 5,00,000"
+                          className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">Height</label>
+                        <select className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent">
+                          <option value="">Select Height</option>
+                          <option value="4.5">4'5" (135 cm)</option>
+                          <option value="4.6">4'6" (137 cm)</option>
+                          <option value="4.7">4'7" (140 cm)</option>
+                          <option value="4.8">4'8" (142 cm)</option>
+                          <option value="4.9">4'9" (145 cm)</option>
+                          <option value="4.10">4'10" (147 cm)</option>
+                          <option value="4.11">4'11" (150 cm)</option>
+                          <option value="5.0">5'0" (152 cm)</option>
+                          <option value="5.1">5'1" (155 cm)</option>
+                          <option value="5.2">5'2" (157 cm)</option>
+                          <option value="5.3">5'3" (160 cm)</option>
+                          <option value="5.4">5'4" (163 cm)</option>
+                          <option value="5.5">5'5" (165 cm)</option>
+                          <option value="5.6">5'6" (168 cm)</option>
+                          <option value="5.7">5'7" (170 cm)</option>
+                          <option value="5.8">5'8" (173 cm)</option>
+                          <option value="5.9">5'9" (175 cm)</option>
+                          <option value="5.10">5'10" (178 cm)</option>
+                          <option value="5.11">5'11" (180 cm)</option>
+                          <option value="6.0">6'0" (183 cm)</option>
+                          <option value="6.1">6'1" (185 cm)</option>
+                          <option value="6.2">6'2" (188 cm)</option>
+                          <option value="6.3">6'3" (191 cm)</option>
+                          <option value="6.4">6'4" (193 cm)</option>
+                          <option value="6.5">6'5" (196 cm)</option>
+                          <option value="6.6">6'6" (198 cm)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">Complexion</label>
+                        <select className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent">
+                          <option value="">Select Complexion</option>
+                          <option value="fair">Fair</option>
+                          <option value="wheatish">Wheatish</option>
+                          <option value="medium">Medium</option>
+                          <option value="dark">Dark</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">Food Habits</label>
+                        <select className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent">
+                          <option value="">Select Food Habit</option>
+                          <option value="vegetarian">Vegetarian</option>
+                          <option value="non-vegetarian">Non-Vegetarian</option>
+                          <option value="eggetarian">Eggetarian</option>
+                          <option value="vegan">Vegan</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* About Me */}
                   <div className="bg-gradient-to-r from-blue-50 to-white border border-blue-100 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4">{t('ABOUT_ME')}</h3>

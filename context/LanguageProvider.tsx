@@ -44,7 +44,6 @@ const translations: Record<Lang, Record<string, string>> = {
     TRUE_LOVE: 'True Love',
     SOULMATE: 'Soulmate',
     FOREVER_PARTNER: 'Forever Partner',
-    AND_START_JOURNEY: 'and start your journey to eternal happiness.',
     HERO_SUB: 'Discover meaningful connections and begin your journey to eternal happiness with someone special.',
     QUICK_PARTNER_SEARCH: 'Quick Partner Search',
     SELECT_GENDER: 'Select Gender',
