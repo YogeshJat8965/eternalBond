@@ -31,8 +31,8 @@ export default function AdminHeader() {
               <span className="text-white font-bold text-lg">K</span>
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-gray-800">Admin Panel</h1>
-              <p className="text-xs text-gray-600">Kalyanautsava</p>
+              <h1 className="text-lg font-bold" style={{ color: '#B91C1C' }}>Admin Panel</h1>
+              <p className="text-xs" style={{ color: '#B91C1C' }}>Kalyanautsava</p>
             </div>
           </Link>
         </div>
@@ -44,7 +44,8 @@ export default function AdminHeader() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all"
+              className="hidden md:flex items-center space-x-2 px-4 py-2 rounded-lg hover:shadow-lg transition-all"
+              style={{ backgroundColor: '#B91C1C', color: 'white' }}
             >
               <ExternalLink className="w-4 h-4" />
               <span className="text-sm font-medium">View Website</span>
@@ -56,7 +57,8 @@ export default function AdminHeader() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="p-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all"
+              className="p-2 rounded-lg hover:shadow-lg transition-all"
+              style={{ backgroundColor: '#B91C1C', color: 'white' }}
             >
               <ExternalLink className="w-5 h-5" />
             </motion.button>
@@ -73,7 +75,7 @@ export default function AdminHeader() {
               <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
                 <User className="w-5 h-5 text-white" />
               </div>
-              <span className="hidden md:block text-sm font-medium text-gray-700">Admin</span>
+              <span className="hidden md:block text-sm font-medium" style={{ color: '#B91C1C' }}>Admin</span>
               <ChevronDown className="hidden md:block w-4 h-4 text-gray-600" />
             </motion.button>
 
