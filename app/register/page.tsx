@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Lock, Heart, ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import PetalAnimation from '@/components/animations/PetalAnimation';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/context/LanguageProvider';
@@ -178,11 +179,18 @@ export default function RegisterPage() {
           <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-golden-100">
             <div className="text-center mb-8">
               <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
+                animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 className="inline-block mb-4"
               >
-                <Heart className="w-16 h-16 text-red-500 fill-red-500 mx-auto" />
+                <Image 
+                  src="/images/Kalyanautsava Matrimony-01.png"
+                  alt="Kalyanautsava Logo"
+                  width={120}
+                  height={120}
+                  className="mx-auto"
+                  priority
+                />
               </motion.div>
 
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
