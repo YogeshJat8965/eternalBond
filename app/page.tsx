@@ -392,18 +392,17 @@ export default function Home() {
               </motion.div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-2xl">
-                {t('FIND_YOUR')}{' '}
+                <span className="block">{t('FIND_YOUR')}</span>
                 <span className="block mt-2">
                   <RotatingWords 
                     className="bg-gradient-to-r from-pink-400 to-pink-500 bg-clip-text text-transparent"
                     words={[t('PERFECT_MATCH'), t('TRUE_LOVE'), t('SOULMATE'), t('FOREVER_PARTNER')]}
                   />
                 </span>
+                <span className="block mt-2 text-3xl sm:text-4xl md:text-5xl lg:text-5xl">
+                  {t('AND_START_JOURNEY')}
+                </span>
               </h1>
-              
-              <p className="text-base sm:text-lg md:text-xl text-white leading-relaxed drop-shadow-lg max-w-2xl font-medium">
-                {t('HERO_SUB')}
-              </p>
             </motion.div>
 
             {/* Right Side - Quick Partner Search Card */}
@@ -1131,7 +1130,7 @@ export default function Home() {
             {[
               {
                 question: t('FAQ_Q1'),
-                answer: "KalyanautsavaMat uses advanced matching algorithms to connect compatible individuals based on their preferences, values, interests, and lifestyle. Simply create a profile, set your preferences, and start connecting with potential matches."
+                answer: "Kalyanautsava uses advanced matching algorithms to connect compatible individuals based on their preferences, values, interests, and lifestyle. Simply create a profile, set your preferences, and start connecting with potential matches."
               },
               {
                 question: t('FAQ_Q2'),

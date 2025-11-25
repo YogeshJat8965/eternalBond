@@ -155,8 +155,8 @@ export default function ContactPage() {
                       <h3 className="font-semibold text-gray-800 mb-1 text-sm sm:text-base">
                         {t('EMAIL_US')}
                       </h3>
-                      <p className="text-gray-600 text-xs sm:text-sm break-words">support@kalyanautsavamat.com</p>
-                      <p className="text-gray-600 text-xs sm:text-sm break-words">info@kalyanautsavamat.com</p>
+                      <p className="text-gray-600 text-xs sm:text-sm break-words">support@kalyanautsava.com</p>
+                      <p className="text-gray-600 text-xs sm:text-sm break-words">info@kalyanautsava.com</p>
                     </div>
                   </div>
 

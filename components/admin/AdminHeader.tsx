@@ -32,7 +32,7 @@ export default function AdminHeader() {
             </div>
             <div className="hidden sm:block">
               <h1 className="text-lg font-bold text-gray-800">Admin Panel</h1>
-              <p className="text-xs text-gray-600">KalyanautsavaMat</p>
+              <p className="text-xs text-gray-600">Kalyanautsava</p>
             </div>
           </Link>
         </div>

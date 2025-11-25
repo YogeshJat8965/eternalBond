@@ -69,7 +69,7 @@ export default function Navbar() {
             <Link href="/" className="flex items-center">
               <Image 
                 src="/images/logo.png" 
-                alt="KalyanautsavaMat Logo" 
+                alt="Kalyanautsava Logo" 
                 width={96} 
                 height={96}
                 className="object-contain w-16 h-16 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
@@ -82,7 +82,7 @@ export default function Navbar() {
           <div className="absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:translate-x-0 lg:flex-1">
             <Link href="/" className="block lg:ml-3">
               <span className="text-base sm:text-xl md:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text whitespace-nowrap" style={{ backgroundImage: 'linear-gradient(to right, #EEC900, #EEC900)' }}>
-                KalyanautsavaMat
+                Kalyanautsava
               </span>
             </Link>
           </div>
@@ -207,7 +207,7 @@ export default function Navbar() {
               <div className="flex items-center justify-between p-4 border-b border-golden-100">
                 <Link href="/" onClick={() => setIsOpen(false)}>
                   <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-golden-500 to-golden-600">
-                    KalyanautsavaMat
+                    Kalyanautsava
                   </span>
                 </Link>
                 <button

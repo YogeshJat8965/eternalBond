@@ -63,7 +63,7 @@ export default function AdminSidebar() {
             <h2 className="text-2xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
               Admin Panel
             </h2>
-            <p className="text-sm text-gray-600 mt-1">KalyanautsavaMat</p>
+            <p className="text-sm text-gray-600 mt-1">Kalyanautsava</p>
           </div>
 
           {/* Navigation */}

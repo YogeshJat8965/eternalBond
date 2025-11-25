@@ -12,7 +12,7 @@ type LangContextType = {
 
 const translations: Record<Lang, Record<string, string>> = {
   en: {
-    BRAND: 'KalyanautsavaMat',
+    BRAND: 'Kalyanautsava',
     HOME: 'Home',
     MEMBERS: 'Members',
     STORIES: 'Success Stories',
@@ -21,11 +21,12 @@ const translations: Record<Lang, Record<string, string>> = {
     DASHBOARD: 'Dashboard',
     LOGIN: 'Login',
     REGISTER: 'Register',
-    FIND_YOUR: 'Find your perfect match and start your journey to eternal happiness.',
+    FIND_YOUR: 'Find your',
+    AND_START_JOURNEY: 'and start your journey to eternal happiness.',
     QUICK_LINKS: 'Quick Links',
     SUPPORT: 'Support',
     CONNECT_WITH_US: 'Connect With Us',
-    COPYRIGHT: '© 2025 KalyanautsavaMat. All rights reserved. Made with',
+    COPYRIGHT: '© 2025 Kalyanautsava. All rights reserved. Made with',
     DOITROCKET: 'doitrocket',
     
     // Footer links
@@ -43,6 +44,7 @@ const translations: Record<Lang, Record<string, string>> = {
     TRUE_LOVE: 'True Love',
     SOULMATE: 'Soulmate',
     FOREVER_PARTNER: 'Forever Partner',
+    AND_START_JOURNEY: 'and start your journey to eternal happiness.',
     HERO_SUB: 'Discover meaningful connections and begin your journey to eternal happiness with someone special.',
     QUICK_PARTNER_SEARCH: 'Quick Partner Search',
     SELECT_GENDER: 'Select Gender',
@@ -50,7 +52,7 @@ const translations: Record<Lang, Record<string, string>> = {
     AGE_FROM: 'Age From',
     AGE_TO: 'Age To',
     SEARCH_NOW: 'Search Now',
-    ABOUT_TITLE: 'About KalyanautsavaMat',
+    ABOUT_TITLE: 'About Kalyanautsava',
     WHERE_TRUE_LOVE: 'Where True Love Begins',
     ABOUT_DESC: "We're not just a matrimonial platform - we're your trusted partner in finding lifelong happiness",
     FEATURED_PROFILES: 'Featured Profiles',
@@ -81,29 +83,29 @@ const translations: Record<Lang, Record<string, string>> = {
     HEAR_FROM_MEMBERS: 'Hear from thousands of happy members who found their perfect match',
     
     READY_FIND_SOULMATE: 'Ready to Find Your Soulmate?',
-    JOIN_HAPPY_COUPLES: 'Join thousands of happy couples who found love through KalyanautsavaMat',
+    JOIN_HAPPY_COUPLES: 'Join thousands of happy couples who found love through Kalyanautsava',
     GET_STARTED_NOW: 'Get Started Now',
     
     FAQ_TITLE: 'Frequently Asked Questions',
-    FAQ_SUBTITLE: 'Everything you need to know about KalyanautsavaMat',
+    FAQ_SUBTITLE: 'Everything you need to know about Kalyanautsava',
     STILL_HAVE_QUESTIONS: 'Still have questions?',
     CONTACT_SUPPORT: 'Contact Support',
-    FAQ_Q1: 'How does KalyanautsavaMat work?',
-    FAQ_Q2: 'Is KalyanautsavaMat free to use?',
+    FAQ_Q1: 'How does Kalyanautsava work?',
+    FAQ_Q2: 'Is Kalyanautsava free to use?',
     FAQ_Q3: 'How do I ensure my profile stands out?',
     FAQ_Q4: 'Is my information safe and secure?',
     FAQ_Q5: 'How long does it take to find a match?',
     FAQ_Q6: 'Can I cancel my subscription anytime?',
-    FAQ_Q7: 'What makes KalyanautsavaMat different from other platforms?',
+    FAQ_Q7: 'What makes Kalyanautsava different from other platforms?',
     FAQ_Q8: 'How do I verify my profile?',
     
     // Testimonials
     TESTIMONIAL_1_NAME: 'Sarah Mitchell',
-    TESTIMONIAL_1_CONTENT: 'KalyanautsavaMat changed my life! The platform is so easy to use, and the matches were spot-on. I met my husband within 3 months of joining. The verification process made me feel safe throughout my journey.',
+    TESTIMONIAL_1_CONTENT: 'Kalyanautsava changed my life! The platform is so easy to use, and the matches were spot-on. I met my husband within 3 months of joining. The verification process made me feel safe throughout my journey.',
     TESTIMONIAL_1_ROLE: 'Marketing Manager',
     
     TESTIMONIAL_2_NAME: 'Rahul Sharma',
-    TESTIMONIAL_2_CONTENT: 'After trying several matrimonial sites, KalyanautsavaMat stood out with its genuine profiles and excellent customer support. The video call feature helped us connect before meeting in person. Highly recommended!',
+    TESTIMONIAL_2_CONTENT: 'After trying several matrimonial sites, Kalyanautsava stood out with its genuine profiles and excellent customer support. The video call feature helped us connect before meeting in person. Highly recommended!',
     TESTIMONIAL_2_ROLE: 'Software Engineer',
     
     TESTIMONIAL_3_NAME: 'Maria Garcia',
@@ -124,40 +126,40 @@ const translations: Record<Lang, Record<string, string>> = {
     
     // Success Stories
     STORY_1_COUPLE: 'Emma & David',
-    STORY_1_TEXT: 'We met through KalyanautsavaMat and it was love at first sight!',
+    STORY_1_TEXT: 'We met through Kalyanautsava and it was love at first sight!',
     STORY_1_DATE: 'Married: June 2024',
     STORY_1_LOCATION: 'New York, USA',
-    STORY_1_FULL: 'We met on KalyanautsavaMat in early 2023, and from our very first conversation, we knew there was something special. David\'s sense of humor and Emma\'s warm personality clicked instantly. After months of video calls and meeting in person, we realized we had found our soulmate. Thank you KalyanautsavaMat for bringing us together!',
+    STORY_1_FULL: 'We met on Kalyanautsava in early 2023, and from our very first conversation, we knew there was something special. David\'s sense of humor and Emma\'s warm personality clicked instantly. After months of video calls and meeting in person, we realized we had found our soulmate. Thank you Kalyanautsava for bringing us together!',
     
     STORY_2_COUPLE: 'Sophia & Ryan',
     STORY_2_TEXT: 'Thanks for bringing us together. Best decision ever!',
     STORY_2_DATE: 'Married: March 2024',
     STORY_2_LOCATION: 'Los Angeles, USA',
-    STORY_2_FULL: 'Finding love felt impossible until we found KalyanautsavaMat. The platform\'s detailed matching system helped us discover each other despite living in different cities. Our first date was magical, and we haven\'t looked back since. We\'re now happily married and expecting our first child!',
+    STORY_2_FULL: 'Finding love felt impossible until we found Kalyanautsava. The platform\'s detailed matching system helped us discover each other despite living in different cities. Our first date was magical, and we haven\'t looked back since. We\'re now happily married and expecting our first child!',
     
     STORY_3_COUPLE: 'Aisha & Omar',
     STORY_3_TEXT: 'A perfect match made through perfect service. Highly recommended!',
     STORY_3_DATE: 'Married: December 2023',
     STORY_3_LOCATION: 'Dubai, UAE',
-    STORY_3_FULL: 'As busy professionals, we struggled to find time for dating. KalyanautsavaMat made it easy to connect with like-minded individuals. Omar\'s profile stood out immediately, and after our first coffee date, we knew we were meant to be. The journey from strangers to soulmates was beautiful.',
+    STORY_3_FULL: 'As busy professionals, we struggled to find time for dating. Kalyanautsava made it easy to connect with like-minded individuals. Omar\'s profile stood out immediately, and after our first coffee date, we knew we were meant to be. The journey from strangers to soulmates was beautiful.',
     
     STORY_4_COUPLE: 'Priya & Arjun',
-    STORY_4_TEXT: 'Our families are thrilled! We found our perfect match through KalyanautsavaMat.',
+    STORY_4_TEXT: 'Our families are thrilled! We found our perfect match through Kalyanautsava.',
     STORY_4_DATE: 'Married: August 2024',
     STORY_4_LOCATION: 'Mumbai, India',
-    STORY_4_FULL: 'Our families had been searching for the perfect match for us for years. When we both joined KalyanautsavaMat independently, we found each other within weeks. It felt like destiny. Our similar values, dreams, and aspirations aligned perfectly. We couldn\'t be happier!',
+    STORY_4_FULL: 'Our families had been searching for the perfect match for us for years. When we both joined Kalyanautsava independently, we found each other within weeks. It felt like destiny. Our similar values, dreams, and aspirations aligned perfectly. We couldn\'t be happier!',
     
     STORY_5_COUPLE: 'Isabella & Lucas',
-    STORY_5_TEXT: 'Distance was no barrier with KalyanautsavaMat. Now we\'re building our future together!',
+    STORY_5_TEXT: 'Distance was no barrier with Kalyanautsava. Now we\'re building our future together!',
     STORY_5_DATE: 'Married: February 2024',
     STORY_5_LOCATION: 'Barcelona, Spain',
-    STORY_5_FULL: 'Long-distance relationships are challenging, but KalyanautsavaMat gave us the tools to make it work. We video chatted for months before meeting in person, and when we finally did, it exceeded all expectations. Now we\'re building our life together in the same city!',
+    STORY_5_FULL: 'Long-distance relationships are challenging, but Kalyanautsava gave us the tools to make it work. We video chatted for months before meeting in person, and when we finally did, it exceeded all expectations. Now we\'re building our life together in the same city!',
     
     STORY_6_COUPLE: 'Yuki & Takeshi',
-    STORY_6_TEXT: 'From skeptics to believers! KalyanautsavaMat gave us our happily ever after.',
+    STORY_6_TEXT: 'From skeptics to believers! Kalyanautsava gave us our happily ever after.',
     STORY_6_DATE: 'Married: May 2024',
     STORY_6_LOCATION: 'Tokyo, Japan',
-    STORY_6_FULL: 'Both of us were skeptical about online matrimonial services, but KalyanautsavaMat changed our minds. The platform\'s emphasis on compatibility and shared values helped us find each other. Our wedding was a beautiful blend of tradition and modern love. Thank you for everything!',
+    STORY_6_FULL: 'Both of us were skeptical about online matrimonial services, but Kalyanautsava changed our minds. The platform\'s emphasis on compatibility and shared values helped us find each other. Our wedding was a beautiful blend of tradition and modern love. Thank you for everything!',
     
     PROFILE_1_NAME: 'Sarah Johnson',
     PROFILE_1_PROFESSION: 'Software Engineer',
@@ -259,7 +261,7 @@ const translations: Record<Lang, Record<string, string>> = {
     COMPLETE_REGISTRATION: 'Complete Registration',
     ALREADY_HAVE_ACCOUNT: 'Already have an account?',
     REGISTRATION_SUCCESSFUL: 'Registration Successful!',
-    WELCOME_TO: 'Welcome to KalyanautsavaMat',
+    WELCOME_TO: 'Welcome to Kalyanautsava',
     JOURNEY_BEGINS: 'Your journey begins now',
 
     // Members
@@ -293,7 +295,7 @@ const translations: Record<Lang, Record<string, string>> = {
     // Stories
     LOVE_STORIES_THAT: 'Love Stories That',
     INSPIRE_US: 'Inspire Us',
-    STORIES_SUBTITLE: 'Real couples, real love stories. Discover how KalyanautsavaMat helped thousands find their perfect match and begin their journey to eternal happiness.',
+    STORIES_SUBTITLE: 'Real couples, real love stories. Discover how Kalyanautsava helped thousands find their perfect match and begin their journey to eternal happiness.',
     MARRIED: 'Married:',
     READ_MORE: 'Read More',
 
@@ -533,7 +535,8 @@ const translations: Record<Lang, Record<string, string>> = {
     DASHBOARD: 'डैशबोर्ड',
     LOGIN: 'लॉगिन',
     REGISTER: 'रजिस्टर',
-    FIND_YOUR: 'अपना परफ़ेक्ट मैच खोजें और अपनी सुखी यात्रा शुरू करें।',
+    FIND_YOUR: 'अपना',
+    AND_START_JOURNEY: 'खोजें और शाश्वत सुख की यात्रा शुरू करें।',
     QUICK_LINKS: 'त्वरित लिंक्स',
     SUPPORT: 'समर्थन',
     CONNECT_WITH_US: 'हमसे जुड़ें',

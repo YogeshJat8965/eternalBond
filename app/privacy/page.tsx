@@ -40,7 +40,7 @@ export default function PrivacyPage() {
           <div className="prose prose-lg max-w-none">
             <div className="mb-8">
               <p className="text-gray-700 leading-relaxed">
-                At KalyanautsavaMat, we take your privacy seriously. This Privacy Policy explains
+                At Kalyanautsava, we take your privacy seriously. This Privacy Policy explains
                 how we collect, use, disclose, and safeguard your information when you use
                 our matrimonial service. Please read this privacy policy carefully.
               </p>
@@ -224,7 +224,7 @@ export default function PrivacyPage() {
                 </p>
                 <div className="mt-4 p-4 bg-rose-50 rounded-lg">
                   <p className="text-gray-700">
-                    <strong>Email:</strong> privacy@kalyanautsavamat.com
+                    <strong>Email:</strong> privacy@kalyanautsava.com
                     <br />
                     <strong>Phone:</strong> +1 (555) 123-4567
                     <br />

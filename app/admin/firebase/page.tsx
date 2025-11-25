@@ -23,7 +23,7 @@ export default function FirebaseSettings() {
       color: 'from-red-500 to-orange-500',
       clientId: 'google-client-id-************************',
       clientSecret: '************************',
-      callbackUrl: 'https://kalyanautsavamat.com/auth/google/callback'
+      callbackUrl: 'https://kalyanautsava.com/auth/google/callback'
     },
     {
       id: 2,
@@ -33,7 +33,7 @@ export default function FirebaseSettings() {
       color: 'from-blue-600 to-blue-700',
       clientId: 'facebook-app-id-************************',
       clientSecret: '************************',
-      callbackUrl: 'https://kalyanautsavamat.com/auth/facebook/callback'
+      callbackUrl: 'https://kalyanautsava.com/auth/facebook/callback'
     },
     {
       id: 3,
@@ -43,7 +43,7 @@ export default function FirebaseSettings() {
       color: 'from-sky-400 to-blue-500',
       clientId: 'twitter-api-key-************************',
       clientSecret: '************************',
-      callbackUrl: 'https://kalyanautsavamat.com/auth/twitter/callback'
+      callbackUrl: 'https://kalyanautsava.com/auth/twitter/callback'
     },
   ]);
 
@@ -351,7 +351,7 @@ export default function FirebaseSettings() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Auth Domain</label>
             <input
               type="text"
-              value="kalyanautsavamat-app.firebaseapp.com"
+              value="kalyanautsava-app.firebaseapp.com"
               readOnly
               className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm"
             />
@@ -361,7 +361,7 @@ export default function FirebaseSettings() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Project ID</label>
               <input
                 type="text"
-                value="kalyanautsavamat-app"
+                value="kalyanautsava-app"
                 readOnly
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm"
               />
@@ -370,7 +370,7 @@ export default function FirebaseSettings() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Storage Bucket</label>
               <input
                 type="text"
-                value="kalyanautsavamat-app.appspot.com"
+                value="kalyanautsava-app.appspot.com"
                 readOnly
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm"
               />

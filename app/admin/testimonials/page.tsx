@@ -23,11 +23,11 @@ export default function TestimonialManagement() {
   });
 
   const [testimonials, setTestimonials] = useState([
-    { id: 1, name: 'Sarah Johnson', position: 'Marketing Manager', company: 'Tech Corp', rating: 5, message: 'KalyanautsavaMat helped me find my perfect match! The platform is incredibly easy to use and the matches are very accurate.', image: 'SJ', date: '2024-10-15' },
-    { id: 2, name: 'Michael Chen', position: 'Software Engineer', company: 'StartupXYZ', rating: 5, message: 'I was skeptical at first, but KalyanautsavaMat exceeded all my expectations. Met my soulmate within 3 months!', image: 'MC', date: '2024-09-22' },
+    { id: 1, name: 'Sarah Johnson', position: 'Marketing Manager', company: 'Tech Corp', rating: 5, message: 'Kalyanautsava helped me find my perfect match! The platform is incredibly easy to use and the matches are very accurate.', image: 'SJ', date: '2024-10-15' },
+    { id: 2, name: 'Michael Chen', position: 'Software Engineer', company: 'StartupXYZ', rating: 5, message: 'I was skeptical at first, but Kalyanautsava exceeded all my expectations. Met my soulmate within 3 months!', image: 'MC', date: '2024-09-22' },
     { id: 3, name: 'Emma Wilson', position: 'Designer', company: 'Creative Studio', rating: 4, message: 'Great platform with genuine profiles. The customer service is outstanding and very helpful.', image: 'EW', date: '2024-11-01' },
     { id: 4, name: 'David Brown', position: 'Business Owner', company: 'Brown Enterprises', rating: 5, message: 'The best matrimonial site I have used. Found my life partner here. Highly recommended!', image: 'DB', date: '2024-08-10' },
-    { id: 5, name: 'Lisa Anderson', position: 'Doctor', company: 'City Hospital', rating: 5, message: 'Professional, secure, and effective. KalyanautsavaMat made my search for a life partner so much easier.', image: 'LA', date: '2024-10-28' },
+    { id: 5, name: 'Lisa Anderson', position: 'Doctor', company: 'City Hospital', rating: 5, message: 'Professional, secure, and effective. Kalyanautsava made my search for a life partner so much easier.', image: 'LA', date: '2024-10-28' },
     { id: 6, name: 'James Taylor', position: 'Teacher', company: 'Central School', rating: 4, message: 'Good experience overall. The matching algorithm is smart and the interface is user-friendly.', image: 'JT', date: '2024-09-05' },
   ]);
 

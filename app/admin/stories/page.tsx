@@ -22,11 +22,11 @@ export default function SuccessStoriesManagement() {
   });
 
   const [stories, setStories] = useState([
-    { id: 1, coupleName: 'Emma & David', weddingDate: '2024-06-15', story: 'We met on KalyanautsavaMat and instantly connected. After 6 months of wonderful conversations, we knew we were meant for each other. Our wedding was a dream come true!', location: 'New York, USA', image: '💑', featured: true },
-    { id: 2, coupleName: 'Sophia & Ryan', weddingDate: '2024-08-20', story: 'KalyanautsavaMat helped us find each other despite living in different cities. The matching algorithm was spot on! We are now happily married and planning our future together.', location: 'Los Angeles, USA', image: '💕', featured: true },
-    { id: 3, coupleName: 'Michael & Priya', weddingDate: '2024-05-10', story: 'A cross-cultural love story made possible by KalyanautsavaMat. We overcame all barriers and celebrated our love with family and friends from both sides.', location: 'London, UK', image: '💖', featured: false },
-    { id: 4, coupleName: 'James & Maria', weddingDate: '2024-09-03', story: 'After years of unsuccessful searching, KalyanautsavaMat brought us together. We connected on so many levels and our relationship blossomed naturally.', location: 'Chicago, USA', image: '❤️', featured: false },
-    { id: 5, coupleName: 'Alex & Sarah', weddingDate: '2024-07-12', story: 'We were both skeptical about online matrimonial sites, but KalyanautsavaMat changed our perspective. Found my soulmate and best friend for life!', location: 'Toronto, Canada', image: '💗', featured: true },
+    { id: 1, coupleName: 'Emma & David', weddingDate: '2024-06-15', story: 'We met on Kalyanautsava and instantly connected. After 6 months of wonderful conversations, we knew we were meant for each other. Our wedding was a dream come true!', location: 'New York, USA', image: '💑', featured: true },
+    { id: 2, coupleName: 'Sophia & Ryan', weddingDate: '2024-08-20', story: 'Kalyanautsava helped us find each other despite living in different cities. The matching algorithm was spot on! We are now happily married and planning our future together.', location: 'Los Angeles, USA', image: '💕', featured: true },
+    { id: 3, coupleName: 'Michael & Priya', weddingDate: '2024-05-10', story: 'A cross-cultural love story made possible by Kalyanautsava. We overcame all barriers and celebrated our love with family and friends from both sides.', location: 'London, UK', image: '💖', featured: false },
+    { id: 4, coupleName: 'James & Maria', weddingDate: '2024-09-03', story: 'After years of unsuccessful searching, Kalyanautsava brought us together. We connected on so many levels and our relationship blossomed naturally.', location: 'Chicago, USA', image: '❤️', featured: false },
+    { id: 5, coupleName: 'Alex & Sarah', weddingDate: '2024-07-12', story: 'We were both skeptical about online matrimonial sites, but Kalyanautsava changed our perspective. Found my soulmate and best friend for life!', location: 'Toronto, Canada', image: '💗', featured: true },
   ]);
 
   const filteredStories = stories.filter(story =>

@@ -24,7 +24,7 @@ export default function Footer() {
             <div className="flex items-center space-x-2 mb-4">
               <Image 
                 src="/images/logo.png" 
-                alt="KalyanautsavaMat Logo" 
+                alt="Kalyanautsava Logo" 
                 width={96} 
                 height={96}
                 className="object-contain"
