@@ -240,29 +240,66 @@ export default function Navbar() {
                   </Link>
                 ))}
 
-                {/* Mobile language options */}
-                <div className="mt-3 px-1">
-                  <div className="text-sm text-gray-500 px-3 mb-1">{t('LANGUAGE')}</div>
-                  <div className="flex space-x-2 px-3">
-                    <button
-                      onClick={() => {
-                        setLanguage('en');
-                        setIsOpen(false);
-                      }}
-                      className="px-3 py-2 rounded border border-golden-100 text-sm"
+                {/* Mobile language dropdown */}
+                <div className="mt-3">
+                  <button
+                    onClick={() => setShowLangMenu(!showLangMenu)}
+                    className="w-full flex items-center justify-between text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-2.5 px-4 rounded-lg font-medium"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Globe className="w-5 h-5" />
+                      <span>{language === 'en' ? 'English' : 'हिन्दी'}</span>
+                    </div>
+                    <motion.div
+                      animate={{ rotate: showLangMenu ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
                     >
-                      English
-                    </button>
-                    <button
-                      onClick={() => {
-                        setLanguage('hi');
-                        setIsOpen(false);
-                      }}
-                      className="px-3 py-2 rounded border border-golden-100 text-sm"
-                    >
-                      हिन्दी
-                    </button>
-                  </div>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </motion.div>
+                  </button>
+                  
+                  <AnimatePresence>
+                    {showLangMenu && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="mt-1 ml-4 space-y-1">
+                          <button
+                            onClick={() => {
+                              setLanguage('en');
+                              setShowLangMenu(false);
+                            }}
+                            className={`w-full text-left py-2 px-4 rounded-lg transition-all duration-200 ${
+                              language === 'en'
+                                ? 'bg-golden-100 text-golden-700 font-medium'
+                                : 'text-gray-600 hover:bg-golden-50'
+                            }`}
+                          >
+                            English
+                          </button>
+                          <button
+                            onClick={() => {
+                              setLanguage('hi');
+                              setShowLangMenu(false);
+                            }}
+                            className={`w-full text-left py-2 px-4 rounded-lg transition-all duration-200 ${
+                              language === 'hi'
+                                ? 'bg-golden-100 text-golden-700 font-medium'
+                                : 'text-gray-600 hover:bg-golden-50'
+                            }`}
+                          >
+                            हिन्दी
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {isRegistered && (

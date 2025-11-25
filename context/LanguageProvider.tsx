@@ -529,6 +529,8 @@ const translations: Record<Lang, Record<string, string>> = {
     CANCEL: 'Cancel',
     CHANGES_SAVED: 'Changes Saved!',
     PROFILE_UPDATED_SUCCESSFULLY: 'Your profile has been updated successfully.',
+    LANGUAGE: 'Language',
+    LOGOUT: 'Logout',
   },
   hi: {
     BRAND: 'कल्याणोत्सवमेट',
@@ -1047,6 +1049,8 @@ const translations: Record<Lang, Record<string, string>> = {
     CANCEL: 'रद्द करें',
     CHANGES_SAVED: 'परिवर्तन सहेजे गए!',
     PROFILE_UPDATED_SUCCESSFULLY: 'आपकी प्रोफ़ाइल सफलतापूर्वक अपडेट की गई है।',
+    LANGUAGE: 'भाषा',
+    LOGOUT: 'लॉगआउट',
   },
 };
 
