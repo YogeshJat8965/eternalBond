@@ -22,10 +22,11 @@ import heroSection3 from './images/heroSection3.jpg';
 export default function Home() {
   const { t } = useTranslation();
   const [searchData, setSearchData] = useState({
-    gender: '',
-    ageFrom: '',
-    ageTo: '',
-    religion: '',
+    lookingFor: '',
+    profession: '',
+    city: '',
+    caste: '',
+    maritalStatus: '',
   });
   const [hoveredStory, setHoveredStory] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -387,7 +388,7 @@ export default function Home() {
               >
                 <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-red-600 flex-shrink-0" />
                 <span className="text-red-700 text-xs sm:text-sm md:text-base font-semibold">
-                  {t('HERO_TAG')}
+                  Discover Your Forever
                 </span>
               </motion.div>
 
@@ -418,47 +419,55 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4 lg:mb-6">
                 <select
                   className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
-                  value={searchData.gender}
+                  value={searchData.lookingFor}
                   onChange={(e) =>
-                    setSearchData({ ...searchData, gender: e.target.value })
+                    setSearchData({ ...searchData, lookingFor: e.target.value })
                   }
                 >
-                  <option value="">{t('SELECT_GENDER')}</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="">Looking for</option>
+                  <option value="bride">Bride</option>
+                  <option value="groom">Groom</option>
                 </select>
+                <input
+                  type="text"
+                  placeholder="Profession"
+                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
+                  value={searchData.profession}
+                  onChange={(e) =>
+                    setSearchData({ ...searchData, profession: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="City"
+                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
+                  value={searchData.city}
+                  onChange={(e) =>
+                    setSearchData({ ...searchData, city: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Caste"
+                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
+                  value={searchData.caste}
+                  onChange={(e) =>
+                    setSearchData({ ...searchData, caste: e.target.value })
+                  }
+                />
                 <select
-                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
-                  value={searchData.religion}
+                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base sm:col-span-2"
+                  value={searchData.maritalStatus}
                   onChange={(e) =>
-                    setSearchData({ ...searchData, religion: e.target.value })
+                    setSearchData({ ...searchData, maritalStatus: e.target.value })
                   }
                 >
-                  <option value="">{t('SELECT_RELIGION')}</option>
-                  <option value="christianity">Christianity</option>
-                  <option value="islam">Islam</option>
-                  <option value="hinduism">Hinduism</option>
-                  <option value="buddhism">Buddhism</option>
-                  <option value="other">Other</option>
+                  <option value="">Marital Status</option>
+                  <option value="never-married">Never Married</option>
+                  <option value="divorced">Divorced</option>
+                  <option value="widowed">Widowed</option>
+                  <option value="awaiting-divorce">Awaiting Divorce</option>
                 </select>
-                <input
-                  type="number"
-                  placeholder={t('AGE_FROM')}
-                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
-                  value={searchData.ageFrom}
-                  onChange={(e) =>
-                    setSearchData({ ...searchData, ageFrom: e.target.value })
-                  }
-                />
-                <input
-                  type="number"
-                  placeholder={t('AGE_TO')}
-                  className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
-                  value={searchData.ageTo}
-                  onChange={(e) =>
-                    setSearchData({ ...searchData, ageTo: e.target.value })
-                  }
-                />
               </div>
               <Link href="/find-partner">
                 <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2.5 md:py-3 lg:py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base">

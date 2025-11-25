@@ -23,20 +23,17 @@ export default function Footer() {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <Image 
-                src="/images/logo.png" 
+                src="/images/Kalyanautsava Matrimony-01.png" 
                 alt="Kalyanautsava Logo" 
                 width={96} 
                 height={96}
                 className="object-contain"
                 priority
               />
-              <span className="text-xl font-bold text-golden-500">
+              <span className="text-xl font-bold text-red-700">
                 {t('BRAND')}
               </span>
             </div>
-            <p className="text-gray-600 text-sm">
-              {t('FIND_YOUR')}
-            </p>
           </div>
 
           <div>

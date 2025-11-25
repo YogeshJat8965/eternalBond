@@ -68,7 +68,7 @@ export default function Navbar() {
           <div className="flex items-center flex-shrink-0">
             <Link href="/" className="flex items-center">
               <Image 
-                src="/images/logo.png" 
+                src="/images/Kalyanautsava Matrimony-01.png" 
                 alt="Kalyanautsava Logo" 
                 width={96} 
                 height={96}
@@ -81,7 +81,7 @@ export default function Navbar() {
           {/* Brand Name in Center (Mobile and Up) */}
           <div className="absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:translate-x-0 lg:flex-1">
             <Link href="/" className="block lg:ml-3">
-              <span className="text-base sm:text-xl md:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text whitespace-nowrap" style={{ backgroundImage: 'linear-gradient(to right, #EEC900, #EEC900)' }}>
+              <span className="text-base sm:text-xl md:text-2xl lg:text-3xl font-bold text-red-700 whitespace-nowrap">
                 Kalyanautsava
               </span>
             </Link>
@@ -206,7 +206,7 @@ export default function Navbar() {
               {/* Header with Close Button */}
               <div className="flex items-center justify-between p-4 border-b border-golden-100">
                 <Link href="/" onClick={() => setIsOpen(false)}>
-                  <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-golden-500 to-golden-600">
+                  <span className="text-xl font-bold text-red-700">
                     Kalyanautsava
                   </span>
                 </Link>
