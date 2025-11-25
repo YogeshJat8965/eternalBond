@@ -4,8 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, Heart, MapPin, Briefcase, X, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/context/LanguageProvider';
 
 export default function MembersPage() {
+  const { t } = useTranslation();
   const [showFilters, setShowFilters] = useState(false);
   const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
   const [burstingHeart, setBurstingHeart] = useState<number | null>(null);
@@ -28,7 +30,7 @@ export default function MembersPage() {
   const showNotification = (name: string) => {
     setNotification({ 
       show: true, 
-      message: `You liked`, 
+      message: t('YOU_LIKED'), 
       name: name 
     });
     setTimeout(() => {
@@ -50,42 +52,42 @@ export default function MembersPage() {
   const members = [
     {
       id: 1,
-      name: 'Sarah Johnson',
+      name: t('PROFILE_1_NAME'),
       age: 28,
       height: "5'6\"",
-      profession: 'Software Engineer',
-      location: 'New York, USA',
-      religion: 'Christianity',
+      profession: t('PROFILE_1_PROFESSION'),
+      location: t('PROFILE_1_LOCATION'),
+      religion: t('RELIGION_CHRISTIANITY'),
       image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
     {
       id: 2,
-      name: 'Michael Chen',
+      name: t('PROFILE_2_NAME'),
       age: 32,
       height: "5'10\"",
-      profession: 'Doctor',
-      location: 'Los Angeles, USA',
-      religion: 'Buddhism',
+      profession: t('PROFILE_2_PROFESSION'),
+      location: t('PROFILE_2_LOCATION'),
+      religion: t('RELIGION_BUDDHISM'),
       image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
     {
       id: 3,
-      name: 'Priya Sharma',
+      name: t('PROFILE_3_NAME'),
       age: 26,
       height: "5'4\"",
-      profession: 'Teacher',
-      location: 'Mumbai, India',
-      religion: 'Hinduism',
+      profession: t('PROFILE_3_PROFESSION'),
+      location: t('PROFILE_3_LOCATION'),
+      religion: t('RELIGION_HINDUISM'),
       image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
     {
       id: 4,
-      name: 'James Wilson',
+      name: t('PROFILE_4_NAME'),
       age: 30,
       height: "6'0\"",
-      profession: 'Architect',
-      location: 'London, UK',
-      religion: 'Christianity',
+      profession: t('PROFILE_4_PROFESSION'),
+      location: t('PROFILE_4_LOCATION'),
+      religion: t('RELIGION_CHRISTIANITY'),
       image: 'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
     {
@@ -95,7 +97,7 @@ export default function MembersPage() {
       height: "5'5\"",
       profession: 'Marketing Manager',
       location: 'Dubai, UAE',
-      religion: 'Islam',
+      religion: t('RELIGION_ISLAM'),
       image: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
     {
@@ -105,27 +107,27 @@ export default function MembersPage() {
       height: "5'11\"",
       profession: 'Business Owner',
       location: 'Madrid, Spain',
-      religion: 'Christianity',
+      religion: t('RELIGION_CHRISTIANITY'),
       image: 'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
     {
       id: 7,
-      name: 'Yuki Tanaka',
+      name: t('PROFILE_7_NAME'),
       age: 29,
       height: "5'3\"",
-      profession: 'Graphic Designer',
-      location: 'Tokyo, Japan',
-      religion: 'Buddhism',
+      profession: t('PROFILE_7_PROFESSION'),
+      location: t('PROFILE_7_LOCATION'),
+      religion: t('RELIGION_BUDDHISM'),
       image: 'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
     {
       id: 8,
-      name: 'Omar Hassan',
+      name: t('PROFILE_8_NAME'),
       age: 31,
       height: "5'9\"",
-      profession: 'Civil Engineer',
-      location: 'Cairo, Egypt',
-      religion: 'Islam',
+      profession: t('PROFILE_8_PROFESSION'),
+      location: t('PROFILE_8_LOCATION'),
+      religion: t('RELIGION_ISLAM'),
       image: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=400',
     },
   ];
@@ -149,7 +151,7 @@ export default function MembersPage() {
                 <p className="text-gray-800 font-semibold text-sm">
                   {notification.message} <span className="text-golden-600">{notification.name}</span>! 💕
                 </p>
-                <p className="text-gray-500 text-xs mt-0.5">Interest sent successfully</p>
+                <p className="text-gray-500 text-xs mt-0.5">{t('INTEREST_SENT_SUCCESSFULLY')}</p>
               </div>
               <CheckCircle className="w-5 h-5 text-green-500" />
             </div>
@@ -164,13 +166,12 @@ export default function MembersPage() {
           className="mb-8"
         >
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Browse{' '}
             <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
-              Members
+              {t('BROWSE_MEMBERS')}
             </span>
           </h1>
           <p className="text-gray-600 text-lg">
-            Find your perfect match from {members.length} amazing profiles
+            {t('FIND_PROFILES_COUNT').replace('{count}', members.length.toString())}
           </p>
         </motion.div>
 
@@ -184,7 +185,7 @@ export default function MembersPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-2">
                   <Filter className="w-5 h-5 text-golden-600" />
-                  <h2 className="text-xl font-semibold text-gray-800">Filters</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">{t('FILTERS')}</h2>
                 </div>
                 <button
                   onClick={() => setShowFilters(false)}
@@ -197,7 +198,7 @@ export default function MembersPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Gender
+                    {t('GENDER')}
                   </label>
                   <select
                     className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
@@ -206,20 +207,20 @@ export default function MembersPage() {
                       setFilters({ ...filters, gender: e.target.value })
                     }
                   >
-                    <option value="">All</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="">{t('ALL')}</option>
+                    <option value="male">{t('MALE')}</option>
+                    <option value="female">{t('FEMALE')}</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Age Range
+                    {t('AGE_RANGE')}
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <input
                       type="number"
-                      placeholder="From"
+                      placeholder={t('FROM')}
                       className="px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                       value={filters.ageFrom}
                       onChange={(e) =>
@@ -228,7 +229,7 @@ export default function MembersPage() {
                     />
                     <input
                       type="number"
-                      placeholder="To"
+                      placeholder={t('TO')}
                       className="px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                       value={filters.ageTo}
                       onChange={(e) =>
@@ -240,7 +241,7 @@ export default function MembersPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Religion
+                    {t('RELIGION')}
                   </label>
                   <select
                     className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
@@ -249,7 +250,7 @@ export default function MembersPage() {
                       setFilters({ ...filters, religion: e.target.value })
                     }
                   >
-                    <option value="">All</option>
+                    <option value="">{t('ALL')}</option>
                     <option value="christianity">Christianity</option>
                     <option value="islam">Islam</option>
                     <option value="hinduism">Hinduism</option>
@@ -260,11 +261,11 @@ export default function MembersPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Location
+                    {t('LOCATION')}
                   </label>
                   <input
                     type="text"
-                    placeholder="City, Country"
+                    placeholder={t('CITY_COUNTRY')}
                     className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.location}
                     onChange={(e) =>
@@ -275,11 +276,11 @@ export default function MembersPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Profession
+                    {t('PROFESSION')}
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g., Engineer"
+                    placeholder={t('EG_ENGINEER')}
                     className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.profession}
                     onChange={(e) =>
@@ -290,7 +291,7 @@ export default function MembersPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Marital Status
+                    {t('MARITAL_STATUS')}
                   </label>
                   <select
                     className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
@@ -299,15 +300,15 @@ export default function MembersPage() {
                       setFilters({ ...filters, maritalStatus: e.target.value })
                     }
                   >
-                    <option value="">All</option>
-                    <option value="never-married">Never Married</option>
-                    <option value="divorced">Divorced</option>
-                    <option value="widowed">Widowed</option>
+                    <option value="">{t('ALL')}</option>
+                    <option value="never-married">{t('NEVER_MARRIED')}</option>
+                    <option value="divorced">{t('DIVORCED')}</option>
+                    <option value="widowed">{t('WIDOWED')}</option>
                   </select>
                 </div>
 
                 <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200">
-                  Apply Filters
+                  {t('APPLY_FILTERS')}
                 </button>
                 <button
                   onClick={() =>
@@ -324,8 +325,7 @@ export default function MembersPage() {
                   }
                   className="w-full bg-pink-100 text-golden-600 py-3 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200"
                 >
-                  Clear All
-                </button>
+                  {t('CLEAR_ALL_FILTERS')}\n                </button>
               </div>
             </div>
           </motion.div>
@@ -337,6 +337,7 @@ export default function MembersPage() {
                 className="w-full bg-white border border-golden-200 px-4 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-golden-50 transition-colors"
               >
                 <Filter className="w-5 h-5 text-golden-600" />
+                <span>{t('SHOW_FILTERS')}</span>
                 <span className="font-medium text-gray-700">Show Filters</span>
               </button>
             </div>
@@ -448,7 +449,7 @@ export default function MembersPage() {
                         whileTap={{ scale: 0.98 }}
                         className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
                       >
-                        View Profile
+                        {t('VIEW_PROFILE')}
                       </motion.button>
                     </Link>
                   </div>
@@ -464,7 +465,7 @@ export default function MembersPage() {
             >
               <div className="flex items-center space-x-2">
                 <button className="px-4 py-2 bg-pink-100 text-golden-600 rounded-lg hover:bg-pink-200 transition-colors">
-                  Previous
+                  {t('PREVIOUS')}
                 </button>
                 <button className="px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg">
                   1
@@ -476,7 +477,7 @@ export default function MembersPage() {
                   3
                 </button>
                 <button className="px-4 py-2 bg-pink-100 text-golden-600 rounded-lg hover:bg-pink-200 transition-colors">
-                  Next
+                  {t('NEXT')}
                 </button>
               </div>
             </motion.div>

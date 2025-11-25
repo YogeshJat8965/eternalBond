@@ -5,8 +5,10 @@ import { Mail, Lock, Heart } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
 import FloatingHearts from '@/components/animations/FloatingHearts';
+import { useTranslation } from '@/context/LanguageProvider';
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -42,17 +44,17 @@ export default function LoginPage() {
               </motion.div>
 
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                Welcome Back
+                {t('WELCOME_BACK')}
               </h1>
               <p className="text-gray-600">
-                Sign in to continue your journey to finding love
+                {t('SIGN_IN_SUB')}
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
+                  {t('EMAIL_ADDRESS')}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -103,14 +105,14 @@ export default function LoginPage() {
                     htmlFor="remember"
                     className="ml-2 text-sm text-gray-700"
                   >
-                    Remember me
+                    {t('REMEMBER_ME')}
                   </label>
                 </div>
                 <Link
                   href="/forgot-password"
                   className="text-sm text-golden-600 hover:text-golden-700"
                 >
-                  Forgot password?
+                  {t('FORGOT_PASSWORD')}
                 </Link>
               </div>
 
@@ -120,7 +122,7 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200"
               >
-                Sign In
+                {t('SIGN_IN')}
               </motion.button>
             </form>
 
@@ -131,7 +133,7 @@ export default function LoginPage() {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="px-4 bg-white text-gray-500">
-                    Or continue with
+                    {t('OR_CONTINUE_WITH')}
                   </span>
                 </div>
               </div>
@@ -149,18 +151,18 @@ export default function LoginPage() {
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                   </svg>
-                  <span className="text-gray-700 font-medium">Continue with Google</span>
+                  <span className="text-gray-700 font-medium">{t('CONTINUE_WITH_GOOGLE')}</span>
                 </motion.button>
               </div>
             </div>
 
             <p className="mt-8 text-center text-gray-600">
-              Don&apos;t have an account?{' '}
+              {t('DONT_HAVE_ACCOUNT')}{' '}
               <Link
                 href="/register"
                 className="text-golden-600 hover:text-golden-700 font-semibold"
               >
-                Sign up
+                {t('SIGN_UP')}
               </Link>
             </p>
           </div>

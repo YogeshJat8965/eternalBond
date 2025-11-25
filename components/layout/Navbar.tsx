@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Heart, Menu, X, LogOut, LayoutDashboard, Shield } from 'lucide-react';
+import { Heart, Menu, X, LogOut, LayoutDashboard, Shield, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -10,7 +10,20 @@ import Image from 'next/image';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const router = useRouter();
+  // translation
+  const { t, language, setLanguage } = (() => {
+    try {
+      // lazy require to avoid server import issues
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const ctx = require('@/context/LanguageProvider');
+      return ctx.useTranslation();
+    } catch (e) {
+      // fallback when not wrapped
+      return { t: (k: string) => k, language: 'en', setLanguage: (_: any) => {} } as any;
+    }
+  })();
 
   useEffect(() => {
     // Check if user is registered
@@ -41,10 +54,10 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: '/members', label: 'Members' },
-    { href: '/stories', label: 'Success Stories' },
-    { href: '/plans', label: 'Plans' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/members', label: t('MEMBERS') },
+    { href: '/stories', label: t('STORIES') },
+    { href: '/plans', label: t('PLANS') },
+    { href: '/contact', label: t('CONTACT') },
   ];
 
   return (
@@ -85,7 +98,40 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            
+            {/* Language selector */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLangMenu((s) => !s)}
+                className="flex items-center space-x-2 text-gray-700 hover:text-golden-600 transition-colors duration-200 font-medium p-2 rounded"
+                aria-label="Select language"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="uppercase text-sm">{language}</span>
+              </button>
+
+              {showLangMenu && (
+                <div className="absolute right-0 mt-2 w-36 bg-white border border-golden-100 rounded shadow-md z-50">
+                  <button
+                    onClick={() => {
+                      setLanguage('en');
+                      setShowLangMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-golden-50"
+                  >
+                    English
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguage('hi');
+                      setShowLangMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-golden-50"
+                  >
+                    हिन्दी
+                  </button>
+                </div>
+              )}
+            </div>
             {isRegistered ? (
               <>
                 <Link
@@ -93,14 +139,14 @@ export default function Navbar() {
                   className="flex items-center space-x-2 text-gray-700 hover:text-golden-600 transition-colors duration-200 font-medium"
                 >
                   <LayoutDashboard className="w-4 h-4" />
-                  <span>Dashboard</span>
+                  <span>{t('MENU_DASHBOARD')}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="flex items-center space-x-2 bg-golden-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
+                  <span>{t('LOGOUT')}</span>
                 </button>
               </>
             ) : (
@@ -109,14 +155,14 @@ export default function Navbar() {
                   href="/login"
                   className="text-golden-600 hover:text-golden-700 font-medium"
                 >
-                  Login
+                  {t('LOGIN')}
                 </Link>
                 <Link
                   href="/register"
                   className="text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200"
                   style={{ backgroundColor: '#EEC900' }}
                 >
-                  Register
+                  {t('REGISTER')}
                 </Link>
               </>
             )}
@@ -180,7 +226,7 @@ export default function Navbar() {
                   className="block text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-2.5 px-4 rounded-lg font-medium"
                   onClick={() => setIsOpen(false)}
                 >
-                  Home
+                  {t('HOME')}
                 </Link>
                 
                 {navLinks.map((link) => (
@@ -194,6 +240,31 @@ export default function Navbar() {
                   </Link>
                 ))}
 
+                {/* Mobile language options */}
+                <div className="mt-3 px-1">
+                  <div className="text-sm text-gray-500 px-3 mb-1">{t('LANGUAGE')}</div>
+                  <div className="flex space-x-2 px-3">
+                    <button
+                      onClick={() => {
+                        setLanguage('en');
+                        setIsOpen(false);
+                      }}
+                      className="px-3 py-2 rounded border border-golden-100 text-sm"
+                    >
+                      English
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLanguage('hi');
+                        setIsOpen(false);
+                      }}
+                      className="px-3 py-2 rounded border border-golden-100 text-sm"
+                    >
+                      हिन्दी
+                    </button>
+                  </div>
+                </div>
+
                 {isRegistered && (
                   <Link
                     href="/dashboard"
@@ -201,7 +272,7 @@ export default function Navbar() {
                     onClick={() => setIsOpen(false)}
                   >
                     <LayoutDashboard className="w-5 h-5" />
-                    <span>Dashboard</span>
+                    <span>{t('MENU_DASHBOARD')}</span>
                   </Link>
                 )}
               </div>
@@ -217,7 +288,7 @@ export default function Navbar() {
                     className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium"
                   >
                     <LogOut className="w-5 h-5" />
-                    <span>Logout</span>
+                    <span>{t('LOGOUT')}</span>
                   </button>
                 ) : (
                   <div className="space-y-3">
@@ -226,14 +297,14 @@ export default function Navbar() {
                       className="block w-full text-center text-golden-600 border-2 border-golden-500 px-6 py-3 rounded-full hover:bg-golden-50 transition-all duration-200 font-medium"
                       onClick={() => setIsOpen(false)}
                     >
-                      Login
+                      {t('LOGIN')}
                     </Link>
                     <Link
                       href="/register"
                       className="block w-full text-center text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium bg-gradient-to-r from-golden-500 to-golden-600"
                       onClick={() => setIsOpen(false)}
                     >
-                      Register
+                      {t('REGISTER')}
                     </Link>
                   </div>
                 )}

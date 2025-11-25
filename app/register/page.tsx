@@ -6,8 +6,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import PetalAnimation from '@/components/animations/PetalAnimation';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from '@/context/LanguageProvider';
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
@@ -123,14 +125,14 @@ export default function RegisterPage() {
                   transition={{ delay: 0.6 }}
                 >
                   <h2 className="text-3xl font-bold text-gray-800 mb-3">
-                    Registration Successful!
+                    {t('REGISTRATION_SUCCESSFUL')}
                   </h2>
                   <p className="text-gray-600 mb-4">
-                    Welcome to KalyanautsavaMat, {formData.name}!
+                    {t('WELCOME_TO')}, {formData.name}!
                   </p>
                   <div className="flex items-center justify-center space-x-2 text-green-600">
                     <Sparkles className="w-5 h-5" />
-                    <p className="font-semibold">Your journey begins now</p>
+                    <p className="font-semibold">{t('JOURNEY_BEGINS')}</p>
                     <Sparkles className="w-5 h-5" />
                   </div>
                 </motion.div>
@@ -184,10 +186,10 @@ export default function RegisterPage() {
               </motion.div>
 
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                Begin Your Journey
+                {t('BEGIN_JOURNEY')}
               </h1>
               <p className="text-gray-600">
-                Create your profile and find your perfect match
+                {t('CREATE_PROFILE_FIND_MATCH')}
               </p>
             </div>
 
@@ -229,12 +231,12 @@ export default function RegisterPage() {
                     className="space-y-6"
                   >
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                      Basic Information
+                      {t('BASIC_INFORMATION')}
                     </h2>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name
+                        {t('FULL_NAME')}
                       </label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -253,7 +255,7 @@ export default function RegisterPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address
+                        {t('EMAIL_ADDRESS')}
                       </label>
                       <div className="relative">
                         <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -273,7 +275,7 @@ export default function RegisterPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Gender
+                          {t('GENDER')}
                         </label>
                         <select
                           required
@@ -283,15 +285,15 @@ export default function RegisterPage() {
                             setFormData({ ...formData, gender: e.target.value })
                           }
                         >
-                          <option value="">Select</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
+                          <option value="">{t('SELECT')}</option>
+                          <option value="male">{t('MALE')}</option>
+                          <option value="female">{t('FEMALE')}</option>
                         </select>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Date of Birth
+                          {t('DATE_OF_BIRTH')}
                         </label>
                         <input
                           type="date"
@@ -319,12 +321,12 @@ export default function RegisterPage() {
                     className="space-y-6"
                   >
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                      Secure Your Account
+                      {t('SECURE_YOUR_ACCOUNT')}
                     </h2>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Password
+                        {t('PASSWORD')}
                       </label>
                       <div className="relative">
                         <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -340,13 +342,13 @@ export default function RegisterPage() {
                         />
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
-                        At least 8 characters with uppercase, lowercase, and numbers
+                        {t('PASSWORD_HINT')}
                       </p>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Confirm Password
+                        {t('CONFIRM_PASSWORD')}
                       </label>
                       <div className="relative">
                         <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -368,12 +370,12 @@ export default function RegisterPage() {
 
                     <div className="bg-rose-50 border border-rose-100 rounded-lg p-4">
                       <p className="text-sm text-gray-700">
-                        <strong>Security Tips:</strong>
+                        <strong>{t('SECURITY_TIPS')}</strong>
                       </p>
                       <ul className="text-sm text-gray-600 mt-2 space-y-1">
-                        <li>• Use a unique password you don&apos;t use elsewhere</li>
-                        <li>• Enable two-factor authentication after signing up</li>
-                        <li>• Never share your password with anyone</li>
+                        <li>{t('SECURITY_TIP_1')}</li>
+                        <li>{t('SECURITY_TIP_2')}</li>
+                        <li>{t('SECURITY_TIP_3')}</li>
                       </ul>
                     </div>
                   </motion.div>
@@ -388,13 +390,13 @@ export default function RegisterPage() {
                     className="space-y-6"
                   >
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                      Verify Your Email
+                      {t('VERIFY_YOUR_EMAIL')}
                     </h2>
 
                     <div className="bg-golden-50 border border-golden-200 rounded-lg p-6 text-center">
                       <Mail className="w-12 h-12 text-golden-600 mx-auto mb-4" />
                       <p className="text-gray-700 mb-2">
-                        We&apos;ve sent a verification code to
+                        {t('VERIFICATION_CODE_SENT')}
                       </p>
                       <p className="font-semibold text-gray-800 mb-4">
                         {formData.email}
@@ -403,7 +405,7 @@ export default function RegisterPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2 text-center">
-                        Enter 6-Digit Code
+                        {t('ENTER_6_DIGIT_CODE')}
                       </label>
                       <input
                         type="text"
@@ -419,12 +421,12 @@ export default function RegisterPage() {
                     </div>
 
                     <p className="text-center text-sm text-gray-600">
-                      Didn&apos;t receive the code?{' '}
+                      {t('DIDNT_RECEIVE_CODE')}{' '}
                       <button
                         type="button"
                         className="text-golden-600 hover:text-golden-700 font-semibold"
                       >
-                        Resend
+                        {t('RESEND')}
                       </button>
                     </p>
                   </motion.div>
@@ -441,7 +443,7 @@ export default function RegisterPage() {
                     className="flex-1 bg-pink-100 text-golden-600 py-4 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200 flex items-center justify-center space-x-2"
                   >
                     <ArrowLeft className="w-5 h-5" />
-                    <span>Back</span>
+                    <span>{t('BACK')}</span>
                   </motion.button>
                 )}
 
@@ -453,7 +455,7 @@ export default function RegisterPage() {
                     onClick={handleNext}
                     className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
                   >
-                    <span>Continue</span>
+                    <span>{t('CONTINUE')}</span>
                     <ArrowRight className="w-5 h-5" />
                   </motion.button>
                 ) : (
@@ -464,19 +466,19 @@ export default function RegisterPage() {
                     className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
                   >
                     <Check className="w-5 h-5" />
-                    <span>Complete Registration</span>
+                    <span>{t('COMPLETE_REGISTRATION')}</span>
                   </motion.button>
                 )}
               </div>
             </form>
 
             <p className="mt-8 text-center text-gray-600">
-              Already have an account?{' '}
+              {t('ALREADY_HAVE_ACCOUNT')}{' '}
               <Link
                 href="/login"
                 className="text-golden-600 hover:text-golden-700 font-semibold"
               >
-                Sign in
+                {t('SIGN_IN')}
               </Link>
             </p>
           </div>

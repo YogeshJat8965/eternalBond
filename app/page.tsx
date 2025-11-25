@@ -1,10 +1,11 @@
-'use client';
+ 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, Users, Award, ArrowRight, Sparkles, Quote, ChevronLeft, ChevronRight, Star, Shield } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslation } from '@/context/LanguageProvider';
 import FloatingHearts from '@/components/animations/FloatingHearts';
 import RotatingWords from '@/components/animations/RotatingWords';
 import CounterAnimation from '@/components/animations/CounterAnimation';
@@ -19,6 +20,7 @@ import heroSection2 from './images/heroSection2.jpg';
 import heroSection3 from './images/heroSection3.jpg';
 
 export default function Home() {
+  const { t } = useTranslation();
   const [searchData, setSearchData] = useState({
     gender: '',
     ageFrom: '',
@@ -32,45 +34,45 @@ export default function Home() {
   const testimonials = [
     {
       id: 1,
-      name: 'Sarah Mitchell',
-      content: 'KalyanautsavaMat changed my life! The platform is so easy to use, and the matches were spot-on. I met my husband within 3 months of joining. The verification process made me feel safe throughout my journey.',
+      name: t('TESTIMONIAL_1_NAME'),
+      content: t('TESTIMONIAL_1_CONTENT'),
       rating: 5,
-      role: 'Marketing Manager',
+      role: t('TESTIMONIAL_1_ROLE'),
     },
     {
       id: 2,
-      name: 'Rahul Sharma',
-      content: 'After trying several matrimonial sites, KalyanautsavaMat stood out with its genuine profiles and excellent customer support. The video call feature helped us connect before meeting in person. Highly recommended!',
+      name: t('TESTIMONIAL_2_NAME'),
+      content: t('TESTIMONIAL_2_CONTENT'),
       rating: 5,
-      role: 'Software Engineer',
+      role: t('TESTIMONIAL_2_ROLE'),
     },
     {
       id: 3,
-      name: 'Maria Garcia',
-      content: 'I was skeptical at first, but the detailed personality matching and compatibility tests really work! Found someone who shares my values and dreams. Thank you for making the search so meaningful and stress-free.',
+      name: t('TESTIMONIAL_3_NAME'),
+      content: t('TESTIMONIAL_3_CONTENT'),
       rating: 5,
-      role: 'Teacher',
+      role: t('TESTIMONIAL_3_ROLE'),
     },
     {
       id: 4,
-      name: 'Ahmed Hassan',
-      content: 'The privacy features and family involvement options made this the perfect platform for our community. My parents were able to participate in the process, which was very important to us. Excellent service!',
+      name: t('TESTIMONIAL_4_NAME'),
+      content: t('TESTIMONIAL_4_CONTENT'),
       rating: 5,
-      role: 'Business Owner',
+      role: t('TESTIMONIAL_4_ROLE'),
     },
     {
       id: 5,
-      name: 'Emily Chen',
-      content: 'Best investment I ever made! The premium features are worth every penny. The personalized matchmaking service understood exactly what I was looking for. Met my soulmate and couldn\'t be happier!',
+      name: t('TESTIMONIAL_5_NAME'),
+      content: t('TESTIMONIAL_5_CONTENT'),
       rating: 5,
-      role: 'Doctor',
+      role: t('TESTIMONIAL_5_ROLE'),
     },
     {
       id: 6,
-      name: 'James Wilson',
-      content: 'Clean interface, real people, and great success rate. What more could you ask for? The team is responsive and genuinely cares about helping people find love. This platform exceeded all my expectations!',
+      name: t('TESTIMONIAL_6_NAME'),
+      content: t('TESTIMONIAL_6_CONTENT'),
       rating: 5,
-      role: 'Architect',
+      role: t('TESTIMONIAL_6_ROLE'),
     },
   ];
 
@@ -102,10 +104,10 @@ export default function Home() {
   const featuredProfiles = [
     {
       id: 1,
-      name: 'Sarah Johnson',
+      name: t('PROFILE_1_NAME'),
       age: 28,
-      profession: 'Software Engineer',
-      location: 'New York, USA',
+      profession: t('PROFILE_1_PROFESSION'),
+      location: t('PROFILE_1_LOCATION'),
       image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
       gender: 'Female',
       height: '5\'6"',
@@ -133,10 +135,10 @@ export default function Home() {
     },
     {
       id: 2,
-      name: 'Michael Chen',
+      name: t('PROFILE_2_NAME'),
       age: 32,
-      profession: 'Doctor',
-      location: 'Los Angeles, USA',
+      profession: t('PROFILE_2_PROFESSION'),
+      location: t('PROFILE_2_LOCATION'),
       image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
       gender: 'Male',
       height: '5\'10"',
@@ -164,10 +166,10 @@ export default function Home() {
     },
     {
       id: 3,
-      name: 'Priya Sharma',
+      name: t('PROFILE_3_NAME'),
       age: 26,
-      profession: 'Teacher',
-      location: 'Mumbai, India',
+      profession: t('PROFILE_3_PROFESSION'),
+      location: t('PROFILE_3_LOCATION'),
       image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
       gender: 'Female',
       height: '5\'4"',
@@ -195,10 +197,10 @@ export default function Home() {
     },
     {
       id: 4,
-      name: 'James Wilson',
+      name: t('PROFILE_4_NAME'),
       age: 30,
-      profession: 'Architect',
-      location: 'London, UK',
+      profession: t('PROFILE_4_PROFESSION'),
+      location: t('PROFILE_4_LOCATION'),
       image: 'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=400',
       gender: 'Male',
       height: '6\'0"',
@@ -226,10 +228,10 @@ export default function Home() {
     },
     {
       id: 5,
-      name: 'Emily Rodriguez',
+      name: t('PROFILE_5_NAME'),
       age: 29,
-      profession: 'Marketing Manager',
-      location: 'Toronto, Canada',
+      profession: t('PROFILE_5_PROFESSION'),
+      location: t('PROFILE_5_LOCATION'),
       image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
       gender: 'Female',
       height: '5\'5"',
@@ -257,10 +259,10 @@ export default function Home() {
     },
     {
       id: 6,
-      name: 'David Kim',
+      name: t('PROFILE_6_NAME'),
       age: 31,
-      profession: 'Business Analyst',
-      location: 'Singapore',
+      profession: t('PROFILE_6_PROFESSION'),
+      location: t('PROFILE_6_LOCATION'),
       image: 'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
       gender: 'Male',
       height: '5\'9"',
@@ -289,40 +291,40 @@ export default function Home() {
   ];
 
   const stats = [
-    { icon: Users, label: 'Active Members', value: 50, suffix: 'K+' },
-    { icon: Heart, label: 'Success Stories', value: 10, suffix: 'K+' },
-    { icon: Award, label: 'Years of Trust', value: 15, suffix: '+' },
+    { icon: Users, label: t('STATS_ACTIVE_MEMBERS'), value: 50, suffix: 'K+' },
+    { icon: Heart, label: t('STATS_SUCCESS_STORIES'), value: 10, suffix: 'K+' },
+    { icon: Award, label: t('STATS_YEARS_TRUST'), value: 15, suffix: '+' },
   ];
 
   const successStories = [
     {
-      couple: 'Emma & David',
-      story: 'We found each other through KalyanautsavaMat and it was love at first sight!',
+      couple: t('STORY_1_COUPLE'),
+      story: t('STORY_1_TEXT'),
       image: emmaAndDavid,
     },
     {
-      couple: 'Sophia & Ryan',
-      story: 'Thank you for bringing us together. Best decision we ever made!',
+      couple: t('STORY_2_COUPLE'),
+      story: t('STORY_2_TEXT'),
       image: sophiaAndRyan,
     },
     {
-      couple: 'Aisha & Omar',
-      story: 'A perfect match made through perfect service. Highly recommended!',
+      couple: t('STORY_3_COUPLE'),
+      story: t('STORY_3_TEXT'),
       image: aishaAndOmar,
     },
     {
-      couple: 'Priya & Arjun',
-      story: 'Our families are thrilled! We found our perfect match through KalyanautsavaMat.',
+      couple: t('STORY_4_COUPLE'),
+      story: t('STORY_4_TEXT'),
       image: priyaAndArjun,
     },
     {
-      couple: 'Isabella & Lucas',
-      story: 'Distance was no barrier with KalyanautsavaMat. Now we\'re building our future together!',
+      couple: t('STORY_5_COUPLE'),
+      story: t('STORY_5_TEXT'),
       image: isabellaAndLucas,
     },
     {
-      couple: 'Yuki & Takeshi',
-      story: 'From skeptics to believers! KalyanautsavaMat gave us our happily ever after.',
+      couple: t('STORY_6_COUPLE'),
+      story: t('STORY_6_TEXT'),
       image: yukiAndTakeshi,
     },
   ];
@@ -385,23 +387,22 @@ export default function Home() {
               >
                 <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-red-600 flex-shrink-0" />
                 <span className="text-red-700 text-xs sm:text-sm md:text-base font-semibold">
-                  Trusted by thousands of happy couples
+                  {t('HERO_TAG')}
                 </span>
               </motion.div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-2xl">
-                Find Your{' '}
+                {t('FIND_YOUR')}{' '}
                 <span className="block mt-2">
                   <RotatingWords 
                     className="bg-gradient-to-r from-pink-400 to-pink-500 bg-clip-text text-transparent"
-                    words={['Perfect Match', 'True Love', 'Soulmate', 'Forever Partner']}
+                    words={[t('PERFECT_MATCH'), t('TRUE_LOVE'), t('SOULMATE'), t('FOREVER_PARTNER')]}
                   />
                 </span>
               </h1>
               
               <p className="text-base sm:text-lg md:text-xl text-white leading-relaxed drop-shadow-lg max-w-2xl font-medium">
-                Discover meaningful connections and begin your journey to eternal
-                happiness with someone special.
+                {t('HERO_SUB')}
               </p>
             </motion.div>
 
@@ -413,7 +414,7 @@ export default function Home() {
               className="bg-white/95 backdrop-blur-sm p-4 md:p-6 lg:p-8 rounded-2xl shadow-2xl border border-golden-100"
             >
               <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-800 mb-3 md:mb-4 lg:mb-6">
-                Quick Partner Search
+                {t('QUICK_PARTNER_SEARCH')}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4 lg:mb-6">
                 <select
@@ -423,7 +424,7 @@ export default function Home() {
                     setSearchData({ ...searchData, gender: e.target.value })
                   }
                 >
-                  <option value="">Select Gender</option>
+                  <option value="">{t('SELECT_GENDER')}</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
@@ -434,7 +435,7 @@ export default function Home() {
                     setSearchData({ ...searchData, religion: e.target.value })
                   }
                 >
-                  <option value="">Select Religion</option>
+                  <option value="">{t('SELECT_RELIGION')}</option>
                   <option value="christianity">Christianity</option>
                   <option value="islam">Islam</option>
                   <option value="hinduism">Hinduism</option>
@@ -443,7 +444,7 @@ export default function Home() {
                 </select>
                 <input
                   type="number"
-                  placeholder="Age From"
+                  placeholder={t('AGE_FROM')}
                   className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
                   value={searchData.ageFrom}
                   onChange={(e) =>
@@ -452,7 +453,7 @@ export default function Home() {
                 />
                 <input
                   type="number"
-                  placeholder="Age To"
+                  placeholder={t('AGE_TO')}
                   className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
                   value={searchData.ageTo}
                   onChange={(e) =>
@@ -463,7 +464,7 @@ export default function Home() {
               <Link href="/find-partner">
                 <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2.5 md:py-3 lg:py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base">
                   <Search className="w-4 h-4 md:w-5 md:h-5" />
-                  <span>Search Now</span>
+                  <span>{t('SEARCH_NOW')}</span>
                 </button>
               </Link>
             </motion.div>
@@ -479,31 +480,28 @@ export default function Home() {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
+            <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="text-center mb-12 md:mb-16"
           >
-            <motion.div
+              <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               className="inline-flex items-center space-x-3 md:space-x-4 bg-red-50 px-8 md:px-12 py-4 md:py-6 rounded-full mb-6"
             >
               <Heart className="w-8 h-8 md:w-10 md:h-10 text-red-700" />
-              <span className="text-xl md:text-2xl lg:text-3xl font-bold text-red-700">About KalyanautsavaMat</span>
+              <span className="text-xl md:text-2xl lg:text-3xl font-bold text-red-700">{t('ABOUT_TITLE')}</span>
             </motion.div>
             
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 md:mb-6">
-              Where True Love{' '}
-              <span className="bg-gradient-to-r from-golden-500 to-golden-600 bg-clip-text text-transparent">
-                Begins
-              </span>
+              {t('WHERE_TRUE_LOVE')}
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              We're not just a matrimonial platform - we're your trusted partner in finding lifelong happiness
+              {t('ABOUT_DESC')}
             </p>
           </motion.div>
 
@@ -517,15 +515,11 @@ export default function Home() {
             >
               <div className="prose prose-lg">
                 <p className="text-gray-700 text-base md:text-lg leading-relaxed">
-                  Founded with a vision to revolutionize the way people find their life partners, 
-                  <span className="font-semibold text-golden-600"> KalyanautsavaMat</span> combines 
-                  cutting-edge technology with traditional values to create meaningful connections.
+                  {t('ABOUT_FOUNDED')}
+                  <span className="font-semibold text-golden-600"> {t('BRAND')}</span> {t('ABOUT_COMBINES')}
                 </p>
                 <p className="text-gray-700 text-base md:text-lg leading-relaxed">
-                  With over <span className="font-bold text-golden-600">15 years of experience</span>, 
-                  we've helped thousands of individuals discover their perfect match. Our advanced 
-                  matching algorithms, verified profiles, and dedicated support team ensure your 
-                  journey to finding love is safe, secure, and successful.
+                  {t('ABOUT_WITH_OVER')} <span className="font-bold text-golden-600">{t('YEARS_EXPERIENCE')}</span>{t('ABOUT_HELPED')}
                 </p>
               </div>
               
@@ -535,14 +529,14 @@ export default function Home() {
                   className="bg-white p-4 rounded-xl shadow-md border border-golden-100"
                 >
                   <div className="text-2xl font-bold text-golden-600 mb-1">100%</div>
-                  <div className="text-sm text-gray-600">Verified Profiles</div>
+                  <div className="text-sm text-gray-600">{t('VERIFIED_PROFILES')}</div>
                 </motion.div>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   className="bg-white p-4 rounded-xl shadow-md border border-golden-100"
                 >
                   <div className="text-2xl font-bold text-golden-600 mb-1">24/7</div>
-                  <div className="text-sm text-gray-600">Support Available</div>
+                  <div className="text-sm text-gray-600">{t('SUPPORT_AVAILABLE')}</div>
                 </motion.div>
               </div>
             </motion.div>
@@ -560,8 +554,8 @@ export default function Home() {
                     <Shield className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-2">Privacy & Security</h3>
-                    <p className="text-gray-600 text-sm">Your data is protected with bank-level encryption and strict privacy controls.</p>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">{t('PRIVACY_SECURITY')}</h3>
+                    <p className="text-gray-600 text-sm">{t('PRIVACY_DESC')}</p>
                   </div>
                 </div>
               </div>
@@ -572,8 +566,8 @@ export default function Home() {
                     <Award className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-2">Verified Profiles</h3>
-                    <p className="text-gray-600 text-sm">All profiles are thoroughly verified to ensure authenticity and genuine connections.</p>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">{t('VERIFIED_PROFILES_TITLE')}</h3>
+                    <p className="text-gray-600 text-sm">{t('VERIFIED_DESC')}</p>
                   </div>
                 </div>
               </div>
@@ -584,8 +578,8 @@ export default function Home() {
                     <Heart className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-2">Success Stories</h3>
-                    <p className="text-gray-600 text-sm">Join thousands of happy couples who found their perfect match through our platform.</p>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">{t('SUCCESS_STORIES_TITLE')}</h3>
+                    <p className="text-gray-600 text-sm">{t('SUCCESS_DESC')}</p>
                   </div>
                 </div>
               </div>
@@ -632,10 +626,10 @@ export default function Home() {
             className="text-center mb-8 md:mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
-              Featured Profiles
+              {t('FEATURED_PROFILES')}
             </h2>
             <p className="text-gray-600 text-base md:text-lg">
-              Meet some of our amazing members
+              {t('MEET_MEMBERS')}
             </p>
           </motion.div>
 
@@ -681,7 +675,7 @@ export default function Home() {
                     <p className="text-gray-500 text-sm">{profile.location}</p>
                     <Link href={`/profile/${profile.id}`}>
                       <button className="mt-4 w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200">
-                        View Profile
+                        {t('VIEW_PROFILE')}
                       </button>
                     </Link>
                   </div>
@@ -721,7 +715,7 @@ export default function Home() {
                   <p className="text-gray-500 text-xs mb-3">{profile.location}</p>
                   <Link href={`/profile/${profile.id}`}>
                     <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 text-sm rounded-lg hover:shadow-md transition-all duration-200">
-                      View Profile
+                      {t('VIEW_PROFILE')}
                     </button>
                   </Link>
                 </div>
@@ -731,12 +725,12 @@ export default function Home() {
 
           <div className="text-center mt-8 md:mt-12">
             <Link href="/members">
-              <motion.button
+                <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-golden-500 to-golden-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center space-x-2 text-sm md:text-base"
               >
-                <span>View All Members</span>
+                <span>{t('VIEW_ALL_MEMBERS')}</span>
                 <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </motion.button>
             </Link>
@@ -753,10 +747,10 @@ export default function Home() {
             className="text-center mb-8 md:mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
-              Success Stories
+              {t('SUCCESS_STORIES')}
             </h2>
             <p className="text-gray-600 text-base md:text-lg">
-              Real couples, real happiness
+              {t('REAL_COUPLES')}
             </p>
           </motion.div>
 
@@ -977,13 +971,10 @@ export default function Home() {
             className="text-center mb-12 md:mb-16"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              What Our Members{' '}
-              <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
-                Say
-              </span>
+              {t('WHAT_MEMBERS_SAY')}
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
-              Hear from thousands of happy members who found their perfect match
+              {t('HEAR_FROM_MEMBERS')}
             </p>
           </motion.div>
 
@@ -1101,10 +1092,10 @@ export default function Home() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 md:mb-6">
-              Ready to Find Your Soulmate?
+              {t('READY_FIND_SOULMATE')}
             </h2>
             <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8">
-              Join thousands of happy couples who found love through KalyanautsavaMat
+              {t('JOIN_HAPPY_COUPLES')}
             </p>
             <Link href="/register">
               <motion.button
@@ -1112,7 +1103,7 @@ export default function Home() {
                 whileTap={{ scale: 0.95 }}
                 className="bg-white text-golden-600 px-6 py-3 md:px-8 md:py-4 rounded-full font-semibold hover:shadow-2xl transition-all duration-200 text-base md:text-lg"
               >
-                Get Started Now
+                {t('GET_STARTED_NOW')}
               </motion.button>
             </Link>
           </motion.div>
@@ -1129,45 +1120,45 @@ export default function Home() {
             className="text-center mb-8 md:mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
-              Frequently Asked Questions
+              {t('FAQ_TITLE')}
             </h2>
             <p className="text-gray-600 text-base md:text-lg">
-              Everything you need to know about KalyanautsavaMat
+              {t('FAQ_SUBTITLE')}
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-4 md:gap-6">
             {[
               {
-                question: "How does KalyanautsavaMat work?",
+                question: t('FAQ_Q1'),
                 answer: "KalyanautsavaMat uses advanced matching algorithms to connect compatible individuals based on their preferences, values, interests, and lifestyle. Simply create a profile, set your preferences, and start connecting with potential matches."
               },
               {
-                question: "Is KalyanautsavaMat free to use?",
+                question: t('FAQ_Q2'),
                 answer: "Yes! We offer a free basic membership that allows you to create a profile, browse matches, and send limited messages. For unlimited messaging, advanced search filters, and premium features, you can upgrade to our Premium or VIP plans."
               },
               {
-                question: "How do I ensure my profile stands out?",
+                question: t('FAQ_Q3'),
                 answer: "Upload clear, recent photos, write a genuine and detailed bio, be honest about your interests and values, and regularly update your profile. Premium members also get priority visibility in search results."
               },
               {
-                question: "Is my information safe and secure?",
+                question: t('FAQ_Q4'),
                 answer: "Absolutely! We use bank-level encryption to protect your data. Your personal information is never shared without your consent. We have strict privacy policies and verification processes to ensure a safe environment for all members."
               },
               {
-                question: "How long does it take to find a match?",
+                question: t('FAQ_Q5'),
                 answer: "While success varies for each individual, many of our members report meaningful connections within the first few weeks. Stay active, keep your profile updated, and be patient - the right person is worth the wait!"
               },
               {
-                question: "Can I cancel my subscription anytime?",
+                question: t('FAQ_Q6'),
                 answer: "Yes, you can cancel your premium subscription at any time from your account settings. You'll continue to have access to premium features until the end of your billing period."
               },
               {
-                question: "What makes KalyanautsavaMat different from other platforms?",
+                question: t('FAQ_Q7'),
                 answer: "We focus on meaningful relationships, not casual dating. Our verification process ensures authentic profiles, and our matching algorithm considers values, compatibility, and long-term potential. Plus, we provide personalized support throughout your journey."
               },
               {
-                question: "How do I verify my profile?",
+                question: t('FAQ_Q8'),
                 answer: "Profile verification is simple! Upload a government-issued ID and take a selfie. Our team reviews and approves verifications within 24 hours. Verified profiles get a special badge and higher visibility."
               }
             ].map((faq, index) => (
@@ -1218,14 +1209,14 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mt-8 md:mt-12"
           >
-            <p className="text-gray-600 mb-4 text-sm md:text-base">Still have questions?</p>
+            <p className="text-gray-600 mb-4 text-sm md:text-base">{t('STILL_HAVE_QUESTIONS')}</p>
             <Link href="/contact">
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-golden-500 to-golden-500 text-white px-6 py-2.5 md:px-8 md:py-3 rounded-full font-semibold hover:shadow-xl transition-all duration-300 text-sm md:text-base"
               >
-                Contact Support
+                {t('CONTACT_SUPPORT')}
               </motion.button>
             </Link>
           </motion.div>

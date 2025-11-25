@@ -7,6 +7,7 @@ import Footer from '@/components/layout/Footer';
 import LoadingProvider from '@/components/LoadingProvider';
 import { Toaster } from '@/components/ui/toaster';
 import { usePathname } from 'next/navigation';
+import { LanguageProvider } from '@/context/LanguageProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,9 +23,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <LoadingProvider>
-          {!isAdminPage && <Navbar />}
-          <main>{children}</main>
-          {!isAdminPage && <Footer />}
+          <LanguageProvider>
+            {!isAdminPage && <Navbar />}
+            <main>{children}</main>
+            {!isAdminPage && <Footer />}
+          </LanguageProvider>
         </LoadingProvider>
         <Toaster />
       </body>

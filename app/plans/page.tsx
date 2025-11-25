@@ -4,58 +4,60 @@ import { motion } from 'framer-motion';
 import { Check, Crown, Heart, Star, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import PetalAnimation from '@/components/animations/PetalAnimation';
+import { useTranslation } from '@/context/LanguageProvider';
 
 export default function PlansPage() {
+  const { t } = useTranslation();
   const plans = [
     {
-      name: 'Free',
+      name: t('PLAN_FREE_NAME'),
       price: '$0',
-      period: '/month',
-      description: 'Perfect for getting started',
+      period: t('PLAN_MONTH'),
+      description: t('PLAN_FREE_DESC'),
       icon: Heart,
       features: [
-        'Create Profile',
-        'View 5 Profiles Daily',
-        'Send 2 Interest Requests',
-        'Basic Search Filters',
-        'Email Support',
+        t('PLAN_FREE_FEATURE_1'),
+        t('PLAN_FREE_FEATURE_2'),
+        t('PLAN_FREE_FEATURE_3'),
+        t('PLAN_FREE_FEATURE_4'),
+        t('PLAN_FREE_FEATURE_5'),
       ],
       color: 'from-gray-400 to-gray-500',
       popular: false,
     },
     {
-      name: 'Silver',
+      name: t('PLAN_SILVER_NAME'),
       price: '$29',
-      period: '/month',
-      description: 'Best for serious seekers',
+      period: t('PLAN_MONTH'),
+      description: t('PLAN_SILVER_DESC'),
       icon: Star,
       features: [
-        'Everything in Free',
-        'View Unlimited Profiles',
-        'Send 50 Interest Requests',
-        'Advanced Search Filters',
-        'Chat with Matches',
-        'Priority Support',
-        'Profile Highlighted',
+        t('PLAN_SILVER_FEATURE_1'),
+        t('PLAN_SILVER_FEATURE_2'),
+        t('PLAN_SILVER_FEATURE_3'),
+        t('PLAN_SILVER_FEATURE_4'),
+        t('PLAN_SILVER_FEATURE_5'),
+        t('PLAN_SILVER_FEATURE_6'),
+        t('PLAN_SILVER_FEATURE_7'),
       ],
       color: 'from-rose-400 to-golden-500',
       popular: true,
     },
     {
-      name: 'Gold',
+      name: t('PLAN_GOLD_NAME'),
       price: '$49',
-      period: '/month',
-      description: 'Premium experience',
+      period: t('PLAN_MONTH'),
+      description: t('PLAN_GOLD_DESC'),
       icon: Crown,
       features: [
-        'Everything in Silver',
-        'Unlimited Interest Requests',
-        'Video Call Feature',
-        'Profile Verification Badge',
-        'Top Profile Position',
-        'Dedicated Relationship Manager',
-        'Premium Support 24/7',
-        'Exclusive Events Access',
+        t('PLAN_GOLD_FEATURE_1'),
+        t('PLAN_GOLD_FEATURE_2'),
+        t('PLAN_GOLD_FEATURE_3'),
+        t('PLAN_GOLD_FEATURE_4'),
+        t('PLAN_GOLD_FEATURE_5'),
+        t('PLAN_GOLD_FEATURE_6'),
+        t('PLAN_GOLD_FEATURE_7'),
+        t('PLAN_GOLD_FEATURE_8'),
       ],
       color: 'from-amber-400 to-yellow-500',
       popular: false,
@@ -81,18 +83,18 @@ export default function PlansPage() {
             >
               <Sparkles className="w-4 h-4 text-red-700" />
               <span className="text-red-700 text-sm font-medium">
-                Choose Your Perfect Plan
+                {t('CHOOSE_PLAN_TAG')}
               </span>
             </motion.div>
 
             <h1 className="text-5xl font-bold text-gray-800 mb-4">
-              Find Love with the{' '}
+              {t('FIND_LOVE_RIGHT_PLAN').split(' ').slice(0, 3).join(' ')}{' '}
               <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
-                Right Plan
+                {t('FIND_LOVE_RIGHT_PLAN').split(' ').slice(3).join(' ')}
               </span>
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Select a plan that fits your needs and start your journey to finding your perfect match
+              {t('SELECT_PLAN_DESC')}
             </p>
           </motion.div>
 
@@ -110,7 +112,7 @@ export default function PlansPage() {
               >
                 {plan.popular && (
                   <div className="absolute top-0 right-0 bg-gradient-to-r from-golden-500 to-golden-500 text-white px-6 py-2 text-sm font-semibold rounded-bl-2xl">
-                    Most Popular
+                    {t('MOST_POPULAR')}
                   </div>
                 )}
 
@@ -143,7 +145,7 @@ export default function PlansPage() {
                           : 'bg-pink-100 text-golden-600 hover:bg-pink-200'
                       }`}
                     >
-                      Get Started
+                      {t('GET_STARTED')}
                     </motion.button>
                   </Link>
 

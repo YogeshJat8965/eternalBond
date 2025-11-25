@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { Shield, Lock, Eye, CheckCircle } from 'lucide-react';
+import { useTranslation } from '@/context/LanguageProvider';
 
 export default function PrivacyPage() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen pt-16 bg-gradient-to-b from-golden-50 to-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -22,12 +24,11 @@ export default function PrivacyPage() {
           </motion.div>
 
           <h1 className="text-5xl font-bold text-gray-800 mb-4">
-            Privacy{' '}
             <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
-              Policy
+              {t('PRIVACY_POLICY_TITLE')}
             </span>
           </h1>
-          <p className="text-gray-600">Last updated: January 2025</p>
+          <p className="text-gray-600">{t('LAST_UPDATED')}</p>
         </motion.div>
 
         <motion.div
@@ -52,7 +53,7 @@ export default function PrivacyPage() {
                     <Eye className="w-5 h-5 text-golden-600" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-800">
-                    Information We Collect
+                    {t('INFORMATION_WE_COLLECT')}
                   </h2>
                 </div>
                 <div className="ml-12">
@@ -90,7 +91,7 @@ export default function PrivacyPage() {
                     <Lock className="w-5 h-5 text-golden-600" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-800">
-                    How We Use Your Information
+                    {t('HOW_WE_USE')}
                   </h2>
                 </div>
                 <div className="ml-12">
@@ -128,7 +129,7 @@ export default function PrivacyPage() {
 
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Data Security
+                  {t('DATA_SECURITY')}
                 </h2>
                 <p className="text-gray-700 leading-relaxed">
                   We implement appropriate technical and organizational security measures
@@ -141,7 +142,7 @@ export default function PrivacyPage() {
 
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Information Sharing
+                  {t('INFORMATION_SHARING')}
                 </h2>
                 <p className="text-gray-700 leading-relaxed mb-4">
                   We do not sell your personal information to third parties. We may share
@@ -168,7 +169,7 @@ export default function PrivacyPage() {
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Rights</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('YOUR_RIGHTS')}</h2>
                 <p className="text-gray-700 leading-relaxed mb-4">
                   You have the right to:
                 </p>
@@ -194,7 +195,7 @@ export default function PrivacyPage() {
 
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Cookies and Tracking
+                  {t('COOKIES_TRACKING')}
                 </h2>
                 <p className="text-gray-700 leading-relaxed">
                   We use cookies and similar tracking technologies to enhance your
@@ -206,7 +207,7 @@ export default function PrivacyPage() {
 
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Changes to This Policy
+                  {t('CHANGES_POLICY')}
                 </h2>
                 <p className="text-gray-700 leading-relaxed">
                   We may update this Privacy Policy from time to time. We will notify you
@@ -216,7 +217,7 @@ export default function PrivacyPage() {
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Contact Us</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('CONTACT_US_TITLE')}</h2>
                 <p className="text-gray-700 leading-relaxed">
                   If you have any questions about this Privacy Policy, please contact us
                   at:

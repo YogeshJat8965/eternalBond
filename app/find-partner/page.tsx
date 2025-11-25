@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { Search, Filter, Heart, MapPin, Briefcase, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/context/LanguageProvider';
 
 export default function FindPartnerPage() {
+  const { t } = useTranslation();
   const [showResults, setShowResults] = useState(false);
   const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
   const [burstingHeart, setBurstingHeart] = useState<number | null>(null);
@@ -129,15 +131,12 @@ export default function FindPartnerPage() {
           >
             <Sparkles className="w-4 h-4 text-red-600" />
             <span className="text-red-700 text-sm font-medium">
-              Advanced Partner Search
+              {t('ADVANCED_PARTNER_SEARCH')}
             </span>
           </motion.div>
 
           <h1 className="text-5xl font-bold text-gray-800 mb-4">
-            Find Your{' '}
-            <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
-              Perfect Partner
-            </span>
+            {t('FIND_YOUR_PERFECT_PARTNER')}
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Use our advanced filters to discover your ideal match
@@ -152,13 +151,13 @@ export default function FindPartnerPage() {
         >
           <div className="flex items-center space-x-2 mb-6">
             <Filter className="w-5 h-5 text-golden-600" />
-            <h2 className="text-2xl font-bold text-gray-800">Search Filters</h2>
+            <h2 className="text-2xl font-bold text-gray-800">{t('SEARCH_FILTERS')}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Looking For
+                {t('LOOKING_FOR')}
               </label>
               <select
                 className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
@@ -318,13 +317,13 @@ export default function FindPartnerPage() {
               className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
             >
               <Search className="w-5 h-5" />
-              <span>Search Partners</span>
+              <span>{t('SEARCH_PARTNERS')}</span>
             </motion.button>
             <button
               onClick={handleClearFilters}
               className="px-8 py-4 bg-pink-100 text-golden-600 rounded-lg font-semibold hover:bg-pink-200 transition-colors"
             >
-              Clear Filters
+              {t('CLEAR_FILTERS')}
             </button>
           </div>
         </motion.div>

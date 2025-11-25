@@ -5,9 +5,11 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
 import PetalAnimation from '@/components/animations/PetalAnimation';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from '@/context/LanguageProvider';
 
 export default function ContactPage() {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,13 +39,10 @@ export default function ContactPage() {
             className="text-center mb-12 sm:mb-16"
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 sm:mb-4 px-2">
-              Get In{' '}
-              <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
-                Touch
-              </span>
+              {t('CONTACT_GET_IN_TOUCH')}
             </h1>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4 sm:px-6 leading-relaxed">
-              Have questions or need assistance? We are here to help you find your perfect match.
+              {t('CONTACT_DESC')}
             </p>
           </motion.div>
 
@@ -55,13 +54,13 @@ export default function ContactPage() {
             >
               <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-4 sm:p-6 lg:p-8 border border-golden-100">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">
-                  Send Us a Message
+                  {t('SEND_US_MESSAGE')}
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                      Your Name
+                      {t('YOUR_NAME')}
                     </label>
                     <input
                       type="text"
@@ -71,13 +70,13 @@ export default function ContactPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      placeholder="John Doe"
+                      placeholder={t('YOUR_NAME')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                      Email Address
+                      {t('EMAIL_ADDRESS')}
                     </label>
                     <input
                       type="email"
@@ -93,7 +92,7 @@ export default function ContactPage() {
 
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                      Subject
+                      {t('SUBJECT')}
                     </label>
                     <input
                       type="text"
@@ -103,13 +102,13 @@ export default function ContactPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, subject: e.target.value })
                       }
-                      placeholder="How can we help?"
+                      placeholder={t('SUBJECT')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                      Message
+                      {t('MESSAGE')}
                     </label>
                     <textarea
                       required
@@ -130,7 +129,7 @@ export default function ContactPage() {
                     className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-3 sm:py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base"
                   >
                     <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>Send Message</span>
+                    <span>{t('SEND_MESSAGE')}</span>
                   </motion.button>
                 </form>
               </div>
@@ -144,7 +143,7 @@ export default function ContactPage() {
             >
               <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-4 sm:p-6 lg:p-8 border border-golden-100">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">
-                  Contact Information
+                  {t('CONTACT_INFORMATION')}
                 </h2>
 
                 <div className="space-y-4 sm:space-y-6">
@@ -154,7 +153,7 @@ export default function ContactPage() {
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-semibold text-gray-800 mb-1 text-sm sm:text-base">
-                        Email Us
+                        {t('EMAIL_US')}
                       </h3>
                       <p className="text-gray-600 text-xs sm:text-sm break-words">support@kalyanautsavamat.com</p>
                       <p className="text-gray-600 text-xs sm:text-sm break-words">info@kalyanautsavamat.com</p>
@@ -167,7 +166,7 @@ export default function ContactPage() {
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-semibold text-gray-800 mb-1 text-sm sm:text-base">
-                        Call Us
+                        {t('CALL_US')}
                       </h3>
                       <p className="text-gray-600 text-xs sm:text-sm">+1 (555) 123-4567</p>
                       <p className="text-gray-600 text-xs sm:text-sm">Mon-Fri, 9am-6pm EST</p>
@@ -180,7 +179,7 @@ export default function ContactPage() {
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-semibold text-gray-800 mb-1 text-sm sm:text-base">
-                        Visit Us
+                        {t('VISIT_US')}
                       </h3>
                       <p className="text-gray-600 text-xs sm:text-sm">
                         123 Love Street, Suite 100

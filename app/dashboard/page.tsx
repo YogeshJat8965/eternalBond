@@ -5,6 +5,7 @@ import { Heart, User, Image, Eye, List, MessageCircle, Ban, Settings, Key, LogOu
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslation } from '@/context/LanguageProvider';
 
 /**
  * Dashboard Page Component
@@ -52,8 +53,9 @@ import Link from 'next/link';
  */
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const [userName, setUserName] = useState('');
-  const [activeMenu, setActiveMenu] = useState('Dashboard');
+  const [activeMenu, setActiveMenu] = useState('MENU_DASHBOARD');
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState(1);
   const [uploadedImages, setUploadedImages] = useState<string[]>([
@@ -62,13 +64,13 @@ export default function DashboardPage() {
     '/app/images/hand3.jpeg',
   ]);
   const [interestRequests, setInterestRequests] = useState([
-    { id: 1, userId: 'user_101', name: 'Rahul Verma', age: 28, profession: 'Business Analyst', location: 'Pune', time: '2 hours ago', photo: '/app/images/hand1.jpeg' },
-    { id: 2, userId: 'user_102', name: 'Amit Singh', age: 29, profession: 'Civil Engineer', location: 'Jaipur', time: '1 day ago', photo: '/app/images/hand2.jpeg' },
-    { id: 3, userId: 'user_103', name: 'Vikram Joshi', age: 30, profession: 'Architect', location: 'Chennai', time: '3 days ago', photo: '/app/images/hand3.jpeg' },
+    { id: 1, userId: 'user_101', name: t('NAME_RAHUL_VERMA'), age: 28, profession: t('BUSINESS_ANALYST'), location: t('LOCATION_PUNE'), time: t('HOURS_AGO').replace('{hours}', '2'), photo: '/app/images/hand1.jpeg' },
+    { id: 2, userId: 'user_102', name: t('NAME_AMIT_SINGH'), age: 29, profession: t('CIVIL_ENGINEER'), location: t('LOCATION_JAIPUR'), time: t('DAYS_AGO').replace('{days}', '1'), photo: '/app/images/hand2.jpeg' },
+    { id: 3, userId: 'user_103', name: t('NAME_VIKRAM_JOSHI'), age: 30, profession: t('ARCHITECT'), location: t('LOCATION_CHENNAI'), time: t('DAYS_AGO').replace('{days}', '3'), photo: '/app/images/hand3.jpeg' },
   ]);
   const [ignoredMembers, setIgnoredMembers] = useState([
-    { id: 1, userId: 'user_201', name: 'Karan Mehta', age: 31, profession: 'Manager', location: 'Hyderabad', ignoredDate: '10 Nov, 2024' },
-    { id: 2, userId: 'user_202', name: 'Rohan Gupta', age: 28, profession: 'Consultant', location: 'Kolkata', ignoredDate: '05 Nov, 2024' },
+    { id: 1, userId: 'user_201', name: t('NAME_KARAN_MEHTA'), age: 31, profession: t('MANAGER'), location: t('LOCATION_HYDERABAD'), ignoredDate: '10 Nov, 2024' },
+    { id: 2, userId: 'user_202', name: t('NAME_ROHAN_GUPTA'), age: 28, profession: t('CONSULTANT'), location: t('LOCATION_KOLKATA'), ignoredDate: '05 Nov, 2024' },
   ]);
   const [toast, setToast] = useState<{ show: boolean; message: string; type: 'success' | 'error' | 'info' }>({
     show: false,
@@ -82,7 +84,7 @@ export default function DashboardPage() {
     { 
       id: 1, 
       userId: 'user_301',
-      name: 'Priya Sharma', 
+      name: t('NAME_PRIYA_SHARMA'), 
       lastMessage: 'Thank you for accepting my interest!', 
       time: '10 mins ago', 
       unread: 2, 
@@ -96,7 +98,7 @@ export default function DashboardPage() {
     { 
       id: 2, 
       userId: 'user_302',
-      name: 'Anjali Patel', 
+      name: t('NAME_ANJALI_PATEL'), 
       lastMessage: 'Would love to know more about you', 
       time: '1 hour ago', 
       unread: 0, 
@@ -109,7 +111,7 @@ export default function DashboardPage() {
     { 
       id: 3, 
       userId: 'user_303',
-      name: 'Neha Reddy', 
+      name: t('NAME_NEHA_REDDY'), 
       lastMessage: 'Looking forward to connecting', 
       time: '2 hours ago', 
       unread: 5, 
@@ -361,22 +363,22 @@ export default function DashboardPage() {
   };
 
   const stats = [
-    { icon: List, label: 'Total Shortlisted', value: '0', color: 'from-purple-400 to-purple-500', bgColor: 'bg-purple-50', textColor: 'text-purple-600' },
-    { icon: Heart, label: 'Interest Sent', value: '0', color: 'from-golden-400 to-rose-500', bgColor: 'bg-golden-50', textColor: 'text-golden-600' },
-    { icon: Heart, label: 'Interest Requests', value: '0', color: 'from-amber-400 to-amber-500', bgColor: 'bg-amber-50', textColor: 'text-amber-600' },
+    { icon: List, label: t('STATS_TOTAL_SHORTLISTED'), value: '0', color: 'from-purple-400 to-purple-500', bgColor: 'bg-purple-50', textColor: 'text-purple-600' },
+    { icon: Heart, label: t('STATS_INTEREST_SENT'), value: '0', color: 'from-golden-400 to-rose-500', bgColor: 'bg-golden-50', textColor: 'text-golden-600' },
+    { icon: Heart, label: t('STATS_INTEREST_REQUESTS'), value: '0', color: 'from-amber-400 to-amber-500', bgColor: 'bg-amber-50', textColor: 'text-amber-600' },
   ];
 
   const menuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', active: true },
-    { icon: ShoppingCart, label: 'Purchase History' },
-    { icon: ImageIcon, label: 'Gallery' },
-    { icon: List, label: 'Shortlist' },
-    { icon: Heart, label: 'My Interest' },
-    { icon: Heart, label: 'Interest Request' },
-    { icon: Ban, label: 'Ignored Lists' },
-    { icon: MessageCircle, label: 'Message' },
-    { icon: Settings, label: 'Profile Setting' },
-    { icon: LogOut, label: 'Sign Out' },
+    { icon: LayoutDashboard, key: 'MENU_DASHBOARD', label: t('MENU_DASHBOARD'), active: true },
+    { icon: ShoppingCart, key: 'MENU_PURCHASE_HISTORY', label: t('MENU_PURCHASE_HISTORY') },
+    { icon: ImageIcon, key: 'MENU_GALLERY', label: t('MENU_GALLERY') },
+    { icon: List, key: 'MENU_SHORTLIST', label: t('MENU_SHORTLIST') },
+    { icon: Heart, key: 'MENU_MY_INTEREST', label: t('MENU_MY_INTEREST') },
+    { icon: Heart, key: 'MENU_INTEREST_REQUEST', label: t('MENU_INTEREST_REQUEST') },
+    { icon: Ban, key: 'MENU_IGNORED_LISTS', label: t('MENU_IGNORED_LISTS') },
+    { icon: MessageCircle, key: 'MENU_MESSAGE', label: t('MENU_MESSAGE') },
+    { icon: Settings, key: 'MENU_PROFILE_SETTING', label: t('MENU_PROFILE_SETTING') },
+    { icon: LogOut, key: 'MENU_SIGN_OUT', label: t('MENU_SIGN_OUT') },
   ];
 
   return (
@@ -429,8 +431,8 @@ export default function DashboardPage() {
             >
               {/* Progress Bar */}
               <div className="p-8 pb-4">
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">Complete Your Profile</h2>
-                <p className="text-gray-600 mb-6">Step {onboardingStep} of 3</p>
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">{t('COMPLETE_YOUR_PROFILE')}</h2>
+                <p className="text-gray-600 mb-6">{t('STEP_OF').replace('{step}', onboardingStep.toString()).replace('{total}', '3')}</p>
                 
                 <div className="flex gap-2 mb-8">
                   {[1, 2, 3].map((step) => (
@@ -452,31 +454,31 @@ export default function DashboardPage() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                   >
-                    <h3 className="text-2xl font-bold text-gray-800 mb-6">Basic Details</h3>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-6">{t('BASIC_DETAILS')}</h3>
                     <div className="space-y-4">
                       <div>
                         <label className="block text-gray-700 font-medium mb-2">
-                          Full Name <span className="text-rose-500">*</span>
+                          {t('FULL_NAME')} <span className="text-rose-500">*</span>
                         </label>
                         <input
                           type="text"
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
-                          placeholder="Enter your full name"
+                          placeholder={t('ENTER_YOUR_FULL_NAME')}
                           className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                         />
                       </div>
                       <div>
                         <label className="block text-gray-700 font-medium mb-2">
-                          Phone Number <span className="text-rose-500">*</span>
+                          {t('PHONE_NUMBER')} <span className="text-rose-500">*</span>
                         </label>
                         <input
                           type="tel"
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          placeholder="Enter your phone number"
+                          placeholder={t('ENTER_YOUR_PHONE_NUMBER')}
                           className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                         />
                       </div>
@@ -628,16 +630,16 @@ export default function DashboardPage() {
               <div className="space-y-1">
                 {menuItems.map((item, index) => (
                   <motion.button
-                    key={item.label}
+                    key={item.key}
                     whileHover={{ x: 5 }}
                     onClick={() => {
-                      setActiveMenu(item.label);
-                      if (item.label === 'Sign Out') {
+                      setActiveMenu(item.key);
+                      if (item.key === 'MENU_SIGN_OUT') {
                         handleLogout();
                       }
                     }}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                      activeMenu === item.label
+                      activeMenu === item.key
                         ? 'bg-golden-50 text-rose-500'
                         : 'text-gray-600 hover:bg-golden-50 hover:text-rose-500'
                     }`}
@@ -658,12 +660,12 @@ export default function DashboardPage() {
               className="mb-8"
             >
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                {activeMenu === 'Dashboard' ? 'Dashboard' : activeMenu}
+                {t(activeMenu)}
               </h1>
             </motion.div>
 
             {/* Dashboard Content */}
-            {activeMenu === 'Dashboard' && (
+            {activeMenu === 'MENU_DASHBOARD' && (
               <>
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -696,11 +698,11 @@ export default function DashboardPage() {
               transition={{ delay: 0.6 }}
               className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100 mb-8"
             >
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Current Package</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('CURRENT_PACKAGE')}</h2>
               
               <div className="mb-6">
                 <h3 className="text-3xl font-bold bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent mb-4">
-                  Free
+                  {t('PLAN_FREE_NAME')}
                 </h3>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
@@ -709,7 +711,7 @@ export default function DashboardPage() {
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-600">50 Express Interests</span>
+                    <span className="text-gray-600">{t('EXPRESS_INTERESTS').replace('{count}', '50')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
@@ -717,7 +719,7 @@ export default function DashboardPage() {
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-600">20 Contact View</span>
+                    <span className="text-gray-600">{t('CONTACT_VIEW').replace('{count}', '20')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
@@ -725,12 +727,12 @@ export default function DashboardPage() {
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-600">20 Image Upload</span>
+                    <span className="text-gray-600">{t('IMAGE_UPLOAD').replace('{count}', '20')}</span>
                   </div>
                 </div>
               </div>
 
-              <p className="text-gray-500 mb-6">Package expiry date : 21 Dec, 2025</p>
+              <p className="text-gray-500 mb-6">{t('PACKAGE_EXPIRY_DATE').replace('{date}', '21 Dec, 2025')}</p>
 
               <Link href="/plans">
                 <motion.button
@@ -738,7 +740,7 @@ export default function DashboardPage() {
                   whileTap={{ scale: 0.98 }}
                   className="bg-gradient-to-r from-golden-500 to-golden-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200"
                 >
-                  Upgrade Package
+                  {t('UPGRADE_PACKAGE')}
                 </motion.button>
               </Link>
             </motion.div>
@@ -750,15 +752,15 @@ export default function DashboardPage() {
               transition={{ delay: 0.8 }}
               className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100"
             >
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Latest Interests</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('LATEST_INTERESTS')}</h2>
               
               <div className="flex items-center justify-center py-12">
                 <div className="text-center">
                   <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Heart className="w-12 h-12 text-golden-300" />
                   </div>
-                  <p className="text-gray-500 font-medium">No interests yet</p>
-                  <p className="text-gray-400 text-sm mt-2">Start browsing members to send interests</p>
+                  <p className="text-gray-500 font-medium">{t('NO_INTERESTS_YET')}</p>
+                  <p className="text-gray-400 text-sm mt-2">{t('START_BROWSING_MEMBERS')}</p>
                 </div>
               </div>
             </motion.div>
@@ -766,38 +768,38 @@ export default function DashboardPage() {
             )}
 
             {/* Purchase History Section */}
-            {activeMenu === 'Purchase History' && (
+            {activeMenu === 'MENU_PURCHASE_HISTORY' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100"
               >
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Purchase History</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('MENU_PURCHASE_HISTORY')}</h2>
                 
                 {/* Purchase Records */}
                 <div className="space-y-4">
                   {[
                     {
                       id: 1,
-                      planName: 'Gold Plan',
+                      planName: t('GOLD_PLAN'),
                       amount: '₹4,999',
                       purchaseDate: '15 Dec, 2024',
                       purchaseTime: '10:30 AM',
                       transactionId: 'TXN1234567890',
                       status: 'Active',
                       duration: '3 Months',
-                      features: ['100 Express Interests', '50 Contact Views', 'Unlimited Image Upload']
+                      features: [t('FEATURE_EXPRESS_INTERESTS_100'), t('FEATURE_CONTACT_VIEWS_50'), t('FEATURE_UNLIMITED_IMAGE_UPLOAD')]
                     },
                     {
                       id: 2,
-                      planName: 'Silver Plan',
+                      planName: t('SILVER_PLAN'),
                       amount: '₹2,999',
                       purchaseDate: '10 Sep, 2024',
                       purchaseTime: '02:15 PM',
                       transactionId: 'TXN0987654321',
                       status: 'Expired',
                       duration: '1 Month',
-                      features: ['50 Express Interests', '25 Contact Views', '50 Image Upload']
+                      features: [t('FEATURE_EXPRESS_INTERESTS_50'), t('FEATURE_CONTACT_VIEWS_25'), t('FEATURE_IMAGE_UPLOAD_50')]
                     }
                   ].map((purchase) => (
                     <motion.div
@@ -812,7 +814,7 @@ export default function DashboardPage() {
                           <h3 className="text-xl font-bold text-gray-800 mb-1">
                             {purchase.planName}
                           </h3>
-                          <p className="text-gray-600 text-sm">Duration: {purchase.duration}</p>
+                          <p className="text-gray-600 text-sm">{t('DURATION')}: {purchase.duration}</p>
                         </div>
                         <div className="mt-3 lg:mt-0">
                           <span className={`inline-block px-4 py-1 rounded-full text-sm font-semibold ${
@@ -820,32 +822,32 @@ export default function DashboardPage() {
                               ? 'bg-green-100 text-green-700' 
                               : 'bg-gray-100 text-gray-600'
                           }`}>
-                            {purchase.status}
+                            {purchase.status === 'Active' ? t('ACTIVE') : t('EXPIRED')}
                           </span>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                          <p className="text-sm text-gray-500">Purchase Date</p>
+                          <p className="text-sm text-gray-500">{t('PURCHASE_DATE')}</p>
                           <p className="text-gray-800 font-semibold">{purchase.purchaseDate}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Purchase Time</p>
+                          <p className="text-sm text-gray-500">{t('PURCHASE_TIME')}</p>
                           <p className="text-gray-800 font-semibold">{purchase.purchaseTime}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Transaction ID</p>
+                          <p className="text-sm text-gray-500">{t('TRANSACTION_ID')}</p>
                           <p className="text-gray-800 font-semibold">{purchase.transactionId}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Amount Paid</p>
+                          <p className="text-sm text-gray-500">{t('AMOUNT_PAID')}</p>
                           <p className="text-gray-800 font-semibold text-lg">{purchase.amount}</p>
                         </div>
                       </div>
 
                       <div className="border-t border-pink-100 pt-4">
-                        <p className="text-sm text-gray-500 mb-2">Features Included:</p>
+                        <p className="text-sm text-gray-500 mb-2">{t('FEATURES_INCLUDED')}</p>
                         <div className="space-y-2">
                           {purchase.features.map((feature, index) => (
                             <div key={index} className="flex items-center space-x-2">
@@ -872,7 +874,7 @@ export default function DashboardPage() {
                       className="bg-gradient-to-r from-golden-500 to-golden-600 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 inline-flex items-center gap-2"
                     >
                       <ShoppingCart className="w-5 h-5" />
-                      Upgrade Plan
+                      {t('UPGRADE_PACKAGE')}
                     </motion.button>
                   </Link>
                 </div>
@@ -884,8 +886,8 @@ export default function DashboardPage() {
                     <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
                       <ShoppingCart className="w-12 h-12 text-golden-300" />
                     </div>
-                    <p className="text-gray-500 font-medium">No purchase history</p>
-                    <p className="text-gray-400 text-sm mt-2">You haven't made any purchases yet</p>
+                    <p className="text-gray-500 font-medium">{t('NO_PURCHASE_HISTORY')}</p>
+                    <p className="text-gray-400 text-sm mt-2">{t('NO_PURCHASES_YET')}</p>
                   </div>
                 </div>
                 */}
@@ -893,14 +895,14 @@ export default function DashboardPage() {
             )}
 
             {/* Gallery Section */}
-            {activeMenu === 'Gallery' && (
+            {activeMenu === 'MENU_GALLERY' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800">My Gallery</h2>
+                  <h2 className="text-2xl font-bold text-gray-800">{t('MY_GALLERY')}</h2>
                   <label htmlFor="image-upload">
                     <motion.div
                       whileHover={{ scale: 1.05 }}
@@ -908,7 +910,7 @@ export default function DashboardPage() {
                       className="bg-gradient-to-r from-golden-500 to-golden-500 text-white px-6 py-3 rounded-lg font-semibold cursor-pointer hover:shadow-lg transition-all duration-200 flex items-center gap-2"
                     >
                       <Camera className="w-5 h-5" />
-                      Upload Images
+                      {t('UPLOAD_IMAGES')}
                     </motion.div>
                   </label>
                   <input
@@ -922,8 +924,8 @@ export default function DashboardPage() {
                 </div>
 
                 <p className="text-gray-600 mb-6">
-                  You have uploaded <span className="font-bold text-golden-600">{uploadedImages.length}</span> images. 
-                  Remaining uploads: <span className="font-bold text-green-600">20</span>
+                  {t('YOU_HAVE_UPLOADED')} <span className="font-bold text-golden-600">{uploadedImages.length}</span> {t('IMAGES')}. 
+                  {t('REMAINING_UPLOADS')}: <span className="font-bold text-green-600">20</span>
                 </p>
 
                 {/* Image Grid */}
@@ -981,8 +983,8 @@ export default function DashboardPage() {
                       <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <ImageIcon className="w-12 h-12 text-golden-300" />
                       </div>
-                      <p className="text-gray-500 font-medium">No images uploaded yet</p>
-                      <p className="text-gray-400 text-sm mt-2">Click "Upload Images" to add photos to your gallery</p>
+                      <p className="text-gray-500 font-medium">{t('NO_IMAGES_UPLOADED')}</p>
+                      <p className="text-gray-400 text-sm mt-2">{t('CLICK_UPLOAD_IMAGES')}</p>
                     </div>
                   </div>
                 )}
@@ -993,24 +995,24 @@ export default function DashboardPage() {
                     <svg className="w-5 h-5 text-golden-600" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
-                    Upload Guidelines
+                    {t('UPLOAD_GUIDELINES')}
                   </h3>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-start gap-2">
                       <span className="text-golden-600 font-bold">•</span>
-                      <span>Upload clear, recent photos for better profile visibility</span>
+                      <span>{t('GUIDELINE_CLEAR_PHOTOS')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-golden-600 font-bold">•</span>
-                      <span>Supported formats: JPG, PNG, JPEG (Max size: 5MB per image)</span>
+                      <span>{t('GUIDELINE_FORMATS')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-golden-600 font-bold">•</span>
-                      <span>Avoid group photos, blurry images, or inappropriate content</span>
+                      <span>{t('GUIDELINE_AVOID')}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-golden-600 font-bold">•</span>
-                      <span>Profile photos with face clearly visible get 3x more responses</span>
+                      <span>{t('GUIDELINE_VISIBILITY')}</span>
                     </li>
                   </ul>
                 </div>
@@ -1018,23 +1020,23 @@ export default function DashboardPage() {
             )}
 
             {/* My Interest Section */}
-            {activeMenu === 'My Interest' && (
+            {activeMenu === 'MENU_MY_INTEREST' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-pink-100"
               >
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">My Interests</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">{t('MY_INTERESTS')}</h2>
                 <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-                  Interests you have sent to other members
+                  {t('INTERESTS_SENT_DESC')}
                 </p>
 
                 {/* Interest List */}
                 <div className="space-y-3 sm:space-y-4">
                   {[
-                    { id: 1, userId: 'user_001', name: 'Priya Sharma', age: 26, profession: 'Software Engineer', location: 'Mumbai', status: 'Pending', photo: '/app/images/hand1.jpeg' },
-                    { id: 2, userId: 'user_002', name: 'Anjali Patel', age: 25, profession: 'Doctor', location: 'Delhi', status: 'Accepted', photo: '/app/images/hand2.jpeg' },
-                    { id: 3, userId: 'user_003', name: 'Sneha Kumar', age: 27, profession: 'Teacher', location: 'Bangalore', status: 'Declined', photo: '/app/images/hand3.jpeg' },
+                    { id: 1, userId: 'user_001', name: t('NAME_PRIYA_SHARMA'), age: 26, profession: t('SOFTWARE_ENGINEER'), location: t('LOCATION_MUMBAI'), status: 'Pending', photo: '/app/images/hand1.jpeg' },
+                    { id: 2, userId: 'user_002', name: t('NAME_ANJALI_PATEL'), age: 25, profession: t('DOCTOR'), location: t('LOCATION_DELHI'), status: 'Accepted', photo: '/app/images/hand2.jpeg' },
+                    { id: 3, userId: 'user_003', name: t('NAME_SNEHA_KUMAR'), age: 27, profession: t('TEACHER'), location: t('LOCATION_BANGALORE'), status: 'Declined', photo: '/app/images/hand3.jpeg' },
                   ].map((interest, index) => (
                     <motion.div
                       key={interest.id}
@@ -1050,7 +1052,7 @@ export default function DashboardPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{interest.name}</h3>
-                            <p className="text-gray-600 text-xs sm:text-sm truncate">{interest.age} years • {interest.profession}</p>
+                            <p className="text-gray-600 text-xs sm:text-sm truncate">{t('AGE_YEARS').replace('{age}', String(interest.age))} • {interest.profession}</p>
                             <p className="text-gray-500 text-xs sm:text-sm truncate">{interest.location}</p>
                           </div>
                         </div>
@@ -1060,7 +1062,9 @@ export default function DashboardPage() {
                             interest.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
                             'bg-red-100 text-red-700'
                           }`}>
-                            {interest.status}
+                            {interest.status === 'Accepted' ? t('STATUS_ACCEPTED') :
+                            interest.status === 'Pending' ? t('STATUS_PENDING') :
+                            t('STATUS_DECLINED')}
                           </span>
                           <Link href={`/profile/${interest.userId}`}>
                             <motion.button
@@ -1068,7 +1072,7 @@ export default function DashboardPage() {
                               whileTap={{ scale: 0.95 }}
                               className="text-golden-600 hover:text-golden-700 text-xs sm:text-sm font-medium underline whitespace-nowrap"
                             >
-                              View Profile
+                              {t('VIEW_PROFILE')}
                             </motion.button>
                           </Link>
                         </div>
@@ -1084,8 +1088,8 @@ export default function DashboardPage() {
                     <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Heart className="w-12 h-12 text-golden-300" />
                     </div>
-                    <p className="text-gray-500 font-medium">No interests sent yet</p>
-                    <p className="text-gray-400 text-sm mt-2">Start browsing members to send interests</p>
+                    <p className="text-gray-500 font-medium">{t('NO_INTERESTS_SENT')}</p>
+                    <p className="text-gray-400 text-sm mt-2">{t('START_BROWSING_MEMBERS')}</p>
                   </div>
                 </div>
                 */}
@@ -1093,15 +1097,15 @@ export default function DashboardPage() {
             )}
 
             {/* Interest Request Section */}
-            {activeMenu === 'Interest Request' && (
+            {activeMenu === 'MENU_INTEREST_REQUEST' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-pink-100"
               >
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">Interest Requests</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">{t('INTEREST_REQUESTS')}</h2>
                 <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-                  Members who have shown interest in your profile
+                  {t('INTEREST_REQUESTS_DESC')}
                 </p>
 
                 {/* Request List */}
@@ -1121,7 +1125,7 @@ export default function DashboardPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{request.name}</h3>
-                          <p className="text-gray-600 text-xs sm:text-sm truncate">{request.age} years • {request.profession}</p>
+                          <p className="text-gray-600 text-xs sm:text-sm truncate">{t('AGE_YEARS').replace('{age}', String(request.age))} • {request.profession}</p>
                           <p className="text-gray-500 text-xs sm:text-sm truncate">{request.location}</p>
                           <p className="text-gray-400 text-xs mt-1 flex items-center gap-1">
                             <Clock className="w-3 h-3" />
@@ -1137,7 +1141,7 @@ export default function DashboardPage() {
                           className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-2 sm:py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                           <CheckCircle className="w-4 h-4" />
-                          Accept
+                          {t('ACCEPT')}
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.02 }}
@@ -1146,7 +1150,7 @@ export default function DashboardPage() {
                           className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 sm:py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                           <XCircle className="w-4 h-4" />
-                          Decline
+                          {t('DECLINE')}
                         </motion.button>
                         <Link href={`/profile/${request.userId}`} className="flex-1 sm:flex-none">
                           <motion.button
@@ -1154,7 +1158,7 @@ export default function DashboardPage() {
                             whileTap={{ scale: 0.98 }}
                             className="w-full px-4 sm:px-6 bg-golden-100 text-golden-700 py-2 sm:py-2.5 rounded-lg font-semibold hover:bg-golden-200 transition-all text-sm sm:text-base"
                           >
-                            View Profile
+                            {t('VIEW_PROFILE')}
                           </motion.button>
                         </Link>
                       </div>
@@ -1167,8 +1171,8 @@ export default function DashboardPage() {
                       <div className="w-20 h-20 sm:w-24 sm:h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-golden-300" />
                       </div>
-                      <p className="text-gray-500 font-medium text-sm sm:text-base">No interest requests</p>
-                      <p className="text-gray-400 text-xs sm:text-sm mt-2">You haven't received any interest requests yet</p>
+                      <p className="text-gray-500 font-medium text-sm sm:text-base">{t('NO_INTEREST_REQUESTS')}</p>
+                      <p className="text-gray-400 text-xs sm:text-sm mt-2">{t('NO_INTEREST_REQUESTS_DESC')}</p>
                     </div>
                   </div>
                 )}
@@ -1176,15 +1180,15 @@ export default function DashboardPage() {
             )}
 
             {/* Ignored Lists Section */}
-            {activeMenu === 'Ignored Lists' && (
+            {activeMenu === 'MENU_IGNORED_LISTS' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-pink-100"
               >
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">Ignored Members</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">{t('IGNORED_MEMBERS')}</h2>
                 <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-                  Members you have chosen to ignore
+                  {t('IGNORED_MEMBERS_DESC')}
                 </p>
 
                 {/* Ignored List */}
@@ -1205,9 +1209,9 @@ export default function DashboardPage() {
                             </div>
                             <div className="flex-1 min-w-0">
                               <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{ignored.name}</h3>
-                              <p className="text-gray-600 text-xs sm:text-sm truncate">{ignored.age} years • {ignored.profession}</p>
+                              <p className="text-gray-600 text-xs sm:text-sm truncate">{t('AGE_YEARS').replace('{age}', String(ignored.age))} • {ignored.profession}</p>
                               <p className="text-gray-500 text-xs sm:text-sm truncate">{ignored.location}</p>
-                              <p className="text-gray-400 text-xs mt-1">Ignored on: {ignored.ignoredDate}</p>
+                              <p className="text-gray-400 text-xs mt-1">{t('IGNORED_ON').replace('{date}', ignored.ignoredDate)}</p>
                             </div>
                           </div>
                           <div className="w-full sm:w-auto">
@@ -1217,7 +1221,7 @@ export default function DashboardPage() {
                               onClick={() => handleUnignoreMember(ignored.userId, ignored.name)}
                               className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 bg-golden-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm sm:text-base"
                             >
-                              Unignore
+                              {t('UNIGNORE')}
                             </motion.button>
                           </div>
                         </div>
@@ -1230,8 +1234,8 @@ export default function DashboardPage() {
                       <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Ban className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
                       </div>
-                      <p className="text-gray-500 font-medium text-sm sm:text-base">No ignored members</p>
-                      <p className="text-gray-400 text-sm mt-2">You haven't ignored anyone yet</p>
+                      <p className="text-gray-500 font-medium text-sm sm:text-base">{t('NO_IGNORED_MEMBERS')}</p>
+                      <p className="text-gray-400 text-sm mt-2">{t('NO_IGNORED_DESC')}</p>
                     </div>
                   </div>
                 )}
@@ -1239,7 +1243,7 @@ export default function DashboardPage() {
             )}
 
             {/* Message Section - WhatsApp-like Interface */}
-            {activeMenu === 'Message' && (
+            {activeMenu === 'MENU_MESSAGE' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1251,8 +1255,8 @@ export default function DashboardPage() {
                   <div className={`${selectedChat ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-96 border-r border-pink-100`}>
                     {/* Header */}
                     <div className="p-4 bg-gradient-to-r from-golden-500 to-golden-600 text-white">
-                      <h2 className="text-xl font-bold">Messages</h2>
-                      <p className="text-sm text-golden-100">Your conversations</p>
+                      <h2 className="text-xl font-bold">{t('MESSAGES')}</h2>
+                      <p className="text-sm text-golden-100">{t('YOUR_CONVERSATIONS')}</p>
                     </div>
 
                     {/* Chat List */}
@@ -1317,7 +1321,7 @@ export default function DashboardPage() {
                             <div>
                               <h3 className="font-bold">{conversations.find(c => c.id === selectedChat)?.name}</h3>
                               <p className="text-xs text-golden-100">
-                                {conversations.find(c => c.id === selectedChat)?.online ? 'Online' : 'Offline'}
+                                {conversations.find(c => c.id === selectedChat)?.online ? t('ONLINE') : t('OFFLINE')}
                               </p>
                             </div>
                           </div>
@@ -1383,7 +1387,7 @@ export default function DashboardPage() {
                               value={messageText}
                               onChange={(e) => setMessageText(e.target.value)}
                               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                              placeholder="Type a message..."
+                              placeholder={t('TYPE_MESSAGE')}
                               className="flex-1 px-4 py-3 border border-pink-200 rounded-full focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                             />
                             <motion.button
@@ -1403,8 +1407,8 @@ export default function DashboardPage() {
                           <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
                             <MessageCircle className="w-12 h-12 text-golden-400" />
                           </div>
-                          <h3 className="text-xl font-bold text-gray-800 mb-2">Select a conversation</h3>
-                          <p className="text-gray-500">Choose a chat from the list to start messaging</p>
+                          <h3 className="text-xl font-bold text-gray-800 mb-2">{t('SELECT_CONVERSATION')}</h3>
+                          <p className="text-gray-500">{t('CHOOSE_CHAT')}</p>
                         </div>
                       </div>
                     )}
@@ -1414,15 +1418,15 @@ export default function DashboardPage() {
             )}
 
             {/* Profile Setting Section */}
-            {activeMenu === 'Profile Setting' && (
+            {activeMenu === 'MENU_PROFILE_SETTING' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100"
               >
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Profile Settings</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('PROFILE_SETTINGS')}</h2>
                 <p className="text-gray-600 mb-6">
-                  Manage your profile information and preferences
+                  {t('MANAGE_PROFILE_DESC')}
                 </p>
 
                 {/* Settings Form */}
@@ -1431,11 +1435,11 @@ export default function DashboardPage() {
                   <div className="bg-gradient-to-r from-pink-50 to-white border border-pink-100 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                       <User className="w-5 h-5 text-golden-600" />
-                      Personal Information
+                      {t('PERSONAL_INFORMATION')}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Full Name</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('FULL_NAME')}</label>
                         <input
                           type="text"
                           defaultValue={userName}
@@ -1443,23 +1447,23 @@ export default function DashboardPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Email</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('EMAIL')}</label>
                         <input
                           type="email"
-                          placeholder="your.email@example.com"
+                          placeholder={t('PLACEHOLDER_EMAIL')}
                           className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Phone Number</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('PHONE_NUMBER')}</label>
                         <input
                           type="tel"
-                          placeholder="+91 98765 43210"
+                          placeholder={t('PLACEHOLDER_PHONE')}
                           className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Date of Birth</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('DATE_OF_BIRTH')}</label>
                         <input
                           type="date"
                           className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
@@ -1472,38 +1476,38 @@ export default function DashboardPage() {
                   <div className="bg-gradient-to-r from-golden-50 to-white border border-golden-200 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                       <Settings className="w-5 h-5 text-golden-600" />
-                      Professional Details
+                      {t('PROFESSIONAL_DETAILS')}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Occupation</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('OCCUPATION')}</label>
                         <input
                           type="text"
-                          placeholder="Software Engineer"
+                          placeholder={t('PLACEHOLDER_OCCUPATION')}
                           className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Annual Income</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('ANNUAL_INCOME')}</label>
                         <input
                           type="text"
-                          placeholder="₹ 8-10 Lakhs"
+                          placeholder={t('PLACEHOLDER_INCOME')}
                           className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Education</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('EDUCATION')}</label>
                         <input
                           type="text"
-                          placeholder="B.Tech in Computer Science"
+                          placeholder={t('PLACEHOLDER_EDUCATION')}
                           className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Company</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('COMPANY')}</label>
                         <input
                           type="text"
-                          placeholder="ABC Technologies"
+                          placeholder={t('PLACEHOLDER_COMPANY')}
                           className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
@@ -1512,28 +1516,28 @@ export default function DashboardPage() {
 
                   {/* About Me */}
                   <div className="bg-gradient-to-r from-blue-50 to-white border border-blue-100 rounded-xl p-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">About Me</h3>
+                    <h3 className="text-lg font-bold text-gray-800 mb-4">{t('ABOUT_ME')}</h3>
                     <textarea
                       rows={5}
-                      placeholder="Tell us about yourself..."
+                      placeholder={t('TELL_ABOUT_YOURSELF')}
                       className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent resize-none"
                     />
                   </div>
 
                   {/* Privacy Settings */}
                   <div className="bg-gradient-to-r from-purple-50 to-white border border-purple-100 rounded-xl p-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">Privacy Settings</h3>
+                    <h3 className="text-lg font-bold text-gray-800 mb-4">{t('PRIVACY_SETTINGS')}</h3>
                     <div className="space-y-3">
                       <label className="flex items-center justify-between cursor-pointer">
-                        <span className="text-gray-700">Show my profile to all members</span>
+                        <span className="text-gray-700">{t('SHOW_PROFILE_ALL')}</span>
                         <input type="checkbox" defaultChecked className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" />
                       </label>
                       <label className="flex items-center justify-between cursor-pointer">
-                        <span className="text-gray-700">Allow members to contact me</span>
+                        <span className="text-gray-700">{t('ALLOW_CONTACT')}</span>
                         <input type="checkbox" defaultChecked className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" />
                       </label>
                       <label className="flex items-center justify-between cursor-pointer">
-                        <span className="text-gray-700">Show when I'm online</span>
+                        <span className="text-gray-700">{t('SHOW_ONLINE')}</span>
                         <input type="checkbox" className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" />
                       </label>
                     </div>
@@ -1543,30 +1547,30 @@ export default function DashboardPage() {
                   <div className="bg-gradient-to-r from-red-50 to-white border border-red-100 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                       <Key className="w-5 h-5 text-red-600" />
-                      Change Password
+                      {t('CHANGE_PASSWORD')}
                     </h3>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Current Password</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('CURRENT_PASSWORD')}</label>
                         <input
                           type="password"
-                          placeholder="Enter current password"
+                          placeholder={t('ENTER_CURRENT_PASSWORD')}
                           className="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">New Password</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('NEW_PASSWORD')}</label>
                         <input
                           type="password"
-                          placeholder="Enter new password"
+                          placeholder={t('ENTER_NEW_PASSWORD')}
                           className="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Confirm New Password</label>
+                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('CONFIRM_NEW_PASSWORD')}</label>
                         <input
                           type="password"
-                          placeholder="Re-enter new password"
+                          placeholder={t('REENTER_NEW_PASSWORD')}
                           className="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
                         />
                       </div>
@@ -1575,7 +1579,7 @@ export default function DashboardPage() {
                         whileTap={{ scale: 0.98 }}
                         className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
                       >
-                        Update Password
+                        {t('UPDATE_PASSWORD')}
                       </motion.button>
                     </div>
                   </div>
@@ -1587,14 +1591,14 @@ export default function DashboardPage() {
                       whileTap={{ scale: 0.98 }}
                       className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
                     >
-                      Save Changes
+                      {t('SAVE_CHANGES')}
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className="px-8 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all"
                     >
-                      Cancel
+                      {t('CANCEL')}
                     </motion.button>
                   </div>
                 </div>

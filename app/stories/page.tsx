@@ -10,58 +10,60 @@ import priyaAndArjun from '../images/priya&arjun.jpg';
 import isabellaAndLucas from '../images/isabella&lucas.jpg';
 import yukiAndTakeshi from '../images/yuki&takesi.jpg';
 import { useState } from 'react';
+import { useTranslation } from '@/context/LanguageProvider';
 
 export default function StoriesPage() {
+  const { t } = useTranslation();
   const [hoveredStory, setHoveredStory] = useState<number | null>(null);
   
   const stories = [
     {
       id: 1,
-      couple: 'Emma & David',
-      date: 'Married: June 2024',
-      story: 'We met on KalyanautsavaMat in early 2023, and from our very first conversation, we knew there was something special. David\'s sense of humor and Emma\'s warm personality clicked instantly. After months of video calls and meeting in person, we realized we had found our soulmate. Thank you KalyanautsavaMat for bringing us together!',
+      couple: t('STORY_1_COUPLE'),
+      date: t('STORY_1_DATE'),
+      story: t('STORY_1_FULL'),
       image: emmaAndDavid,
-      location: 'New York, USA',
+      location: t('STORY_1_LOCATION'),
     },
     {
       id: 2,
-      couple: 'Sophia & Ryan',
-      date: 'Married: March 2024',
-      story: 'Finding love felt impossible until we found KalyanautsavaMat. The platform\'s detailed matching system helped us discover each other despite living in different cities. Our first date was magical, and we haven\'t looked back since. We\'re now happily married and expecting our first child!',
+      couple: t('STORY_2_COUPLE'),
+      date: t('STORY_2_DATE'),
+      story: t('STORY_2_FULL'),
       image: sophiaAndRyan,
-      location: 'Los Angeles, USA',
+      location: t('STORY_2_LOCATION'),
     },
     {
       id: 3,
-      couple: 'Aisha & Omar',
-      date: 'Married: December 2023',
-      story: 'As busy professionals, we struggled to find time for dating. KalyanautsavaMat made it easy to connect with like-minded individuals. Omar\'s profile stood out immediately, and after our first coffee date, we knew we were meant to be. The journey from strangers to soulmates was beautiful.',
+      couple: t('STORY_3_COUPLE'),
+      date: t('STORY_3_DATE'),
+      story: t('STORY_3_FULL'),
       image: aishaAndOmar,
-      location: 'Dubai, UAE',
+      location: t('STORY_3_LOCATION'),
     },
     {
       id: 4,
-      couple: 'Priya & Arjun',
-      date: 'Married: August 2024',
-      story: 'Our families had been searching for the perfect match for us for years. When we both joined KalyanautsavaMat independently, we found each other within weeks. It felt like destiny. Our similar values, dreams, and aspirations aligned perfectly. We couldn\'t be happier!',
+      couple: t('STORY_4_COUPLE'),
+      date: t('STORY_4_DATE'),
+      story: t('STORY_4_FULL'),
       image: priyaAndArjun,
-      location: 'Mumbai, India',
+      location: t('STORY_4_LOCATION'),
     },
     {
       id: 5,
-      couple: 'Isabella & Lucas',
-      date: 'Married: February 2024',
-      story: 'Long-distance relationships are challenging, but KalyanautsavaMat gave us the tools to make it work. We video chatted for months before meeting in person, and when we finally did, it exceeded all expectations. Now we\'re building our life together in the same city!',
+      couple: t('STORY_5_COUPLE'),
+      date: t('STORY_5_DATE'),
+      story: t('STORY_5_FULL'),
       image: isabellaAndLucas,
-      location: 'Barcelona, Spain',
+      location: t('STORY_5_LOCATION'),
     },
     {
       id: 6,
-      couple: 'Yuki & Takeshi',
-      date: 'Married: May 2024',
-      story: 'Both of us were skeptical about online matrimonial services, but KalyanautsavaMat changed our minds. The platform\'s emphasis on compatibility and shared values helped us find each other. Our wedding was a beautiful blend of tradition and modern love. Thank you for everything!',
+      couple: t('STORY_6_COUPLE'),
+      date: t('STORY_6_DATE'),
+      story: t('STORY_6_FULL'),
       image: yukiAndTakeshi,
-      location: 'Tokyo, Japan',
+      location: t('STORY_6_LOCATION'),
     },
   ];
 
@@ -85,14 +87,13 @@ export default function StoriesPage() {
             </motion.div>
 
             <h1 className="text-5xl font-bold text-gray-800 mb-4">
-              Love Stories That{' '}
+              {t('LOVE_STORIES_THAT')}{' '}
               <span className="bg-gradient-to-r from-golden-500 to-golden-500 bg-clip-text text-transparent">
-                Inspire Us
+                {t('INSPIRE_US')}
               </span>
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Real couples, real love stories. Discover how KalyanautsavaMat helped thousands
-              find their perfect match and begin their journey to eternal happiness.
+              {t('STORIES_SUBTITLE')}
             </p>
           </motion.div>
 
