@@ -1613,7 +1613,24 @@ export default function DashboardPage() {
                   {/* Privacy Settings */}
                   <div className="bg-gradient-to-r from-purple-50 to-white border border-purple-100 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4">{t('PRIVACY_SETTINGS')}</h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
+                      {/* Profile Visibility */}
+                      <div>
+                        <label className="block text-gray-700 font-medium mb-3 text-sm">Profile Visibility</label>
+                        <div className="flex gap-4">
+                          <label className="flex items-center cursor-pointer">
+                            <input type="radio" name="visibility" value="public" defaultChecked className="w-4 h-4 text-golden-600 focus:ring-golden-500" />
+                            <span className="ml-2 text-gray-700">Public</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer">
+                            <input type="radio" name="visibility" value="private" className="w-4 h-4 text-golden-600 focus:ring-golden-500" />
+                            <span className="ml-2 text-gray-700">Private</span>
+                          </label>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">Public profiles are visible to all members. Private profiles are only visible to accepted connections.</p>
+                      </div>
+                      
+                      {/* Other Privacy Options */}
                       <label className="flex items-center justify-between cursor-pointer">
                         <span className="text-gray-700">{t('SHOW_PROFILE_ALL')}</span>
                         <input type="checkbox" defaultChecked className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" />
@@ -1629,45 +1646,23 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  {/* Change Password */}
+                  {/* Forgot Password */}
                   <div className="bg-gradient-to-r from-red-50 to-white border border-red-100 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                       <Key className="w-5 h-5 text-red-600" />
-                      {t('CHANGE_PASSWORD')}
+                      Password Reset
                     </h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('CURRENT_PASSWORD')}</label>
-                        <input
-                          type="password"
-                          placeholder={t('ENTER_CURRENT_PASSWORD')}
-                          className="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('NEW_PASSWORD')}</label>
-                        <input
-                          type="password"
-                          placeholder={t('ENTER_NEW_PASSWORD')}
-                          className="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('CONFIRM_NEW_PASSWORD')}</label>
-                        <input
-                          type="password"
-                          placeholder={t('REENTER_NEW_PASSWORD')}
-                          className="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
-                      >
-                        {t('UPDATE_PASSWORD')}
-                      </motion.button>
-                    </div>
+                    <p className="text-gray-600 mb-4 text-sm">
+                      If you've forgotten your password or want to reset it, click the button below to receive a password reset link via email.
+                    </p>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                    >
+                      <Key className="w-5 h-5" />
+                      Forgot Password
+                    </motion.button>
                   </div>
 
                   {/* Save Button */}
@@ -1675,6 +1670,9 @@ export default function DashboardPage() {
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        showToast(t('PROFILE_UPDATED_SUCCESSFULLY'), 'success');
+                      }}
                       className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
                     >
                       {t('SAVE_CHANGES')}

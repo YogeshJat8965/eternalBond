@@ -523,6 +523,12 @@ const translations: Record<Lang, Record<string, string>> = {
     // Shortlist (placeholder for future)
     SHORTLIST: 'Shortlist',
     MY_SHORTLIST: 'My Shortlist',
+    
+    // Actions
+    SAVE_CHANGES: 'Save Changes',
+    CANCEL: 'Cancel',
+    CHANGES_SAVED: 'Changes Saved!',
+    PROFILE_UPDATED_SUCCESSFULLY: 'Your profile has been updated successfully.',
   },
   hi: {
     BRAND: 'कल्याणोत्सवमेट',
@@ -1035,6 +1041,12 @@ const translations: Record<Lang, Record<string, string>> = {
     // Shortlist (placeholder for future)
     SHORTLIST: 'शॉर्टलिस्ट',
     MY_SHORTLIST: 'मेरी शॉर्टलिस्ट',
+    
+    // Actions
+    SAVE_CHANGES: 'परिवर्तन सहेजें',
+    CANCEL: 'रद्द करें',
+    CHANGES_SAVED: 'परिवर्तन सहेजे गए!',
+    PROFILE_UPDATED_SUCCESSFULLY: 'आपकी प्रोफ़ाइल सफलतापूर्वक अपडेट की गई है।',
   },
 };
 
