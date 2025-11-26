@@ -81,9 +81,26 @@ export default function Navbar() {
           {/* Brand Name in Center (Mobile and Up) */}
           <div className="absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:translate-x-0 lg:flex-1">
             <Link href="/" className="block lg:ml-3">
-              <span className="text-base sm:text-xl md:text-2xl lg:text-3xl font-bold text-red-700 whitespace-nowrap">
+              <motion.span 
+                className="text-xl sm:text-2xl md:text-3xl lg:text-3xl font-bold whitespace-nowrap"
+                style={{
+                  background: 'linear-gradient(90deg, #B91C1C 0%, #EAB308 50%, #B91C1C 100%)',
+                  backgroundSize: '200% 100%',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'linear'
+                }}
+              >
                 Kalyanautsava
-              </span>
+              </motion.span>
             </Link>
           </div>
 

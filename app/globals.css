@@ -80,3 +80,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes colorShift {
+  0%, 100% {
+    color: #B91C1C; /* red-700 */
+  }
+  50% {
+    color: #EAB308; /* golden color */
+  }
+}
+
+.animate-color-shift {
+  animation: colorShift 3s ease-in-out infinite;
+}
