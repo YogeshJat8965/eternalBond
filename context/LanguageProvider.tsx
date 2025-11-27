@@ -1,8 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { tamilTranslations } from './translations/tamil';
 
-type Lang = 'en' | 'hi';
+type Lang = 'en' | 'hi' | 'ta';
 
 type LangContextType = {
   language: Lang;
@@ -1052,6 +1053,7 @@ const translations: Record<Lang, Record<string, string>> = {
     LANGUAGE: 'भाषा',
     LOGOUT: 'लॉगआउट',
   },
+  ta: tamilTranslations,
 };
 
 const LanguageContext = createContext<LangContextType | undefined>(undefined);
@@ -1062,7 +1064,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   useEffect(() => {
     try {
       const stored = localStorage.getItem('lang') as Lang | null;
-      if (stored === 'en' || stored === 'hi') setLanguageState(stored);
+      if (stored === 'en' || stored === 'hi' || stored === 'ta') setLanguageState(stored);
     } catch (e) {
       // ignore
     }

@@ -27,8 +27,8 @@ export default function AdminHeader() {
         {/* Left Section - Logo & Brand */}
         <div className="flex items-center space-x-4">
           <Link href="/admin" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">K</span>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#B91C1C' }}>
+              <span className="text-white font-bold text-xl">K</span>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-lg font-bold" style={{ color: '#B91C1C' }}>Admin Panel</h1>
@@ -72,7 +72,7 @@ export default function AdminHeader() {
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="flex items-center space-x-2 p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#B91C1C' }}>
                 <User className="w-5 h-5 text-white" />
               </div>
               <span className="hidden md:block text-sm font-medium" style={{ color: '#B91C1C' }}>Admin</span>
@@ -89,7 +89,7 @@ export default function AdminHeader() {
               >
                 <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-rose-50 to-pink-50">
                   <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#B91C1C' }}>
                       <User className="w-6 h-6 text-white" />
                     </div>
                     <div>

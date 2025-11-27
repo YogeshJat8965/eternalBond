@@ -26,6 +26,10 @@ export default function MembersPage() {
     height: '',
     maritalStatus: '',
     caste: '',
+    subCaste: '',
+    annualIncome: '',
+    complexion: '',
+    foodHabits: '',
     education: '',
   });
 
@@ -183,7 +187,7 @@ export default function MembersPage() {
             animate={{ opacity: 1, x: 0 }}
             className={`lg:w-80 ${showFilters ? 'block' : 'hidden lg:block'}`}
           >
-            <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24 border border-golden-100">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24 border border-golden-100 max-h-[calc(100vh-120px)] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-2">
                   <Filter className="w-5 h-5 text-golden-600" />
@@ -197,7 +201,7 @@ export default function MembersPage() {
                 </button>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-4 pr-2">{/* Added padding-right for scrollbar spacing */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {t('GENDER')}
@@ -281,30 +285,137 @@ export default function MembersPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {t('PROFESSION')}
                   </label>
-                  <input
-                    type="text"
-                    placeholder={t('EG_ENGINEER')}
+                  <select
                     className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.profession}
                     onChange={(e) =>
                       setFilters({ ...filters, profession: e.target.value })
                     }
-                  />
+                  >
+                    <option value="">{t('ALL')}</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="business">Business</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Caste
                   </label>
-                  <input
-                    type="text"
-                    placeholder="Enter Caste"
+                  <select
                     className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                     value={filters.caste}
                     onChange={(e) =>
                       setFilters({ ...filters, caste: e.target.value })
                     }
+                  >
+                    <option value="">All</option>
+                    <option value="brahmin">Brahmin</option>
+                    <option value="kshatriya">Kshatriya</option>
+                    <option value="vaishya">Vaishya</option>
+                    <option value="shudra">Shudra</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Sub Caste
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter Sub Caste"
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                    value={filters.subCaste}
+                    onChange={(e) =>
+                      setFilters({ ...filters, subCaste: e.target.value })
+                    }
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Annual Income (₹)
+                  </label>
+                  <select
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                    value={filters.annualIncome}
+                    onChange={(e) =>
+                      setFilters({ ...filters, annualIncome: e.target.value })
+                    }
+                  >
+                    <option value="">All</option>
+                    <option value="0-3">0 - 3 Lakhs</option>
+                    <option value="3-5">3 - 5 Lakhs</option>
+                    <option value="5-7">5 - 7 Lakhs</option>
+                    <option value="7-10">7 - 10 Lakhs</option>
+                    <option value="10-15">10 - 15 Lakhs</option>
+                    <option value="15-20">15 - 20 Lakhs</option>
+                    <option value="20+">20+ Lakhs</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Height
+                  </label>
+                  <select
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                    value={filters.height}
+                    onChange={(e) =>
+                      setFilters({ ...filters, height: e.target.value })
+                    }
+                  >
+                    <option value="">All</option>
+                    <option value="4.5-4.9">4'5" - 4'9"</option>
+                    <option value="4.10-5.2">4'10" - 5'2"</option>
+                    <option value="5.3-5.5">5'3" - 5'5"</option>
+                    <option value="5.6-5.8">5'6" - 5'8"</option>
+                    <option value="5.9-5.11">5'9" - 5'11"</option>
+                    <option value="6.0-6.2">6'0" - 6'2"</option>
+                    <option value="6.3+">6'3" and above</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Complexion
+                  </label>
+                  <select
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                    value={filters.complexion}
+                    onChange={(e) =>
+                      setFilters({ ...filters, complexion: e.target.value })
+                    }
+                  >
+                    <option value="">All</option>
+                    <option value="fair">Fair</option>
+                    <option value="wheatish">Wheatish</option>
+                    <option value="dusky">Dusky</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Food Habits
+                  </label>
+                  <select
+                    className="w-full px-4 py-2 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                    value={filters.foodHabits}
+                    onChange={(e) =>
+                      setFilters({ ...filters, foodHabits: e.target.value })
+                    }
+                  >
+                    <option value="">All</option>
+                    <option value="vegetarian">Vegetarian</option>
+                    <option value="non-vegetarian">Non-Vegetarian</option>
+                    <option value="eggetarian">Eggetarian</option>
+                    <option value="vegan">Vegan</option>
+                  </select>
                 </div>
 
                 <div>
@@ -367,6 +478,10 @@ export default function MembersPage() {
                       height: '',
                       maritalStatus: '',
                       caste: '',
+                      subCaste: '',
+                      annualIncome: '',
+                      complexion: '',
+                      foodHabits: '',
                       education: '',
                     })
                   }

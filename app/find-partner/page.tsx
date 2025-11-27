@@ -241,15 +241,20 @@ export default function FindPartnerPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Profession
               </label>
-              <input
-                type="text"
-                placeholder="e.g., Engineer"
+              <select
                 className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
                 value={searchFilters.profession}
                 onChange={(e) =>
                   setSearchFilters({ ...searchFilters, profession: e.target.value })
                 }
-              />
+              >
+                <option value="">All</option>
+                <option value="engineer">Engineer</option>
+                <option value="doctor">Doctor</option>
+                <option value="teacher">Teacher</option>
+                <option value="business">Business</option>
+                <option value="other">Other</option>
+              </select>
             </div>
 
             <div>

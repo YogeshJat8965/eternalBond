@@ -428,15 +428,20 @@ export default function Home() {
                   <option value="bride">Bride</option>
                   <option value="groom">Groom</option>
                 </select>
-                <input
-                  type="text"
-                  placeholder="Profession"
+                <select
                   className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
                   value={searchData.profession}
                   onChange={(e) =>
                     setSearchData({ ...searchData, profession: e.target.value })
                   }
-                />
+                >
+                  <option value="">Profession</option>
+                  <option value="engineer">Engineer</option>
+                  <option value="doctor">Doctor</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="business">Business</option>
+                  <option value="other">Other</option>
+                </select>
                 <input
                   type="text"
                   placeholder="City"
@@ -446,15 +451,20 @@ export default function Home() {
                     setSearchData({ ...searchData, city: e.target.value })
                   }
                 />
-                <input
-                  type="text"
-                  placeholder="Caste"
+                <select
                   className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base"
                   value={searchData.caste}
                   onChange={(e) =>
                     setSearchData({ ...searchData, caste: e.target.value })
                   }
-                />
+                >
+                  <option value="">Caste</option>
+                  <option value="brahmin">Brahmin</option>
+                  <option value="kshatriya">Kshatriya</option>
+                  <option value="vaishya">Vaishya</option>
+                  <option value="shudra">Shudra</option>
+                  <option value="other">Other</option>
+                </select>
                 <select
                   className="px-3 py-2 md:px-4 md:py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-sm md:text-base sm:col-span-2"
                   value={searchData.maritalStatus}
