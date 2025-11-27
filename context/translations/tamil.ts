@@ -347,7 +347,7 @@ export const tamilTranslations = {
   // Additional translations
   LANGUAGE: 'மொழி',
   LOGOUT: 'வெளியேறு',
-  MENU_DASHBOARD: 'டாஷ்போர்டு',
+  // MENU_DASHBOARD: 'டாஷ்போர்டு',
   CANCEL: 'ரத்து செய்',
   CHANGES_SAVED: 'மாற்றங்கள் சேமிக்கப்பட்டன!',
   PROFILE_UPDATED_SUCCESSFULLY: 'உங்கள் சுயவிவரம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது.',
