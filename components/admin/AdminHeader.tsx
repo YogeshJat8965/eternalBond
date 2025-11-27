@@ -27,12 +27,12 @@ export default function AdminHeader() {
         {/* Left Section - Logo & Brand */}
         <div className="flex items-center space-x-4">
           <Link href="/admin" className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#B91C1C' }}>
-              <span className="text-white font-bold text-xl">K</span>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#EEC900' }}>
+              <span className="font-bold text-xl" style={{ color: '#B91C1C' }}>K</span>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-lg font-bold" style={{ color: '#B91C1C' }}>Admin Panel</h1>
-              <p className="text-xs" style={{ color: '#B91C1C' }}>Kalyanautsava</p>
+              <p className="text-sm" style={{ color: '#EEC900' }}>Kalyanautsava</p>
             </div>
           </Link>
         </div>
