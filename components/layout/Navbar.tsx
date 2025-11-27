@@ -72,7 +72,7 @@ export default function Navbar() {
                 alt="Kalyanautsava Logo" 
                 width={96} 
                 height={96}
-                className="object-contain w-16 h-16 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
+                className="object-contain w-20 h-20 sm:w-20 sm:h-20 md:w-20 md:h-20 lg:w-24 lg:h-24"
                 priority
               />
             </Link>
