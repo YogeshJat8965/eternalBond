@@ -93,3 +93,58 @@
 .animate-color-shift {
   animation: colorShift 3s ease-in-out infinite;
 }
+
+/* Tamil language text scaling */
+html[lang="ta"],
+html[lang="ta"] body,
+html[lang="ta"] * {
+  font-size: 100% !important;
+  line-height: 1.5 !important;
+}
+
+/* Adjust headings for Tamil */
+html[lang="ta"] h1 {
+  font-size: 102% !important;
+}
+
+html[lang="ta"] h2 {
+  font-size: 101% !important;
+}
+
+html[lang="ta"] h3 {
+  font-size: 101% !important;
+}
+
+html[lang="ta"] h4 {
+  font-size: 100% !important;
+}
+
+/* Hero section "Discover Your Forever" badge - make it larger for Tamil */
+html[lang="ta"] section:first-of-type .inline-flex span {
+  font-size: 108% !important;
+}
+
+/* Hero section main heading - increase for Tamil */
+html[lang="ta"] section:first-of-type h1 {
+  font-size: 106% !important;
+}
+
+/* Hero section content near "Discover Your Forever" */
+html[lang="ta"] section:first-of-type h1 span {
+  font-size: 106% !important;
+}
+
+/* Navbar brand text adjustment for Tamil */
+html[lang="ta"] nav span {
+  font-size: 100% !important;
+}
+
+/* Button text adjustment for Tamil */
+html[lang="ta"] button {
+  font-size: 100% !important;
+}
+
+/* Paragraph text for Tamil */
+html[lang="ta"] p {
+  font-size: 100% !important;
+}
