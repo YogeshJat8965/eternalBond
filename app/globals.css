@@ -148,3 +148,46 @@ html[lang="ta"] button {
 html[lang="ta"] p {
   font-size: 100% !important;
 }
+
+/* Kannada language font size adjustments */
+html[lang="kn"] {
+  font-size: 100%;
+}
+
+html[lang="kn"] h1 {
+  font-size: 102% !important;
+}
+
+html[lang="kn"] h2 {
+  font-size: 101% !important;
+}
+
+html[lang="kn"] h3 {
+  font-size: 101% !important;
+}
+
+/* Hero section badge for Kannada */
+html[lang="kn"] .badge {
+  font-size: 108% !important;
+}
+
+/* Hero section content near "Discover Your Forever" */
+html[lang="kn"] section:first-of-type h1 span {
+  font-size: 106% !important;
+}
+
+/* Navbar brand text adjustment for Kannada */
+html[lang="kn"] nav span {
+  font-size: 100% !important;
+}
+
+/* Button text adjustment for Kannada */
+html[lang="kn"] button {
+  font-size: 100% !important;
+}
+
+/* Paragraph text for Kannada */
+html[lang="kn"] p {
+  font-size: 100% !important;
+}
+
