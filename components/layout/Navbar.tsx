@@ -274,7 +274,7 @@ export default function Navbar() {
                   >
                     <div className="flex items-center space-x-3">
                       <Globe className="w-5 h-5" />
-                      <span>{language === 'en' ? 'English' : language === 'hi' ? 'हिन्दी' : 'தமிழ்'}</span>
+                      <span>{language === 'en' ? 'English' : language === 'hi' ? 'हिन्दी' : language === 'ta' ? 'தமிழ்' : 'ಕನ್ನಡ'}</span>
                     </div>
                     <motion.div
                       animate={{ rotate: showLangMenu ? 180 : 0 }}
