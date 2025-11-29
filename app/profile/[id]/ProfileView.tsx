@@ -9,6 +9,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import PetalAnimation from '@/components/animations/PetalAnimation';
+import { useTranslation } from '@/context/LanguageProvider';
 
 type ProfileType = {
   id: number;
@@ -42,18 +43,19 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const { t } = useTranslation();
 
   if (!profile) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Profile Not Found</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">{t('PROFILE_NOT_FOUND')}</h1>
           <button
             onClick={() => router.push('/')}
             className="text-golden-600 hover:text-golden-700 flex items-center gap-2 mx-auto"
           >
             <ArrowLeft className="w-5 h-5" />
-            Back to Home
+            {t('BACK_TO_HOME')}
           </button>
         </div>
       </div>
@@ -73,7 +75,7 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
           className="flex items-center gap-2 text-gray-700 hover:text-golden-600 transition-colors mb-6 font-semibold"
         >
           <ArrowLeft className="w-5 h-5" />
-          {isOwnProfile ? 'Back to Dashboard' : 'Back to Profiles'}
+          {isOwnProfile ? t('BACK_TO_DASHBOARD') : t('BACK_TO_PROFILES')}
         </motion.button>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -115,24 +117,24 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
             <div className="bg-white rounded-3xl border border-golden-100 p-6 space-y-4">
               <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-golden-500" />
-                Quick Info
+                {t('QUICK_INFO')}
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-gray-700">
                   <Calendar className="w-5 h-5 text-golden-500" />
-                  <span className="text-sm"><strong>Age:</strong> {profile.age} years</span>
+                  <span className="text-sm"><strong>{t('AGE')}:</strong> {profile.age} {t('YEARS')}</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-700">
                   <Ruler className="w-5 h-5 text-golden-500" />
-                  <span className="text-sm"><strong>Height:</strong> {profile.height}</span>
+                  <span className="text-sm"><strong>{t('HEIGHT')}:</strong> {profile.height}</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-700">
                   <Globe className="w-5 h-5 text-golden-500" />
-                  <span className="text-sm"><strong>Mother Tongue:</strong> {profile.motherTongue}</span>
+                  <span className="text-sm"><strong>{t('MOTHER_TONGUE')}:</strong> {profile.motherTongue}</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-700">
                   <Award className="w-5 h-5 text-golden-500" />
-                  <span className="text-sm"><strong>Marital Status:</strong> {profile.maritalStatus}</span>
+                  <span className="text-sm"><strong>{t('MARITAL_STATUS')}:</strong> {profile.maritalStatus}</span>
                 </div>
               </div>
             </div>
@@ -151,7 +153,7 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
                   }`}
                 >
                   <Heart className={`w-5 h-5 ${isLiked ? 'fill-white' : ''}`} />
-                  {isLiked ? 'Liked' : 'Like Profile'}
+                  {isLiked ? t('LIKED') : t('LIKE_PROFILE')}
                 </motion.button>
 
                 <motion.button
@@ -160,7 +162,7 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
                   className="w-full py-4 rounded-2xl bg-gradient-to-r from-golden-400 to-golden-600 text-white font-semibold flex items-center justify-center gap-2 shadow-lg"
                 >
                   <MessageCircle className="w-5 h-5" />
-                  Send Message
+                  {t('SEND_MESSAGE')}
                 </motion.button>
               </div>
             )}
@@ -169,10 +171,10 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
             {isOwnProfile && (
               <div className="mt-6 bg-gradient-to-r from-golden-50 to-lavender-50 rounded-2xl p-6 border border-golden-200">
                 <p className="text-center text-gray-700 font-medium">
-                  This is how your profile appears to other members! 👀
+                  {t('OWN_PROFILE_MESSAGE')}
                 </p>
                 <p className="text-center text-sm text-gray-600 mt-2">
-                  Update your information from Profile Settings in the dashboard
+                  {t('UPDATE_PROFILE_INFO')}
                 </p>
               </div>
             )}
@@ -207,7 +209,7 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
                   <Book className="w-5 h-5 text-golden-500" />
-                  About Me
+                  {t('ABOUT_ME')}
                 </h3>
                 <p className="text-gray-700 leading-relaxed">{profile.bio}</p>
               </div>
@@ -216,7 +218,7 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
               <div>
                 <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
                   <Heart className="w-5 h-5 text-golden-500" />
-                  Hobbies & Interests
+                  {t('HOBBIES_INTERESTS')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {profile.hobbies.map((hobby, index) => (
@@ -235,13 +237,13 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
             <div className="bg-white rounded-3xl border border-golden-100 p-8">
               <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                 <GraduationCap className="w-6 h-6 text-golden-500" />
-                Education & Career
+                {t('EDUCATION_CAREER')}
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
-                <InfoItem label="Education" value={profile.education} />
-                <InfoItem label="College/University" value={profile.college} />
-                <InfoItem label="Employed In" value={profile.employedIn} />
-                <InfoItem label="Annual Income" value={profile.income} />
+                <InfoItem label={t('EDUCATION')} value={profile.education} />
+                <InfoItem label={t('COLLEGE_UNIVERSITY')} value={profile.college} />
+                <InfoItem label={t('EMPLOYED_IN')} value={profile.employedIn} />
+                <InfoItem label={t('ANNUAL_INCOME')} value={profile.income} />
               </div>
             </div>
 
@@ -249,13 +251,13 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
             <div className="bg-white rounded-3xl border border-golden-100 p-8">
               <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                 <Globe className="w-6 h-6 text-golden-500" />
-                Religious & Cultural Background
+                {t('RELIGIOUS_CULTURAL')}
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
-                <InfoItem label="Religion" value={profile.religion} />
-                <InfoItem label="Caste" value={profile.caste} />
-                <InfoItem label="Mother Tongue" value={profile.motherTongue} />
-                <InfoItem label="Gender" value={profile.gender} />
+                <InfoItem label={t('RELIGION')} value={profile.religion} />
+                <InfoItem label={t('CASTE')} value={profile.caste} />
+                <InfoItem label={t('MOTHER_TONGUE')} value={profile.motherTongue} />
+                <InfoItem label={t('GENDER')} value={profile.gender} />
               </div>
             </div>
 
@@ -263,13 +265,13 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
             <div className="bg-white rounded-3xl border border-golden-100 p-8">
               <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                 <Home className="w-6 h-6 text-golden-500" />
-                Family Details
+                {t('FAMILY_DETAILS')}
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
-                <InfoItem label="Family Type" value={profile.familyType} />
-                <InfoItem label="Father's Occupation" value={profile.fatherOccupation} />
-                <InfoItem label="Mother's Occupation" value={profile.motherOccupation} />
-                <InfoItem label="Siblings" value={profile.siblings} />
+                <InfoItem label={t('FAMILY_TYPE')} value={profile.familyType} />
+                <InfoItem label={t('FATHER_OCCUPATION')} value={profile.fatherOccupation} />
+                <InfoItem label={t('MOTHER_OCCUPATION')} value={profile.motherOccupation} />
+                <InfoItem label={t('SIBLINGS')} value={profile.siblings} />
               </div>
             </div>
           </motion.div>
