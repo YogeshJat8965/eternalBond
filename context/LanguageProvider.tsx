@@ -3,8 +3,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { tamilTranslations } from './translations/tamil';
 import { kannadaTranslations } from './translations/kannada';
+import { teluguTranslations } from './translations/telugu';
 
-type Lang = 'en' | 'hi' | 'ta' | 'kn';
+type Lang = 'en' | 'hi' | 'ta' | 'kn' | 'te';
 
 type LangContextType = {
   language: Lang;
@@ -1056,6 +1057,7 @@ const translations: Record<Lang, Record<string, string>> = {
   },
   ta: tamilTranslations,
   kn: kannadaTranslations,
+  te: teluguTranslations,
 };
 
 const LanguageContext = createContext<LangContextType | undefined>(undefined);
@@ -1066,7 +1068,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   useEffect(() => {
     try {
       const stored = localStorage.getItem('lang') as Lang | null;
-      if (stored === 'en' || stored === 'hi' || stored === 'ta' || stored === 'kn') setLanguageState(stored);
+      if (stored === 'en' || stored === 'hi' || stored === 'ta' || stored === 'kn' || stored === 'te') setLanguageState(stored);
     } catch (e) {
       // ignore
     }

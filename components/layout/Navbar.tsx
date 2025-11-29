@@ -157,12 +157,20 @@ export default function Navbar() {
                   </button>
                   <button
                     onClick={() => {
+<<<<<<< HEAD
                       setLanguage('kn');
+=======
+                      setLanguage('te');
+>>>>>>> telugu
                       setShowLangMenu(false);
                     }}
                     className="w-full text-left px-4 py-2 hover:bg-golden-50"
                   >
+<<<<<<< HEAD
                     ಕನ್ನಡ
+=======
+                    తెలుగు
+>>>>>>> telugu
                   </button>
                 </div>
               )}
@@ -283,7 +291,11 @@ export default function Navbar() {
                   >
                     <div className="flex items-center space-x-3">
                       <Globe className="w-5 h-5" />
+<<<<<<< HEAD
                       <span>{language === 'en' ? 'English' : language === 'hi' ? 'हिन्दी' : language === 'ta' ? 'தமிழ்' : 'ಕನ್ನಡ'}</span>
+=======
+                      <span>{language === 'en' ? 'English' : language === 'hi' ? 'हिन्दी' : language === 'ta' ? 'தமிழ்' : 'తెలుగు'}</span>
+>>>>>>> telugu
                     </div>
                     <motion.div
                       animate={{ rotate: showLangMenu ? 180 : 0 }}
@@ -346,16 +358,28 @@ export default function Navbar() {
                           </button>
                           <button
                             onClick={() => {
+<<<<<<< HEAD
                               setLanguage('kn');
                               setShowLangMenu(false);
                             }}
                             className={`w-full text-left py-2 px-4 rounded-lg transition-all duration-200 ${
                               language === 'kn'
+=======
+                              setLanguage('te');
+                              setShowLangMenu(false);
+                            }}
+                            className={`w-full text-left py-2 px-4 rounded-lg transition-all duration-200 ${
+                              language === 'te'
+>>>>>>> telugu
                                 ? 'bg-golden-100 text-golden-700 font-medium'
                                 : 'text-gray-600 hover:bg-golden-50'
                             }`}
                           >
+<<<<<<< HEAD
                             ಕನ್ನಡ
+=======
+                            తెలుగు
+>>>>>>> telugu
                           </button>
                         </div>
                       </motion.div>
