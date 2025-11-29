@@ -450,11 +450,11 @@ backend/
 - Seed plans in database
 - Get plans endpoint
 
-**Step 12:** Payment integration
+<!-- **Step 12:** Payment integration
 - Choose payment gateway (Razorpay/Stripe)
 - Create order endpoint
 - Payment verification endpoint
-- Create Payment model
+- Create Payment model -->
 
 **Step 13:** Plan restrictions enforcement
 - Middleware to check plan limits
