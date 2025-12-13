@@ -6,10 +6,17 @@ import { Heart, Menu, X, LogOut, LayoutDashboard, Shield, Globe } from 'lucide-r
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { isAuthenticated, clearAuth } from '@/lib/auth-utils';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Initialize from token on mount
+    if (typeof window !== 'undefined') {
+      return isAuthenticated();
+    }
+    return false;
+  });
   const [showLangMenu, setShowLangMenu] = useState(false);
   const router = useRouter();
   // translation
@@ -26,30 +33,57 @@ export default function Navbar() {
   })();
 
   useEffect(() => {
-    // Check if user is registered
-    const checkRegistration = () => {
-      const registered = localStorage.getItem('isRegistered') === 'true';
-      setIsRegistered(registered);
+    // Check if user is authenticated using token
+    const checkAuth = () => {
+      const authStatus = isAuthenticated();
+      console.log('Navbar: Checking auth status:', authStatus);
+      setIsLoggedIn(authStatus);
     };
     
     // Check on mount
-    checkRegistration();
+    checkAuth();
     
-    // Listen for registration events
-    window.addEventListener('registrationComplete', checkRegistration);
-    window.addEventListener('storage', checkRegistration);
+    // Poll auth status every 500ms for the first 3 seconds after mount
+    // This ensures we catch the login even if events fail
+    let pollCount = 0;
+    const pollInterval = setInterval(() => {
+      pollCount++;
+      checkAuth();
+      if (pollCount >= 6) { // 6 * 500ms = 3 seconds
+        clearInterval(pollInterval);
+      }
+    }, 500);
+    
+    // Listen for auth changes
+    const handleAuthChange = () => {
+      console.log('Navbar: Auth change event received');
+      checkAuth();
+    };
+    
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        checkAuth();
+      }
+    };
+    
+    window.addEventListener('storage', handleAuthChange);
+    window.addEventListener('authChange', handleAuthChange);
+    window.addEventListener('focus', checkAuth);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     
     // Cleanup
     return () => {
-      window.removeEventListener('registrationComplete', checkRegistration);
-      window.removeEventListener('storage', checkRegistration);
+      clearInterval(pollInterval);
+      window.removeEventListener('storage', handleAuthChange);
+      window.removeEventListener('authChange', handleAuthChange);
+      window.removeEventListener('focus', checkAuth);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('isRegistered');
-    localStorage.removeItem('userName');
-    setIsRegistered(false);
+    clearAuth();
+    setIsLoggedIn(false);
     router.push('/');
   };
 
@@ -176,7 +210,7 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-            {isRegistered ? (
+            {isLoggedIn ? (
               <>
                 <Link
                   href="/dashboard"
@@ -385,7 +419,7 @@ export default function Navbar() {
                   </AnimatePresence>
                 </div>
 
-                {isRegistered && (
+                {isLoggedIn && (
                   <Link
                     href="/dashboard"
                     className="flex items-center space-x-3 text-gray-700 hover:text-golden-600 hover:bg-golden-50 transition-all duration-200 py-2.5 px-4 rounded-lg font-medium"
@@ -399,7 +433,7 @@ export default function Navbar() {
 
               {/* Action Buttons - Placed after navigation */}
               <div className="px-6 pb-4">
-                {isRegistered ? (
+                {isLoggedIn ? (
                   <button
                     onClick={() => {
                       handleLogout();

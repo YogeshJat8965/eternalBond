@@ -1,24 +1,55 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Lock } from 'lucide-react';
-import { useState } from 'react';
+import { Mail, Lock, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import FloatingHearts from '@/components/animations/FloatingHearts';
 import { useTranslation } from '@/context/LanguageProvider';
+import { useAuth } from '@/lib/auth-context';
+import { toast } from 'sonner';
+import { isAuthenticated } from '@/lib/auth-utils';
 
 export default function LoginPage() {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push('/members');
+    }
+  }, [router]);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     rememberMe: false,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Login functionality will be implemented with backend!');
+    setLoading(true);
+    
+    try {
+      await login(formData.email, formData.password);
+      toast.success('Login successful! Redirecting...');
+      router.push('/members');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+      toast.error(errorMessage);
+      
+      // Specific error handling
+      if (errorMessage.includes('not verified')) {
+        toast.info('Please check your email to verify your account.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -128,9 +159,17 @@ export default function LoginPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
-                {t('SIGN_IN')}
+                {loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Signing in...</span>
+                  </>
+                ) : (
+                  <span>{t('SIGN_IN')}</span>
+                )}
               </motion.button>
             </form>
 

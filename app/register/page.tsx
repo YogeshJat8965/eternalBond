@@ -1,19 +1,32 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Mail, Lock, Heart, ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { User, Mail, Lock, Heart, ArrowRight, ArrowLeft, Check, Sparkles, Phone, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import PetalAnimation from '@/components/animations/PetalAnimation';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/context/LanguageProvider';
+import { useAuth } from '@/lib/auth-context';
+import { toast } from 'sonner';
+import { isAuthenticated } from '@/lib/auth-utils';
 
 export default function RegisterPage() {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { register } = useAuth();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push('/members');
+    }
+  }, [router]);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,34 +35,176 @@ export default function RegisterPage() {
     gender: '',
     dateOfBirth: '',
     phone: '',
-    otp: '',
+    city: '',
+    height: '',
+    maritalStatus: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateStep1 = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+    if (!formData.gender) {
+      newErrors.gender = 'Gender is required';
+    }
+    if (!formData.dateOfBirth) {
+      newErrors.dateOfBirth = 'Date of birth is required';
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone is required';
+    }
+    if (!formData.city.trim()) {
+      newErrors.city = 'City is required';
+    }
+    if (!formData.height) {
+      newErrors.height = 'Height is required';
+    }
+    if (!formData.maritalStatus) {
+      newErrors.maritalStatus = 'Marital status is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep2 = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleNext = () => {
-    if (step < 3) setStep(step + 1);
+    if (step === 1 && validateStep1()) {
+      setStep(2);
+    }
   };
 
   const handleBack = () => {
-    if (step > 1) setStep(step - 1);
+    if (step > 1) {
+      setStep(step - 1);
+      setErrors({});
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Show success animation
-    setShowSuccess(true);
+    if (!validateStep2()) {
+      return;
+    }
     
-    // Store registration status in localStorage
-    localStorage.setItem('isRegistered', 'true');
-    localStorage.setItem('userName', formData.name);
+    setLoading(true);
     
-    // Dispatch custom event to notify navbar
-    window.dispatchEvent(new Event('registrationComplete'));
-    
-    // Redirect to home after 3 seconds
-    setTimeout(() => {
-      router.push('/');
-    }, 3000);
+    try {
+      await register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        gender: formData.gender,
+        dateOfBirth: formData.dateOfBirth,
+        city: formData.city,
+        height: formData.height,
+        maritalStatus: formData.maritalStatus,
+      });
+      
+      // Show success animation
+      setShowSuccess(true);
+      
+      toast.success('Registration successful! Please check your email to verify your account.');
+      
+      // Redirect to login after 3 seconds
+      setTimeout(() => {
+        router.push('/login');
+      }, 3000);
+    } catch (error: any) {
+      console.error('=== Registration Error Debug Info ===');
+      console.error('Full error:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      console.error('Error code:', error.code);
+      
+      // Get detailed error information
+      const errorMessage = error.response?.data?.message || '';
+      const errorDetails = error.response?.data?.errors;
+      const statusCode = error.response?.status;
+      
+      // Handle specific error cases with detailed messages
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        // Network error - backend not running
+        toast.error('🔌 Cannot connect to server. Please ensure the backend is running on http://localhost:5000');
+        console.error('💡 Solution: Start the backend server with "npm start" in the backend directory');
+        
+      } else if (statusCode === 400) {
+        // Bad request - validation errors
+        if (errorMessage.toLowerCase().includes('already exists') || 
+            errorMessage.toLowerCase().includes('already registered') ||
+            errorMessage.toLowerCase().includes('email') && errorMessage.toLowerCase().includes('phone')) {
+          toast.error('🚫 User with this email or phone already exists!\n\nPlease:\n• Login if you already have an account\n• Use a different email/phone number');
+          
+        } else if (errorMessage.toLowerCase().includes('required')) {
+          // Missing required fields
+          toast.error(`❌ Missing Required Information\n\n${errorMessage}\n\nPlease fill all required fields and try again.`);
+          
+        } else if (errorMessage.toLowerCase().includes('invalid email')) {
+          toast.error('📧 Invalid Email Format\n\nPlease enter a valid email address (e.g., user@example.com)');
+          
+        } else if (errorMessage.toLowerCase().includes('password')) {
+          toast.error(`🔒 Password Issue\n\n${errorMessage}\n\nPassword must be at least 8 characters long.`);
+          
+        } else if (errorMessage.toLowerCase().includes('phone')) {
+          toast.error(`📱 Phone Number Issue\n\n${errorMessage}\n\nPlease enter a valid phone number.`);
+          
+        } else if (errorDetails && Array.isArray(errorDetails)) {
+          // Multiple validation errors
+          const errorList = errorDetails.map(err => `• ${err}`).join('\n');
+          toast.error(`❌ Validation Errors:\n\n${errorList}`);
+          
+        } else {
+          // Generic 400 error
+          toast.error(`⚠️ Registration Error\n\n${errorMessage}\n\nPlease check your information and try again.`);
+        }
+        
+      } else if (statusCode === 500) {
+        // Server error
+        toast.error('❌ Server Error\n\nSomething went wrong on our end. Please try again later.\n\nIf the problem persists, contact support.');
+        console.error('Server error details:', error.response?.data);
+        
+      } else if (statusCode === 409) {
+        // Conflict - duplicate entry
+        toast.error('🚫 Account Already Exists\n\nAn account with this email or phone number already exists.\n\nPlease login or use different credentials.');
+        
+      } else if (statusCode === 429) {
+        // Too many requests
+        toast.error('⏳ Too Many Attempts\n\nPlease wait a moment before trying again.');
+        
+      } else {
+        // Unknown error - show whatever message we have
+        const fallbackMessage = errorMessage || 'Registration failed. Please check your information and try again.';
+        toast.error(`❌ Registration Failed\n\n${fallbackMessage}\n\nIf this continues, please contact support.`);
+        console.error('Unknown error type - Status:', statusCode);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -128,13 +283,15 @@ export default function RegisterPage() {
                   <h2 className="text-3xl font-bold text-gray-800 mb-3">
                     {t('REGISTRATION_SUCCESSFUL')}
                   </h2>
+                  <p className="text-gray-600 mb-2">
+                    Welcome, {formData.name}!
+                  </p>
                   <p className="text-gray-600 mb-4">
-                    {t('WELCOME_TO')}, {formData.name}!
+                    Please check your email to verify your account.
                   </p>
                   <div className="flex items-center justify-center space-x-2 text-green-600">
-                    <Sparkles className="w-5 h-5" />
-                    <p className="font-semibold">{t('JOURNEY_BEGINS')}</p>
-                    <Sparkles className="w-5 h-5" />
+                    <Mail className="w-5 h-5" />
+                    <p className="font-semibold">Verification email sent!</p>
                   </div>
                 </motion.div>
               </motion.div>
@@ -202,7 +359,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="flex items-center justify-center mb-8">
-              {[1, 2, 3].map((s) => (
+              {[1, 2].map((s) => (
                 <div key={s} className="flex items-center">
                   <motion.div
                     initial={false}
@@ -217,7 +374,7 @@ export default function RegisterPage() {
                   >
                     {step > s ? <Check className="w-5 h-5" /> : s}
                   </motion.div>
-                  {s < 3 && (
+                  {s < 2 && (
                     <div
                       className={`w-16 h-1 mx-2 ${
                         step > s ? 'bg-rose-500' : 'bg-pink-100'
@@ -270,7 +427,9 @@ export default function RegisterPage() {
                         <input
                           type="email"
                           required
-                          className="w-full pl-12 pr-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                          className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 ${
+                            errors.email ? 'border-red-500' : 'border-golden-200'
+                          }`}
                           placeholder="your@email.com"
                           value={formData.email}
                           onChange={(e) =>
@@ -278,6 +437,54 @@ export default function RegisterPage() {
                           }
                         />
                       </div>
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t('PHONE')}
+                      </label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <input
+                          type="tel"
+                          required
+                          className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 ${
+                            errors.phone ? 'border-red-500' : 'border-golden-200'
+                          }`}
+                          placeholder="+91 98765 43210"
+                          value={formData.phone}
+                          onChange={(e) =>
+                            setFormData({ ...formData, phone: e.target.value })
+                          }
+                        />
+                      </div>
+                      {errors.phone && (
+                        <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 ${
+                          errors.city ? 'border-red-500' : 'border-golden-200'
+                        }`}
+                        placeholder="Mumbai"
+                        value={formData.city}
+                        onChange={(e) =>
+                          setFormData({ ...formData, city: e.target.value })
+                        }
+                      />
+                      {errors.city && (
+                        <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -317,6 +524,78 @@ export default function RegisterPage() {
                         />
                       </div>
                     </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Height
+                        </label>
+                        <select
+                          required
+                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 ${
+                            errors.height ? 'border-red-500' : 'border-golden-200'
+                          }`}
+                          value={formData.height}
+                          onChange={(e) =>
+                            setFormData({ ...formData, height: e.target.value })
+                          }
+                        >
+                          <option value="">Select Height</option>
+                          <option value="4'6&quot;">4'6"</option>
+                          <option value="4'7&quot;">4'7"</option>
+                          <option value="4'8&quot;">4'8"</option>
+                          <option value="4'9&quot;">4'9"</option>
+                          <option value="4'10&quot;">4'10"</option>
+                          <option value="4'11&quot;">4'11"</option>
+                          <option value="5'0&quot;">5'0"</option>
+                          <option value="5'1&quot;">5'1"</option>
+                          <option value="5'2&quot;">5'2"</option>
+                          <option value="5'3&quot;">5'3"</option>
+                          <option value="5'4&quot;">5'4"</option>
+                          <option value="5'5&quot;">5'5"</option>
+                          <option value="5'6&quot;">5'6"</option>
+                          <option value="5'7&quot;">5'7"</option>
+                          <option value="5'8&quot;">5'8"</option>
+                          <option value="5'9&quot;">5'9"</option>
+                          <option value="5'10&quot;">5'10"</option>
+                          <option value="5'11&quot;">5'11"</option>
+                          <option value="6'0&quot;">6'0"</option>
+                          <option value="6'1&quot;">6'1"</option>
+                          <option value="6'2&quot;">6'2"</option>
+                          <option value="6'3&quot;">6'3"</option>
+                          <option value="6'4&quot;">6'4"</option>
+                          <option value="6'5&quot;">6'5"</option>
+                          <option value="6'6&quot;">6'6"</option>
+                        </select>
+                        {errors.height && (
+                          <p className="text-red-500 text-sm mt-1">{errors.height}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Marital Status
+                        </label>
+                        <select
+                          required
+                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 ${
+                            errors.maritalStatus ? 'border-red-500' : 'border-golden-200'
+                          }`}
+                          value={formData.maritalStatus}
+                          onChange={(e) =>
+                            setFormData({ ...formData, maritalStatus: e.target.value })
+                          }
+                        >
+                          <option value="">Select Status</option>
+                          <option value="Never Married">Never Married</option>
+                          <option value="Divorced">Divorced</option>
+                          <option value="Widowed">Widowed</option>
+                        </select>
+                        {errors.maritalStatus && (
+                          <p className="text-red-500 text-sm mt-1">{errors.maritalStatus}</p>
+                        )}
+                      </div>
+                    </div>
                   </motion.div>
                 )}
 
@@ -350,7 +629,7 @@ export default function RegisterPage() {
                         />
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
-                        {t('PASSWORD_HINT')}
+                        Must be at least 8 characters
                       </p>
                     </div>
 
@@ -388,57 +667,6 @@ export default function RegisterPage() {
                     </div>
                   </motion.div>
                 )}
-
-                {step === 3 && (
-                  <motion.div
-                    key="step3"
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    className="space-y-6"
-                  >
-                    <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                      {t('VERIFY_YOUR_EMAIL')}
-                    </h2>
-
-                    <div className="bg-golden-50 border border-golden-200 rounded-lg p-6 text-center">
-                      <Mail className="w-12 h-12 text-golden-600 mx-auto mb-4" />
-                      <p className="text-gray-700 mb-2">
-                        {t('VERIFICATION_CODE_SENT')}
-                      </p>
-                      <p className="font-semibold text-gray-800 mb-4">
-                        {formData.email}
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 text-center">
-                        {t('ENTER_6_DIGIT_CODE')}
-                      </label>
-                      <input
-                        type="text"
-                        maxLength={6}
-                        required
-                        className="w-full px-4 py-4 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 text-center text-2xl font-semibold tracking-widest"
-                        placeholder="000000"
-                        value={formData.otp}
-                        onChange={(e) =>
-                          setFormData({ ...formData, otp: e.target.value })
-                        }
-                      />
-                    </div>
-
-                    <p className="text-center text-sm text-gray-600">
-                      {t('DIDNT_RECEIVE_CODE')}{' '}
-                      <button
-                        type="button"
-                        className="text-golden-600 hover:text-golden-700 font-semibold"
-                      >
-                        {t('RESEND')}
-                      </button>
-                    </p>
-                  </motion.div>
-                )}
               </AnimatePresence>
 
               <div className="flex gap-4 mt-8">
@@ -448,14 +676,15 @@ export default function RegisterPage() {
                     whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={handleBack}
-                    className="flex-1 bg-pink-100 text-golden-600 py-4 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200 flex items-center justify-center space-x-2"
+                    disabled={loading}
+                    className="flex-1 bg-pink-100 text-golden-600 py-4 rounded-lg font-semibold hover:bg-pink-200 transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50"
                   >
                     <ArrowLeft className="w-5 h-5" />
                     <span>{t('BACK')}</span>
                   </motion.button>
                 )}
 
-                {step < 3 ? (
+                {step < 2 ? (
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -471,10 +700,20 @@ export default function RegisterPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                    disabled={loading}
+                    className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Check className="w-5 h-5" />
-                    <span>{t('COMPLETE_REGISTRATION')}</span>
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Creating account...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-5 h-5" />
+                        <span>{t('COMPLETE_REGISTRATION')}</span>
+                      </>
+                    )}
                   </motion.button>
                 )}
               </div>

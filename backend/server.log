@@ -1,0 +1,4 @@
+[dotenv@17.2.3] injecting env (10) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+Connecting to MongoDB...
+Server running on port 5000
+✅ MongoDB Connected: ac-pwa2vcs-shard-00-01.rjzkmhg.mongodb.net
