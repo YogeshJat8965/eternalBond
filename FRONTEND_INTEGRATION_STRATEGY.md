@@ -217,7 +217,7 @@ Integrate Next.js frontend with completed backend APIs. Focus on clean, function
 ## ✅ Phase B Testing Checklist
 
 ### Test 1: View Profile
-1. Login and go to http://localhost:3000/members
+1. Login and go to http://localhost:3000/my-profile
 2. Should display your profile with all fields:
    - Basic Info: name, email, phone, gender, DOB
    - Location: city, state, country
@@ -629,6 +629,196 @@ When interest is accepted, verify contact info shows:
 2. Email address (clickable mailto: link)
 3. Phone number (clickable tel: link)
 4. Message: "You can now contact [Name] directly!"
+
+---
+
+## Phase D.5: Google OAuth Integration (Continue with Google)
+
+**Goal:** Allow users to register and login using their Google account
+
+### Step 1: Backend Setup - Google OAuth
+**Files to modify/create:**
+- `backend/package.json` - Install passport and passport-google-oauth20
+- `backend/config/passport.js` - Configure Google OAuth strategy
+- `backend/routes/authRoutes.js` - Add Google OAuth routes
+- `backend/controllers/authController.js` - Add Google OAuth handlers
+- `backend/.env` - Add Google OAuth credentials
+
+**Installation:**
+```bash
+cd backend
+npm install passport passport-google-oauth20
+```
+
+**Environment Variables (.env):**
+```
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+```
+
+**New Routes:**
+- GET /api/auth/google - Initiate Google OAuth
+- GET /api/auth/google/callback - Handle Google callback
+- Generate JWT token after successful Google authentication
+- Create user if doesn't exist, login if exists
+
+**Features:**
+- Extract name, email from Google profile
+- Auto-verify email (since Google verifies it)
+- Store Google ID for future logins
+- Generate same JWT token as regular login
+- Handle errors gracefully
+
+### Step 2: Frontend - Google Login Button
+**Files to update:**
+- `app/login/page.tsx` - Add "Continue with Google" button
+- `app/register/page.tsx` - Add "Continue with Google" button
+- `components/GoogleAuthButton.tsx` - Reusable Google button component
+
+**Button Design:**
+- Google logo icon
+- Text: "Continue with Google"
+- Positioned above email/password form
+- Styled with Google brand colors (#4285f4)
+- OR divider between Google and email/password
+
+**Flow:**
+1. User clicks "Continue with Google"
+2. Redirect to backend: `http://localhost:5000/api/auth/google`
+3. Google consent screen opens
+4. User approves
+5. Backend receives user data
+6. Backend creates/updates user in database
+7. Backend generates JWT token
+8. Redirect to frontend: `http://localhost:3000/auth/google/callback?token=...`
+9. Frontend extracts token from URL
+10. Frontend saves token to localStorage
+11. Redirect to /members
+
+**Callback Handler:**
+- Create `app/auth/google/callback/page.tsx`
+- Extract token from URL query params
+- Save to localStorage via setToken()
+- Dispatch authChange event
+- Redirect to /members
+- Show success toast
+
+### Step 3: Google OAuth Redirect Handler
+**Files to create:**
+- `app/auth/google/callback/page.tsx` - Handle Google OAuth redirect
+
+**What it does:**
+```typescript
+'use client';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { setToken, setUser } from '@/lib/auth-utils';
+import { toast } from 'sonner';
+
+export default function GoogleCallbackPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  useEffect(() => {
+    const token = searchParams.get('token');
+    const user = searchParams.get('user');
+    const error = searchParams.get('error');
+    
+    if (error) {
+      toast.error('Google authentication failed');
+      router.push('/login');
+      return;
+    }
+    
+    if (token && user) {
+      setToken(token);
+      setUser(JSON.parse(decodeURIComponent(user)));
+      
+      // Dispatch auth change event
+      window.dispatchEvent(new Event('authChange'));
+      
+      toast.success('Login successful!');
+      router.push('/members');
+    } else {
+      router.push('/login');
+    }
+  }, []);
+  
+  return <div>Processing Google authentication...</div>;
+}
+```
+
+---
+
+## ✅ Phase D.5 Testing Checklist
+
+### Test 1: Google OAuth Setup
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create new project: "Eternal Bond Matrimony"
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials
+5. Add authorized origins: http://localhost:5000
+6. Add authorized redirect URIs: http://localhost:5000/api/auth/google/callback
+7. Copy Client ID and Client Secret to backend/.env
+
+### Test 2: Google Login from Login Page
+1. Go to http://localhost:3000/login
+2. Should see "Continue with Google" button above email/password form
+3. Click "Continue with Google"
+4. Should redirect to Google consent screen
+5. Sign in with your Google account
+6. Should redirect back to http://localhost:3000/auth/google/callback?token=...
+7. Should show "Login successful!" toast
+8. Should redirect to /members
+9. Check localStorage - token and user should be saved
+10. Navbar should show "Dashboard" and "Logout"
+
+**Expected Backend Response:**
+```json
+// Redirect URL
+http://localhost:3000/auth/google/callback?token=eyJhbGciOi...&user=%7B%22name%22%3A%22...%22%7D
+```
+
+### Test 3: Google Signup from Register Page
+1. Logout if logged in
+2. Go to http://localhost:3000/register
+3. Click "Continue with Google"
+4. Sign in with new Google account (not previously registered)
+5. Should create new user in database
+6. Should auto-verify email
+7. Should login automatically
+8. Should redirect to /members
+9. Check database - user should exist with isEmailVerified: true
+
+### Test 4: Google Login - Existing User
+1. Logout
+2. Register a new account with email: test@gmail.com (regular registration)
+3. Verify email via link
+4. Logout
+5. Go to /login
+6. Click "Continue with Google"
+7. Sign in with same test@gmail.com Google account
+8. Should login to existing account (not create duplicate)
+9. Should work successfully
+
+### Test 5: Error Handling
+1. Try Google login with backend offline → should show error
+2. Deny Google consent → should redirect to /login with error message
+3. Invalid callback URL → should handle gracefully
+4. Network error during callback → should show error toast
+
+### Test 6: Google User in Database
+1. Login with Google account
+2. Go to database and check user document
+3. Should have fields:
+   - `googleId`: Google user ID
+   - `name`: from Google profile
+   - `email`: from Google account
+   - `isEmailVerified`: true
+   - `profilePicture`: Google profile picture URL (optional)
+4. Password field should be empty or have random hash
+5. Other profile fields should be empty (to be filled later)
 
 ---
 
@@ -1170,6 +1360,9 @@ Verify all fields are displayed correctly for multiple members.
 - View interests → all interests visible
 
 ---
+## OPTIONAL PHASE
+IN THE DASHBOARD PROFILE  SETTING SHOULD BE WORKING DYNAMICALLY AND VISIBILITY SHOULD BE CHANGED DYNAMICALLY
+
 
 ## Phase F: UI Polish & Validation (Optional - After Phase E)
 

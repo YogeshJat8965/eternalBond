@@ -1,0 +1,554 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Edit2, Save, X, User, MapPin, Briefcase, Heart, Phone, Mail, Calendar, Award, Book, CheckCircle2, AlertCircle } from 'lucide-react';
+import { getProfile, updateProfile } from '@/lib/profile-api';
+import { isAuthenticated } from '@/lib/auth-utils';
+import ProfilePhotos from '@/components/ProfilePhotos';
+import PhotoUploader from '@/components/PhotoUploader';
+
+export default function MembersPage() {
+  const router = useRouter();
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [formData, setFormData] = useState<any>({});
+
+  useEffect(() => {
+    // Check authentication first
+    if (!isAuthenticated()) {
+      router.push('/login');
+      return;
+    }
+    fetchProfile();
+  }, [router]);
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await getProfile();
+      
+      if (res?.success && res.data) {
+        setProfile(res.data);
+        setFormData(res.data);
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Failed to load profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+      setSuccess(null);
+      
+      const res = await updateProfile(formData);
+      
+      if (res?.success && res.data) {
+        setProfile(res.data);
+        setFormData(res.data);
+        setIsEditMode(false);
+        setSuccess('Profile updated successfully!');
+        setTimeout(() => setSuccess(null), 3000);
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Failed to update profile');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setFormData(profile);
+    setIsEditMode(false);
+    setError(null);
+  };
+
+  const handleChange = (field: string, value: any) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handlePhotosChange = (photos: string[]) => {
+    setProfile({ ...profile, photos });
+    fetchProfile();
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-16 bg-gradient-to-br from-golden-50 via-pink-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-golden-200 border-t-golden-600 mx-auto"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <User className="w-8 h-8 text-golden-600" />
+            </div>
+          </div>
+          <p className="mt-6 text-gray-700 font-medium">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !profile) {
+    return (
+      <div className="min-h-screen pt-16 bg-gradient-to-br from-golden-50 via-pink-50 to-white flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="bg-red-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-8 h-8 text-red-500" />
+          </div>
+          <p className="text-red-600 mb-4">{error}</p>
+          <button 
+            onClick={fetchProfile} 
+            className="px-6 py-3 bg-gradient-to-r from-golden-500 to-golden-600 text-white rounded-lg hover:shadow-xl transition-all transform hover:scale-105"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const formatDate = (date: string) => {
+    if (!date) return 'Not specified';
+    return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  const calculateAge = (dob: string) => {
+    if (!dob) return 'N/A';
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const InputField = ({ label, field, type = 'text', options = [], placeholder = '' }: any) => {
+    if (type === 'select') {
+      return (
+        <div className="group">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
+          {isEditMode ? (
+            <select
+              value={formData[field] || ''}
+              onChange={(e) => handleChange(field, e.target.value)}
+              className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-golden-400 focus:border-golden-400 transition-all hover:border-golden-300 text-gray-800"
+            >
+              <option value="">Select...</option>
+              {options.map((opt: string) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          ) : (
+            <p className="text-gray-900 py-2.5 px-4 bg-gray-50 rounded-lg font-medium">{profile?.[field] || <span className="text-gray-400 font-normal">Not specified</span>}</p>
+          )}
+        </div>
+      );
+    }
+
+    if (type === 'textarea') {
+      return (
+        <div className="group">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
+          {isEditMode ? (
+            <textarea
+              value={formData[field] || ''}
+              onChange={(e) => handleChange(field, e.target.value)}
+              rows={4}
+              maxLength={500}
+              placeholder={placeholder}
+              className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-golden-400 focus:border-golden-400 transition-all hover:border-golden-300 resize-none text-gray-800"
+            />
+          ) : (
+            <p className="text-gray-900 py-3 px-4 bg-gray-50 rounded-lg whitespace-pre-wrap leading-relaxed">{profile?.[field] || <span className="text-gray-400">Not specified</span>}</p>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="group">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
+        {isEditMode ? (
+          <input
+            type={type}
+            value={formData[field] || ''}
+            onChange={(e) => handleChange(field, e.target.value)}
+            placeholder={placeholder}
+            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-golden-400 focus:border-golden-400 transition-all hover:border-golden-300 text-gray-800"
+          />
+        ) : (
+          <p className="text-gray-900 py-2.5 px-4 bg-gray-50 rounded-lg font-medium">
+            {type === 'date' ? formatDate(profile?.[field]) : (profile?.[field] || <span className="text-gray-400 font-normal">Not specified</span>)}
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen pt-16 bg-gradient-to-br from-golden-50 via-pink-50 to-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+        >
+          <div>
+            <h1 className="text-5xl font-extrabold mb-3">
+              <span className="bg-gradient-to-r from-golden-500 via-pink-500 to-golden-600 bg-clip-text text-transparent">
+                My Profile
+              </span>
+            </h1>
+            <p className="text-gray-600 text-lg flex items-center gap-2">
+              <User className="w-5 h-5 text-golden-500" />
+              Manage your profile and photos
+            </p>
+          </div>
+          
+          <div className="flex gap-3">
+            {!isEditMode ? (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setIsEditMode(true)}
+                className="flex items-center gap-2 bg-gradient-to-r from-golden-500 to-golden-600 text-white px-8 py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                <Edit2 className="w-5 h-5" />
+                Edit Profile
+              </motion.button>
+            ) : (
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Save className="w-5 h-5" />
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleCancel}
+                  disabled={saving}
+                  className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-8 py-3.5 rounded-xl font-semibold hover:bg-gray-50 transition-all disabled:opacity-50"
+                >
+                  <X className="w-5 h-5" />
+                  Cancel
+                </motion.button>
+              </>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Success/Error Messages */}
+        {success && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 text-green-800 px-6 py-4 rounded-xl shadow-sm flex items-center gap-3"
+          >
+            <CheckCircle2 className="w-6 h-6 text-green-600" />
+            <span className="font-medium">{success}</span>
+          </motion.div>
+        )}
+        
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="mb-6 bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 text-red-800 px-6 py-4 rounded-xl shadow-sm flex items-center gap-3"
+          >
+            <AlertCircle className="w-6 h-6 text-red-600" />
+            <span className="font-medium">{error}</span>
+          </motion.div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Photos */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+            className="lg:col-span-1"
+          >
+            <div className="bg-white rounded-3xl shadow-2xl p-8 border-2 border-gray-100 sticky top-24 hover:shadow-3xl transition-shadow duration-300">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-gradient-to-br from-golden-500 to-pink-500 p-3 rounded-2xl">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Photos</h2>
+              </div>
+              
+              <div className="mb-8">
+                <ProfilePhotos 
+                  photos={profile?.photos || []} 
+                  onChange={handlePhotosChange}
+                />
+              </div>
+
+              <div className="pt-6 border-t-2 border-gray-100">
+                <h3 className="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wide">Upload New Photo</h3>
+                <PhotoUploader 
+                  onUploaded={handlePhotosChange}
+                  currentPhotoCount={profile?.photos?.length || 0}
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Column - Profile Details */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="lg:col-span-2 space-y-6"
+          >
+            {/* Basic Information */}
+            <motion.div 
+              whileHover={{ y: -2 }}
+              className="bg-white rounded-3xl shadow-xl p-8 border-2 border-gray-100 hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-2xl">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Basic Information</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField label="Full Name" field="name" />
+                <div className="group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                  <p className="text-gray-900 py-2.5 px-4 bg-gray-50 rounded-lg font-medium">{profile?.email || 'Not specified'}</p>
+                </div>
+                <InputField label="Phone" field="phone" type="tel" placeholder="+1 234 567 8900" />
+                <div className="group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                  <p className="text-gray-900 py-2.5 px-4 bg-gradient-to-r from-golden-50 to-pink-50 rounded-lg font-medium capitalize">{profile?.gender || 'Not specified'}</p>
+                </div>
+                <InputField label="Date of Birth" field="dateOfBirth" type="date" />
+                <div className="group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Age</label>
+                  <p className="text-gray-900 py-2.5 px-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg font-bold text-lg">{calculateAge(profile?.dateOfBirth)} years</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Location */}
+            <motion.div 
+              whileHover={{ y: -2 }}
+              className="bg-white rounded-3xl shadow-xl p-8 border-2 border-gray-100 hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-2xl">
+                  <MapPin className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Location</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField label="City" field="city" placeholder="Mumbai" />
+                <InputField label="State" field="state" placeholder="Maharashtra" />
+                <InputField label="Country" field="country" placeholder="India" />
+              </div>
+            </motion.div>
+
+            {/* Religious Background */}
+            <motion.div 
+              whileHover={{ y: -2 }}
+              className="bg-white rounded-3xl shadow-xl p-8 border-2 border-gray-100 hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="bg-gradient-to-br from-pink-500 to-rose-600 p-3 rounded-2xl">
+                  <Heart className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Religious Background</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField 
+                  label="Religion" 
+                  field="religion" 
+                  type="select"
+                  options={['Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Other']}
+                />
+                <InputField label="Caste" field="caste" placeholder="Optional" />
+                <InputField label="Sub Caste" field="subCaste" placeholder="Optional" />
+                <InputField label="Mother Tongue" field="motherTongue" placeholder="Hindi" />
+              </div>
+            </motion.div>
+
+            {/* Education & Career */}
+            <motion.div 
+              whileHover={{ y: -2 }}
+              className="bg-white rounded-3xl shadow-xl p-8 border-2 border-gray-100 hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Education & Career</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField 
+                  label="Education Level" 
+                  field="education" 
+                  type="select"
+                  options={["Bachelor's Degree", "Master's Degree", 'PhD', 'Diploma', 'High School', 'Other']}
+                />
+                <InputField label="Profession" field="profession" placeholder="Software Engineer" />
+                <InputField label="Annual Income" field="annualIncome" placeholder="$50,000" />
+              </div>
+            </motion.div>
+
+            {/* Physical Attributes */}
+            <motion.div 
+              whileHover={{ y: -2 }}
+              className="bg-white rounded-3xl shadow-xl p-8 border-2 border-gray-100 hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="bg-gradient-to-br from-orange-500 to-amber-600 p-3 rounded-2xl">
+                  <Award className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Physical Attributes</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField label="Height" field="height" placeholder="5'8&quot;" />
+                <InputField 
+                  label="Complexion" 
+                  field="complexion" 
+                  type="select"
+                  options={['Fair', 'Wheatish', 'Dusky', 'Dark']}
+                />
+                <InputField 
+                  label="Food Habits" 
+                  field="foodHabits" 
+                  type="select"
+                  options={['Vegetarian', 'Non-Vegetarian', 'Eggetarian', 'Vegan']}
+                />
+              </div>
+            </motion.div>
+
+            {/* Marital Status */}
+            <motion.div 
+              whileHover={{ y: -2 }}
+              className="bg-white rounded-3xl shadow-xl p-8 border-2 border-gray-100 hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="bg-gradient-to-br from-red-500 to-pink-600 p-3 rounded-2xl">
+                  <Heart className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Marital Information</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField 
+                  label="Marital Status" 
+                  field="maritalStatus" 
+                  type="select"
+                  options={['Never Married', 'Divorced', 'Widowed', 'Separated']}
+                />
+              </div>
+            </motion.div>
+
+            {/* About Me */}
+            <motion.div 
+              whileHover={{ y: -2 }}
+              className="bg-white rounded-3xl shadow-xl p-8 border-2 border-gray-100 hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-3 rounded-2xl">
+                  <Book className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">About Me</h2>
+              </div>
+
+              <InputField 
+                label="Bio (Max 500 characters)" 
+                field="bio" 
+                type="textarea"
+                placeholder="Tell us about yourself, your interests, and what you're looking for in a partner..."
+              />
+              {isEditMode && (
+                <p className="text-xs text-gray-500 mt-2 flex items-center gap-2">
+                  <span className={`font-semibold ${(formData.bio || '').length > 450 ? 'text-orange-600' : 'text-gray-600'}`}>
+                    {(formData.bio || '').length}/500
+                  </span>
+                  characters
+                </p>
+              )}
+            </motion.div>
+
+            {/* Account Status */}
+            <motion.div 
+              whileHover={{ y: -2 }}
+              className="bg-gradient-to-br from-gray-50 to-white rounded-3xl shadow-xl p-8 border-2 border-gray-100 hover:shadow-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="bg-gradient-to-br from-slate-500 to-gray-600 p-3 rounded-2xl">
+                  <Mail className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Account Status</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">Email Verification</label>
+                  <div className="flex items-center gap-2">
+                    {profile?.isEmailVerified ? (
+                      <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 border-2 border-green-200">
+                        <CheckCircle2 className="w-5 h-5" />
+                        Verified
+                      </span>
+                    ) : (
+                      <span className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-700 px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 border-2 border-yellow-200">
+                        <AlertCircle className="w-5 h-5" />
+                        Not Verified
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">Account Status</label>
+                  <div className="flex items-center gap-2">
+                    {profile?.isActive ? (
+                      <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 border-2 border-green-200">
+                        <CheckCircle2 className="w-5 h-5" />
+                        Active
+                      </span>
+                    ) : (
+                      <span className="bg-gradient-to-r from-red-100 to-pink-100 text-red-700 px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 border-2 border-red-200">
+                        <X className="w-5 h-5" />
+                        Inactive
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}

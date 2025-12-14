@@ -7,7 +7,8 @@ const setCookie = (name: string, value: string, days: number = 30): void => {
   if (typeof window === 'undefined') return;
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+  console.log('setCookie: Set cookie', name, 'value length:', value?.length);
 };
 
 /**
@@ -53,7 +54,9 @@ export const setToken = (token: string): void => {
   
   // Verify it was saved
   const saved = localStorage.getItem('token');
-  console.log('setToken: Verified token saved:', !!saved, 'length:', saved?.length);
+  const cookieValue = document.cookie.split('; ').find(row => row.startsWith('token='));
+  console.log('setToken: Verified token saved to localStorage:', !!saved, 'length:', saved?.length);
+  console.log('setToken: Verified token saved to cookie:', !!cookieValue);
 };
 
 /**

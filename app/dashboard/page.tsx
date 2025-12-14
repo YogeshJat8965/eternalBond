@@ -1,11 +1,14 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, User, Image, Eye, List, MessageCircle, Ban, Settings, Key, LogOut, Camera, LayoutDashboard, ShoppingCart, ImageIcon, ArrowLeft, ArrowRight, Clock, UserX, CheckCircle, XCircle, Send, Smile, Paperclip, Phone, Video, MoreVertical } from 'lucide-react';
+import { Heart, User, Image, Eye, List, MessageCircle, Ban, Settings, Key, LogOut, Camera, LayoutDashboard, ShoppingCart, ImageIcon, ArrowLeft, ArrowRight, Clock, UserX, CheckCircle, XCircle, Send, Smile, Paperclip, Phone, Video, MoreVertical, Edit } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from '@/context/LanguageProvider';
+import { isAuthenticated } from '@/lib/auth-utils';
+import api from '@/lib/api';
+import { toast } from 'sonner';
 
 /**
  * Dashboard Page Component
@@ -129,26 +132,72 @@ export default function DashboardPage() {
     education: '',
     partnerExpectation: ''
   });
+  
+  // Privacy settings state
+  const [privacySettings, setPrivacySettings] = useState({
+    visibility: 'public',
+    showProfileToAll: true,
+    allowContact: true,
+    showOnline: false
+  });
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingChange, setPendingChange] = useState<{
+    setting: string;
+    value: any;
+    label: string;
+  } | null>(null);
+  
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is registered
-    const isRegistered = localStorage.getItem('isRegistered') === 'true';
-    if (!isRegistered) {
+    // Check authentication
+    if (!isAuthenticated()) {
       router.push('/login');
       return;
     }
     
-    const name = localStorage.getItem('userName') || 'User';
-    const onboardingComplete = localStorage.getItem('onboardingComplete') === 'true';
-    const savedProfilePhoto = localStorage.getItem('profilePhoto');
-    const savedGallery = localStorage.getItem('galleryImages');
+    // Fetch real user profile data from API
+    const fetchUserProfile = async () => {
+      try {
+        const response = await api.get('/profile/me');
+        console.log('Dashboard Profile Response:', response.data);
+        
+        const data = response.data.data || response.data;
+        console.log('Profile Data:', data);
+        
+        if (data) {
+          // Extract first name from full name
+          const firstName = data.name?.split(' ')[0] || data.name || 'User';
+          console.log('Setting username to:', firstName);
+          setUserName(firstName);
+          setFormData(prev => ({ ...prev, name: data.name || '' }));
+          
+          // Set profile photo from uploaded images (first photo)
+          if (data.profilePicture) {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+            const photoUrl = data.profilePicture.startsWith('/') 
+              ? `${API_URL}${data.profilePicture}` 
+              : `${API_URL}/uploads/${data.profilePicture}`;
+            console.log('Setting profile photo URL:', photoUrl);
+            setProfilePhoto(photoUrl);
+          } else {
+            console.log('No profile picture in data');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        toast.error('Failed to load profile data');
+        // Fallback to localStorage
+        const name = localStorage.getItem('userName') || 'User';
+        setUserName(name);
+        setFormData(prev => ({ ...prev, name }));
+      }
+    };
     
-    setUserName(name);
-    setFormData(prev => ({ ...prev, name }));
-    if (savedProfilePhoto) {
-      setProfilePhoto(savedProfilePhoto);
-    }
+    fetchUserProfile();
+    
+    const onboardingComplete = localStorage.getItem('onboardingComplete') === 'true';
+    const savedGallery = localStorage.getItem('galleryImages');
     
     // Load gallery images from localStorage
     if (savedGallery) {
@@ -362,6 +411,29 @@ export default function DashboardPage() {
     showToast('Image deleted successfully! 🗑️', 'success');
   };
 
+  // Privacy settings handlers
+  const handlePrivacyChange = (setting: string, value: any, label: string) => {
+    setPendingChange({ setting, value, label });
+    setShowConfirmModal(true);
+  };
+
+  const confirmPrivacyChange = () => {
+    if (pendingChange) {
+      setPrivacySettings(prev => ({
+        ...prev,
+        [pendingChange.setting]: pendingChange.value
+      }));
+      showToast(`${pendingChange.label} updated successfully! ✓`, 'success');
+    }
+    setShowConfirmModal(false);
+    setPendingChange(null);
+  };
+
+  const cancelPrivacyChange = () => {
+    setShowConfirmModal(false);
+    setPendingChange(null);
+  };
+
   const stats = [
     { icon: List, label: t('STATS_TOTAL_SHORTLISTED'), value: '0', color: 'from-purple-400 to-purple-500', bgColor: 'bg-purple-50', textColor: 'text-purple-600' },
     { icon: Heart, label: t('STATS_INTEREST_SENT'), value: '0', color: 'from-golden-400 to-rose-500', bgColor: 'bg-golden-50', textColor: 'text-golden-600' },
@@ -383,6 +455,56 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen pt-16 bg-gradient-to-b from-pink-50 to-white">
+      {/* Privacy Settings Confirmation Modal */}
+      <AnimatePresence>
+        {showConfirmModal && pendingChange && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={cancelPrivacyChange}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
+            >
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                  <Settings className="w-8 h-8 text-purple-600" />
+                </div>
+              </div>
+              
+              <h3 className="text-xl font-bold text-gray-800 text-center mb-2">
+                Confirm Privacy Change
+              </h3>
+              
+              <p className="text-gray-600 text-center mb-6">
+                Are you sure you want to change <span className="font-semibold text-purple-600">"{pendingChange.label}"</span>?
+              </p>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={cancelPrivacyChange}
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmPrivacyChange}
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all"
+                >
+                  Confirm
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Toast Notification */}
       <AnimatePresence>
         {toast.show && (
@@ -603,12 +725,6 @@ export default function DashboardPage() {
                       <User className="w-12 h-12 text-white" />
                     )}
                   </div>
-                  <label 
-                    htmlFor="profile-photo-upload"
-                    className="absolute bottom-0 right-0 w-8 h-8 bg-golden-500 rounded-full flex items-center justify-center shadow-lg hover:bg-pink-600 transition-colors cursor-pointer"
-                  >
-                    <Camera className="w-4 h-4 text-white" />
-                  </label>
                   <input
                     id="profile-photo-upload"
                     type="file"
@@ -617,8 +733,7 @@ export default function DashboardPage() {
                     className="hidden"
                   />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-1">{userName}</h3>
-                <p className="text-sm text-gray-600 mb-3">ID : 43723062</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">{userName}</h3>
                 <Link href="/profile">
                   <button className="w-full bg-golden-50 text-rose-500 py-2 rounded-lg font-medium hover:bg-golden-100 transition-colors">
                     Public Profile
@@ -690,6 +805,40 @@ export default function DashboardPage() {
                 </motion.div>
               ))}
             </div>
+
+            {/* Quick Actions - Manage Profile */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="bg-gradient-to-r from-golden-50 to-pink-50 rounded-2xl shadow-lg p-6 border border-golden-200 mb-8"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-golden-500 to-golden-600 rounded-full flex items-center justify-center">
+                    <User className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-1">
+                      Manage Your Profile
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      Update your information, upload photos, and edit your bio
+                    </p>
+                  </div>
+                </div>
+                <Link href="/my-profile">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-gradient-to-r from-golden-500 to-golden-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+                  >
+                    <Edit className="w-5 h-5" />
+                    Manage Profile
+                  </motion.button>
+                </Link>
+              </div>
+            </motion.div>
 
             {/* Current Package Section */}
             <motion.div
@@ -1424,194 +1573,10 @@ export default function DashboardPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-2xl shadow-lg p-8 border border-pink-100"
               >
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('PROFILE_SETTINGS')}</h2>
-                <p className="text-gray-600 mb-6">
-                  {t('MANAGE_PROFILE_DESC')}
-                </p>
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">Privacy Settings</h2>
 
-                {/* Settings Form */}
-                <div className="space-y-6">
-                  {/* Personal Information */}
-                  <div className="bg-gradient-to-r from-pink-50 to-white border border-pink-100 rounded-xl p-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                      <User className="w-5 h-5 text-golden-600" />
-                      {t('PERSONAL_INFORMATION')}
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('FULL_NAME')}</label>
-                        <input
-                          type="text"
-                          defaultValue={userName}
-                          className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('EMAIL')}</label>
-                        <input
-                          type="email"
-                          placeholder={t('PLACEHOLDER_EMAIL')}
-                          className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('PHONE_NUMBER')}</label>
-                        <input
-                          type="tel"
-                          placeholder={t('PLACEHOLDER_PHONE')}
-                          className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('DATE_OF_BIRTH')}</label>
-                        <input
-                          type="date"
-                          className="w-full px-4 py-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Professional Details */}
-                  <div className="bg-gradient-to-r from-golden-50 to-white border border-golden-200 rounded-xl p-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                      <Settings className="w-5 h-5 text-golden-600" />
-                      {t('PROFESSIONAL_DETAILS')}
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('OCCUPATION')}</label>
-                        <input
-                          type="text"
-                          placeholder={t('PLACEHOLDER_OCCUPATION')}
-                          className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('ANNUAL_INCOME')}</label>
-                        <input
-                          type="text"
-                          placeholder={t('PLACEHOLDER_INCOME')}
-                          className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('EDUCATION')}</label>
-                        <input
-                          type="text"
-                          placeholder={t('PLACEHOLDER_EDUCATION')}
-                          className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">{t('COMPANY')}</label>
-                        <input
-                          type="text"
-                          placeholder={t('PLACEHOLDER_COMPANY')}
-                          className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Personal & Physical Details */}
-                  <div className="bg-gradient-to-r from-purple-50 to-white border border-purple-200 rounded-xl p-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                      <User className="w-5 h-5 text-purple-600" />
-                      Personal & Physical Details
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Caste</label>
-                        <input
-                          type="text"
-                          placeholder="Enter Caste"
-                          className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Sub Caste</label>
-                        <input
-                          type="text"
-                          placeholder="Enter Sub Caste"
-                          className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Annual Income (₹)</label>
-                        <input
-                          type="text"
-                          placeholder="e.g., 5,00,000"
-                          className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Height</label>
-                        <select className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent">
-                          <option value="">Select Height</option>
-                          <option value="4.5">4'5" (135 cm)</option>
-                          <option value="4.6">4'6" (137 cm)</option>
-                          <option value="4.7">4'7" (140 cm)</option>
-                          <option value="4.8">4'8" (142 cm)</option>
-                          <option value="4.9">4'9" (145 cm)</option>
-                          <option value="4.10">4'10" (147 cm)</option>
-                          <option value="4.11">4'11" (150 cm)</option>
-                          <option value="5.0">5'0" (152 cm)</option>
-                          <option value="5.1">5'1" (155 cm)</option>
-                          <option value="5.2">5'2" (157 cm)</option>
-                          <option value="5.3">5'3" (160 cm)</option>
-                          <option value="5.4">5'4" (163 cm)</option>
-                          <option value="5.5">5'5" (165 cm)</option>
-                          <option value="5.6">5'6" (168 cm)</option>
-                          <option value="5.7">5'7" (170 cm)</option>
-                          <option value="5.8">5'8" (173 cm)</option>
-                          <option value="5.9">5'9" (175 cm)</option>
-                          <option value="5.10">5'10" (178 cm)</option>
-                          <option value="5.11">5'11" (180 cm)</option>
-                          <option value="6.0">6'0" (183 cm)</option>
-                          <option value="6.1">6'1" (185 cm)</option>
-                          <option value="6.2">6'2" (188 cm)</option>
-                          <option value="6.3">6'3" (191 cm)</option>
-                          <option value="6.4">6'4" (193 cm)</option>
-                          <option value="6.5">6'5" (196 cm)</option>
-                          <option value="6.6">6'6" (198 cm)</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Complexion</label>
-                        <select className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent">
-                          <option value="">Select Complexion</option>
-                          <option value="fair">Fair</option>
-                          <option value="wheatish">Wheatish</option>
-                          <option value="medium">Medium</option>
-                          <option value="dark">Dark</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2 text-sm">Food Habits</label>
-                        <select className="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent">
-                          <option value="">Select Food Habit</option>
-                          <option value="vegetarian">Vegetarian</option>
-                          <option value="non-vegetarian">Non-Vegetarian</option>
-                          <option value="eggetarian">Eggetarian</option>
-                          <option value="vegan">Vegan</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* About Me */}
-                  <div className="bg-gradient-to-r from-blue-50 to-white border border-blue-100 rounded-xl p-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">{t('ABOUT_ME')}</h3>
-                    <textarea
-                      rows={5}
-                      placeholder={t('TELL_ABOUT_YOURSELF')}
-                      className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 focus:border-transparent resize-none"
-                    />
-                  </div>
-
-                  {/* Privacy Settings */}
-                  <div className="bg-gradient-to-r from-purple-50 to-white border border-purple-100 rounded-xl p-6">
+                {/* Privacy Settings */}
+                <div className="bg-gradient-to-r from-purple-50 to-white border border-purple-100 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-gray-800 mb-4">{t('PRIVACY_SETTINGS')}</h3>
                     <div className="space-y-4">
                       {/* Profile Visibility */}
@@ -1619,11 +1584,25 @@ export default function DashboardPage() {
                         <label className="block text-gray-700 font-medium mb-3 text-sm">Profile Visibility</label>
                         <div className="flex gap-4">
                           <label className="flex items-center cursor-pointer">
-                            <input type="radio" name="visibility" value="public" defaultChecked className="w-4 h-4 text-golden-600 focus:ring-golden-500" />
+                            <input 
+                              type="radio" 
+                              name="visibility" 
+                              value="public" 
+                              checked={privacySettings.visibility === 'public'}
+                              onChange={(e) => handlePrivacyChange('visibility', e.target.value, 'Profile Visibility to Public')}
+                              className="w-4 h-4 text-golden-600 focus:ring-golden-500" 
+                            />
                             <span className="ml-2 text-gray-700">Public</span>
                           </label>
                           <label className="flex items-center cursor-pointer">
-                            <input type="radio" name="visibility" value="private" className="w-4 h-4 text-golden-600 focus:ring-golden-500" />
+                            <input 
+                              type="radio" 
+                              name="visibility" 
+                              value="private" 
+                              checked={privacySettings.visibility === 'private'}
+                              onChange={(e) => handlePrivacyChange('visibility', e.target.value, 'Profile Visibility to Private')}
+                              className="w-4 h-4 text-golden-600 focus:ring-golden-500" 
+                            />
                             <span className="ml-2 text-gray-700">Private</span>
                           </label>
                         </div>
@@ -1633,59 +1612,33 @@ export default function DashboardPage() {
                       {/* Other Privacy Options */}
                       <label className="flex items-center justify-between cursor-pointer">
                         <span className="text-gray-700">{t('SHOW_PROFILE_ALL')}</span>
-                        <input type="checkbox" defaultChecked className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" />
+                        <input 
+                          type="checkbox" 
+                          checked={privacySettings.showProfileToAll}
+                          onChange={(e) => handlePrivacyChange('showProfileToAll', e.target.checked, 'Show my profile to all members')}
+                          className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" 
+                        />
                       </label>
                       <label className="flex items-center justify-between cursor-pointer">
                         <span className="text-gray-700">{t('ALLOW_CONTACT')}</span>
-                        <input type="checkbox" defaultChecked className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" />
+                        <input 
+                          type="checkbox" 
+                          checked={privacySettings.allowContact}
+                          onChange={(e) => handlePrivacyChange('allowContact', e.target.checked, 'Allow members to contact me')}
+                          className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" 
+                        />
                       </label>
                       <label className="flex items-center justify-between cursor-pointer">
                         <span className="text-gray-700">{t('SHOW_ONLINE')}</span>
-                        <input type="checkbox" className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" />
+                        <input 
+                          type="checkbox" 
+                          checked={privacySettings.showOnline}
+                          onChange={(e) => handlePrivacyChange('showOnline', e.target.checked, "Show when I'm online")}
+                          className="w-5 h-5 text-golden-600 rounded focus:ring-golden-500" 
+                        />
                       </label>
                     </div>
                   </div>
-
-                  {/* Forgot Password */}
-                  <div className="bg-gradient-to-r from-red-50 to-white border border-red-100 rounded-xl p-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                      <Key className="w-5 h-5 text-red-600" />
-                      Password Reset
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm">
-                      If you've forgotten your password or want to reset it, click the button below to receive a password reset link via email.
-                    </p>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
-                    >
-                      <Key className="w-5 h-5" />
-                      Forgot Password
-                    </motion.button>
-                  </div>
-
-                  {/* Save Button */}
-                  <div className="flex gap-4">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => {
-                        showToast(t('PROFILE_UPDATED_SUCCESSFULLY'), 'success');
-                      }}
-                      className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
-                    >
-                      {t('SAVE_CHANGES')}
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="px-8 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all"
-                    >
-                      {t('CANCEL')}
-                    </motion.button>
-                  </div>
-                </div>
               </motion.div>
             )}
           </div>

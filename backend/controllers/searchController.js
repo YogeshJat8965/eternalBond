@@ -29,6 +29,18 @@ const searchMembers = async (req, res) => {
       order = 'desc'
     } = req.query;
 
+    console.log('Search filters received:', {
+      gender,
+      maritalStatus,
+      religion,
+      city,
+      profession,
+      education,
+      annualIncome,
+      complexion,
+      foodHabits
+    });
+
     // Build query object
     const query = {
       isActive: true,
@@ -126,6 +138,8 @@ const searchMembers = async (req, res) => {
       query.caste = new RegExp(caste, 'i');
     }
 
+    console.log('Final query object:', JSON.stringify(query, null, 2));
+
     // Pagination
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
@@ -144,6 +158,8 @@ const searchMembers = async (req, res) => {
 
     // Get total count for pagination
     const total = await User.countDocuments(query);
+
+    console.log(`Found ${total} total users, returning ${users.length} users for page ${pageNum}`);
 
     res.status(200).json({
       success: true,

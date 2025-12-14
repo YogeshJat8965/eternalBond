@@ -1,0 +1,729 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { 
+  User, Mail, Phone, MapPin, Calendar, Heart, Briefcase, 
+  GraduationCap, DollarSign, Ruler, Users, Edit, Upload, 
+  Trash2, Loader2, Camera, X
+} from 'lucide-react';
+import api from '@/lib/api';
+import { toast } from 'sonner';
+import { isAuthenticated } from '@/lib/auth-utils';
+import Image from 'next/image';
+
+interface UserProfile {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  gender: string;
+  dateOfBirth: string;
+  city: string;
+  state?: string;
+  country?: string;
+  religion?: string;
+  caste?: string;
+  subCaste?: string;
+  motherTongue?: string;
+  education?: string;
+  profession?: string;
+  annualIncome?: string;
+  height?: string;
+  complexion?: string;
+  foodHabits?: string;
+  maritalStatus: string;
+  bio?: string;
+  photos: string[];
+  profilePicture?: string;
+  isEmailVerified: boolean;
+  createdAt: string;
+}
+
+export default function MyProfilePage() {
+  const router = useRouter();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<Partial<UserProfile>>({});
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push('/login');
+      return;
+    }
+    fetchProfile();
+  }, [router]);
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/profile/me');
+      console.log('Profile data:', response.data);
+      setProfile(response.data.data);
+      setEditForm(response.data.data);
+    } catch (error: any) {
+      console.error('Error fetching profile:', error);
+      toast.error(error.response?.data?.message || 'Failed to load profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      setEditForm(profile!);
+    }
+    setIsEditing(!isEditing);
+  };
+
+  const handleInputChange = (field: string, value: any) => {
+    setEditForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      setSaving(true);
+      const response = await api.put('/profile/me', editForm);
+      setProfile(response.data.data);
+      setIsEditing(false);
+      toast.success('Profile updated successfully!');
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+      toast.error(error.response?.data?.message || 'Failed to update profile');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const handleUploadPhoto = async () => {
+    if (!selectedFile) return;
+
+    // Check photo limit
+    if (profile && profile.photos && profile.photos.length >= 5) {
+      toast.error('Maximum 5 photos allowed');
+      return;
+    }
+
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append('photo', selectedFile);
+
+      const response = await api.post('/profile/upload-photo', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      setProfile(response.data.data);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      toast.success('Photo uploaded successfully!');
+    } catch (error: any) {
+      console.error('Error uploading photo:', error);
+      toast.error(error.response?.data?.message || 'Failed to upload photo');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDeletePhoto = async (index: number) => {
+    if (!window.confirm('Are you sure you want to delete this photo?')) {
+      return;
+    }
+
+    try {
+      const response = await api.delete(`/profile/photo/${index}`);
+      setProfile(response.data.data);
+      toast.success('Photo deleted successfully!');
+    } catch (error: any) {
+      console.error('Error deleting photo:', error);
+      toast.error(error.response?.data?.message || 'Failed to delete photo');
+    }
+  };
+
+  const calculateAge = (dob: string) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-24 flex items-center justify-center bg-gradient-to-br from-golden-50 via-lavender-50 to-golden-50">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-golden-600 mx-auto mb-4" />
+          <p className="text-gray-600">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen pt-24 flex items-center justify-center">
+        <p className="text-gray-600">Profile not found</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen pt-20 pb-12 bg-gradient-to-br from-golden-50 via-lavender-50 to-golden-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+          <button
+            onClick={handleEditToggle}
+            className="flex items-center space-x-2 px-6 py-2 bg-golden-500 text-white rounded-full hover:bg-golden-600 transition-colors"
+          >
+            <Edit className="w-4 h-4" />
+            <span>{isEditing ? 'Cancel' : 'Edit Profile'}</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Photos */}
+          <div className="lg:col-span-1">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl shadow-lg p-6"
+            >
+              <h2 className="text-xl font-semibold mb-4">Photos</h2>
+              
+              {/* Profile Picture */}
+              <div className="relative w-full aspect-square rounded-xl overflow-hidden mb-4 bg-gray-100">
+                {profile.profilePicture ? (
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/uploads/${profile.profilePicture}`}
+                    alt={profile.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <User className="w-24 h-24 text-gray-300" />
+                  </div>
+                )}
+              </div>
+
+              {/* Photo Gallery */}
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                {profile.photos && profile.photos.length > 0 ? (
+                  profile.photos.map((photo, index) => (
+                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 group">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/uploads/${photo}`}
+                        alt={`Photo ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      <button
+                        onClick={() => handleDeletePhoto(index)}
+                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-2 text-center text-gray-400 py-8">
+                    No photos uploaded yet
+                  </div>
+                )}
+              </div>
+
+              {/* Upload Photo */}
+              {profile.photos && profile.photos.length < 5 && (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                  {previewUrl ? (
+                    <div className="space-y-4">
+                      <div className="relative w-full aspect-square rounded-lg overflow-hidden">
+                        <Image src={previewUrl} alt="Preview" fill className="object-cover" />
+                      </div>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={handleUploadPhoto}
+                          disabled={uploading}
+                          className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50"
+                        >
+                          {uploading ? (
+                            <><Loader2 className="w-4 h-4 animate-spin" /> <span>Uploading...</span></>
+                          ) : (
+                            <><Upload className="w-4 h-4" /> <span>Upload</span></>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedFile(null);
+                            setPreviewUrl(null);
+                          }}
+                          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                      />
+                      <div className="flex flex-col items-center space-y-2 text-gray-500 hover:text-golden-600 transition-colors">
+                        <Camera className="w-8 h-8" />
+                        <span className="text-sm font-medium">Upload Photo</span>
+                        <span className="text-xs text-gray-400">{profile.photos?.length || 0}/5 photos</span>
+                      </div>
+                    </label>
+                  )}
+                </div>
+              )}
+            </motion.div>
+          </div>
+
+          {/* Right Column - Profile Details */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Basic Information */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-2xl shadow-lg p-6"
+            >
+              <h2 className="text-xl font-semibold mb-6 flex items-center">
+                <User className="w-5 h-5 mr-2 text-golden-600" />
+                Basic Information
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Full Name</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.name || ''}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800 font-medium">{profile.name}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Email</label>
+                  <div className="flex items-center space-x-2">
+                    <Mail className="w-4 h-4 text-gray-400" />
+                    <p className="text-gray-800">{profile.email}</p>
+                    {profile.isEmailVerified && (
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Verified</span>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Phone</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.phone || ''}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <Phone className="w-4 h-4 text-gray-400" />
+                      <p className="text-gray-800">{profile.phone}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Gender</label>
+                  <p className="text-gray-800 capitalize">{profile.gender}</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Date of Birth</label>
+                  {isEditing ? (
+                    <input
+                      type="date"
+                      value={editForm.dateOfBirth?.split('T')[0] || ''}
+                      onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="w-4 h-4 text-gray-400" />
+                      <p className="text-gray-800">{new Date(profile.dateOfBirth).toLocaleDateString()} ({calculateAge(profile.dateOfBirth)} years)</p>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Marital Status</label>
+                  {isEditing ? (
+                    <select
+                      value={editForm.maritalStatus || ''}
+                      onChange={(e) => handleInputChange('maritalStatus', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    >
+                      <option value="">Select</option>
+                      <option value="Never Married">Never Married</option>
+                      <option value="Divorced">Divorced</option>
+                      <option value="Widowed">Widowed</option>
+                      <option value="Awaiting Divorce">Awaiting Divorce</option>
+                    </select>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <Heart className="w-4 h-4 text-gray-400" />
+                      <p className="text-gray-800">{profile.maritalStatus}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Location */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-2xl shadow-lg p-6"
+            >
+              <h2 className="text-xl font-semibold mb-6 flex items-center">
+                <MapPin className="w-5 h-5 mr-2 text-golden-600" />
+                Location
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">City</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.city || ''}
+                      onChange={(e) => handleInputChange('city', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.city || 'Not specified'}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">State</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.state || ''}
+                      onChange={(e) => handleInputChange('state', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.state || 'Not specified'}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Country</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.country || ''}
+                      onChange={(e) => handleInputChange('country', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.country || 'Not specified'}</p>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Religious Information */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white rounded-2xl shadow-lg p-6"
+            >
+              <h2 className="text-xl font-semibold mb-6">Religious Background</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Religion</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.religion || ''}
+                      onChange={(e) => handleInputChange('religion', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.religion || 'Not specified'}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Caste</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.caste || ''}
+                      onChange={(e) => handleInputChange('caste', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.caste || 'Not specified'}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Sub Caste</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.subCaste || ''}
+                      onChange={(e) => handleInputChange('subCaste', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.subCaste || 'Not specified'}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Mother Tongue</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.motherTongue || ''}
+                      onChange={(e) => handleInputChange('motherTongue', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.motherTongue || 'Not specified'}</p>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Professional Information */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="bg-white rounded-2xl shadow-lg p-6"
+            >
+              <h2 className="text-xl font-semibold mb-6 flex items-center">
+                <Briefcase className="w-5 h-5 mr-2 text-golden-600" />
+                Professional Details
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Education</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.education || ''}
+                      onChange={(e) => handleInputChange('education', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                      placeholder="e.g., Bachelor's Degree"
+                    />
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <GraduationCap className="w-4 h-4 text-gray-400" />
+                      <p className="text-gray-800">{profile.education || 'Not specified'}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Profession</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.profession || ''}
+                      onChange={(e) => handleInputChange('profession', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                      placeholder="e.g., Software Engineer"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.profession || 'Not specified'}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Annual Income</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.annualIncome || ''}
+                      onChange={(e) => handleInputChange('annualIncome', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                      placeholder="e.g., 5-7 Lakhs"
+                    />
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <DollarSign className="w-4 h-4 text-gray-400" />
+                      <p className="text-gray-800">{profile.annualIncome || 'Not specified'}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Physical Attributes */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-white rounded-2xl shadow-lg p-6"
+            >
+              <h2 className="text-xl font-semibold mb-6 flex items-center">
+                <Ruler className="w-5 h-5 mr-2 text-golden-600" />
+                Physical Attributes
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Height</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.height || ''}
+                      onChange={(e) => handleInputChange('height', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                      placeholder="e.g., 5'8\""
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.height || 'Not specified'}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Complexion</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.complexion || ''}
+                      onChange={(e) => handleInputChange('complexion', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <p className="text-gray-800">{profile.complexion || 'Not specified'}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Food Habits</label>
+                  {isEditing ? (
+                    <select
+                      value={editForm.foodHabits || ''}
+                      onChange={(e) => handleInputChange('foodHabits', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                    >
+                      <option value="">Select</option>
+                      <option value="Vegetarian">Vegetarian</option>
+                      <option value="Non-Vegetarian">Non-Vegetarian</option>
+                      <option value="Eggetarian">Eggetarian</option>
+                      <option value="Vegan">Vegan</option>
+                    </select>
+                  ) : (
+                    <p className="text-gray-800">{profile.foodHabits || 'Not specified'}</p>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* About Me */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="bg-white rounded-2xl shadow-lg p-6"
+            >
+              <h2 className="text-xl font-semibold mb-6 flex items-center">
+                <Users className="w-5 h-5 mr-2 text-golden-600" />
+                About Me
+              </h2>
+              {isEditing ? (
+                <textarea
+                  value={editForm.bio || ''}
+                  onChange={(e) => handleInputChange('bio', e.target.value)}
+                  rows={5}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-golden-500 focus:border-transparent"
+                  placeholder="Tell us about yourself..."
+                />
+              ) : (
+                <p className="text-gray-700 leading-relaxed">
+                  {profile.bio || 'No bio added yet. Click "Edit Profile" to add one.'}
+                </p>
+              )}
+            </motion.div>
+
+            {/* Save Button */}
+            {isEditing && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex justify-end space-x-4"
+              >
+                <button
+                  onClick={handleEditToggle}
+                  className="px-8 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={saving}
+                  className="px-8 py-3 bg-golden-500 text-white rounded-full hover:bg-golden-600 transition-colors disabled:opacity-50 flex items-center space-x-2"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <span>Save Changes</span>
+                  )}
+                </button>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

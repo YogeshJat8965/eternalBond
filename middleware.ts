@@ -3,11 +3,13 @@ import type { NextRequest } from 'next/server';
 
 // List of protected routes that require authentication
 const protectedRoutes = [
+  '/dashboard',
   '/members',
   '/find-partner',
   '/profile',
   '/interests',
   '/messages',
+  '/my-profile',
 ];
 
 // List of auth routes that should redirect to /members if already logged in

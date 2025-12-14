@@ -1,18 +1,17 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, Heart, MapPin, Briefcase, GraduationCap, Home, 
+  ArrowLeft, Heart, MapPin, Briefcase, GraduationCap, 
   Calendar, Ruler, Globe, Book, Sparkles,
-  Award, CheckCircle, MessageCircle
+  Award, MessageCircle, DollarSign, User, Coffee, Send
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import PetalAnimation from '@/components/animations/PetalAnimation';
 import { useTranslation } from '@/context/LanguageProvider';
 
 type ProfileType = {
-  id: number;
+  id: string;
   name: string;
   age: number;
   profession: string;
@@ -21,19 +20,15 @@ type ProfileType = {
   gender: string;
   height: string;
   religion: string;
-  caste: string;
-  motherTongue: string;
+  caste?: string;
+  subCaste?: string;
+  motherTongue?: string;
   maritalStatus: string;
   education: string;
-  college: string;
-  employedIn: string;
-  income: string;
-  familyType: string;
-  fatherOccupation: string;
-  motherOccupation: string;
-  siblings: string;
-  bio: string;
-  hobbies: string[];
+  income?: string;
+  complexion?: string;
+  foodHabits?: string;
+  bio?: string;
   email: string;
   phone: string;
   gallery: string[];
@@ -43,140 +38,152 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [showInterestModal, setShowInterestModal] = useState(false);
   const { t } = useTranslation();
 
   if (!profile) {
     return (
-      <div className="min-h-screen pt-20 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">{t('PROFILE_NOT_FOUND')}</h1>
-          <button
-            onClick={() => router.push('/')}
-            className="text-golden-600 hover:text-golden-700 flex items-center gap-2 mx-auto"
+      <div className="min-h-screen pt-20 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center bg-white p-12 rounded-3xl shadow-xl"
+        >
+          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-golden-100 to-pink-100 rounded-full flex items-center justify-center">
+            <User className="w-10 h-10 text-golden-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">Profile Not Found</h1>
+          <p className="text-gray-600 mb-6">The profile you're looking for doesn't exist or has been removed.</p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/members')}
+            className="bg-gradient-to-r from-golden-500 to-golden-600 text-white px-8 py-3 rounded-xl font-semibold flex items-center gap-2 mx-auto shadow-lg hover:shadow-xl transition-all"
           >
             <ArrowLeft className="w-5 h-5" />
-            {t('BACK_TO_HOME')}
-          </button>
-        </div>
+            Back to Browse
+          </motion.button>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-16 relative overflow-hidden" style={{ backgroundColor: '#FFF9E7' }}>
-      <PetalAnimation />
+    <div className="min-h-screen pt-24 bg-gradient-to-br from-gray-50 via-white to-golden-50/30">
 
       {/* Header with Back Button */}
-      <div className="relative z-10 container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 pt-6 pb-4 max-w-7xl">
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => isOwnProfile ? router.push('/dashboard') : router.push('/')}
-          className="flex items-center gap-2 text-gray-700 hover:text-golden-600 transition-colors mb-6 font-semibold"
+          onClick={() => isOwnProfile ? router.push('/dashboard') : router.push('/members')}
+          className="flex items-center gap-2 text-gray-600 hover:text-golden-600 transition-colors mb-8 font-medium group"
         >
-          <ArrowLeft className="w-5 h-5" />
-          {isOwnProfile ? t('BACK_TO_DASHBOARD') : t('BACK_TO_PROFILES')}
+          <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center group-hover:shadow-lg transition-all">
+            <ArrowLeft className="w-5 h-5" />
+          </div>
+          <span className="text-lg">{isOwnProfile ? 'Back to Dashboard' : 'Back to Browse'}</span>
         </motion.button>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Images & Quick Info */}
+        <div className="grid lg:grid-cols-5 gap-8">
+          {/* Left Column - Images & Quick Actions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-1"
+            className="lg:col-span-2"
           >
-            {/* Main Image */}
-            <div className="bg-white rounded-3xl overflow-hidden border border-golden-100 mb-6">
-              <div className="relative h-96 overflow-hidden">
-                <img
+            {/* Main Image with modern styling */}
+            <div className="bg-white rounded-3xl overflow-hidden shadow-xl mb-6 group">
+              <div className="relative h-[500px] overflow-hidden">
+                <motion.img
+                  key={selectedImage}
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
                   src={profile.gallery[selectedImage]}
                   alt={profile.name}
                   className="w-full h-full object-cover"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
-              {/* Gallery Thumbnails */}
-              <div className="p-4 grid grid-cols-3 gap-3">
-                {profile.gallery.map((img, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`relative h-24 rounded-xl overflow-hidden border-2 transition-all ${
-                      selectedImage === index
-                        ? 'border-golden-500 shadow-lg'
-                        : 'border-gray-200 hover:border-golden-300'
-                    }`}
-                  >
-                    <img src={img} alt={`${profile.name} ${index + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
+              {/* Gallery Thumbnails with modern design */}
+              {profile.gallery.length > 1 && (
+                <div className="p-4 bg-gradient-to-br from-gray-50 to-white">
+                  <div className="grid grid-cols-4 gap-3">
+                    {profile.gallery.slice(0, 4).map((img, index) => (
+                      <motion.button
+                        key={index}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setSelectedImage(index)}
+                        className={`relative h-20 rounded-xl overflow-hidden transition-all ${
+                          selectedImage === index
+                            ? 'ring-4 ring-golden-500 shadow-lg'
+                            : 'ring-2 ring-gray-200 hover:ring-golden-300'
+                        }`}
+                      >
+                        <img src={img} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                        {selectedImage === index && (
+                          <div className="absolute inset-0 bg-golden-500/20" />
+                        )}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Quick Stats */}
-            <div className="bg-white rounded-3xl border border-golden-100 p-6 space-y-4">
-              <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-golden-500" />
-                {t('QUICK_INFO')}
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-gray-700">
-                  <Calendar className="w-5 h-5 text-golden-500" />
-                  <span className="text-sm"><strong>{t('AGE')}:</strong> {profile.age} {t('YEARS')}</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-700">
-                  <Ruler className="w-5 h-5 text-golden-500" />
-                  <span className="text-sm"><strong>{t('HEIGHT')}:</strong> {profile.height}</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-700">
-                  <Globe className="w-5 h-5 text-golden-500" />
-                  <span className="text-sm"><strong>{t('MOTHER_TONGUE')}:</strong> {profile.motherTongue}</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-700">
-                  <Award className="w-5 h-5 text-golden-500" />
-                  <span className="text-sm"><strong>{t('MARITAL_STATUS')}:</strong> {profile.maritalStatus}</span>
-                </div>
-              </div>
+            {/* Quick Stats with modern cards */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <StatCard icon={Calendar} label="Age" value={`${profile.age} years`} />
+              <StatCard icon={Ruler} label="Height" value={profile.height} />
+              {profile.motherTongue && <StatCard icon={Globe} label="Language" value={profile.motherTongue} />}
+              <StatCard icon={Award} label="Status" value={profile.maritalStatus} />
             </div>
 
-            {/* Action Buttons - Only show for other profiles */}
+            {/* Action Buttons - Modern design */}
             {!isOwnProfile && (
-              <div className="mt-6 space-y-3">
+              <div className="space-y-3">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowInterestModal(true)}
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-golden-500 via-golden-600 to-amber-600 text-white font-semibold flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all group"
+                >
+                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  Send Interest
+                </motion.button>
+
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setIsLiked(!isLiked)}
-                  className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all ${
+                  className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all shadow-lg ${
                     isLiked
-                      ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg'
-                      : 'bg-white border-2 border-golden-200 text-gray-700 hover:border-golden-400'
+                      ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200'
                   }`}
                 >
-                  <Heart className={`w-5 h-5 ${isLiked ? 'fill-white' : ''}`} />
-                  {isLiked ? t('LIKED') : t('LIKE_PROFILE')}
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-golden-400 to-golden-600 text-white font-semibold flex items-center justify-center gap-2 shadow-lg"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  {t('SEND_MESSAGE')}
+                  <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                  {isLiked ? 'Liked' : 'Like Profile'}
                 </motion.button>
               </div>
             )}
 
-            {/* Own Profile Message */}
+            {/* Own Profile Message - Website theme */}
             {isOwnProfile && (
-              <div className="mt-6 bg-gradient-to-r from-golden-50 to-lavender-50 rounded-2xl p-6 border border-golden-200">
-                <p className="text-center text-gray-700 font-medium">
-                  {t('OWN_PROFILE_MESSAGE')}
-                </p>
-                <p className="text-center text-sm text-gray-600 mt-2">
-                  {t('UPDATE_PROFILE_INFO')}
-                </p>
-              </div>
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="bg-gradient-to-br from-golden-50 via-amber-50 to-pink-50 rounded-2xl p-8 border-2 border-golden-200 text-center shadow-lg"
+              >
+                <div className="w-16 h-16 bg-gradient-to-br from-golden-400 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <User className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-gray-800 font-semibold text-lg mb-2">This is your profile</p>
+                <p className="text-gray-600 text-sm">Others see this information when they view your profile</p>
+              </motion.div>
             )}
           </motion.div>
 
@@ -185,95 +192,126 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="lg:col-span-2 space-y-6"
+            className="lg:col-span-3 space-y-6"
           >
-            {/* Profile Header */}
-            <div className="bg-white rounded-3xl border border-golden-100 p-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                <div>
-                  <h1 className="text-4xl font-bold text-gray-800 mb-2">{profile.name}</h1>
-                  <div className="flex flex-wrap gap-4 text-gray-600">
-                    <span className="flex items-center gap-2">
-                      <Briefcase className="w-5 h-5 text-golden-500" />
-                      {profile.profession}
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-golden-500" />
-                      {profile.location}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bio */}
+            {/* Profile Header - Modern design with website theme */}
+            <div className="bg-white rounded-3xl shadow-xl p-8 border-2 border-golden-100 hover:shadow-2xl transition-shadow">
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
-                  <Book className="w-5 h-5 text-golden-500" />
-                  {t('ABOUT_ME')}
-                </h3>
-                <p className="text-gray-700 leading-relaxed">{profile.bio}</p>
-              </div>
-
-              {/* Hobbies */}
-              <div>
-                <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
-                  <Heart className="w-5 h-5 text-golden-500" />
-                  {t('HOBBIES_INTERESTS')}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {profile.hobbies.map((hobby, index) => (
-                    <span
-                      key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-golden-50 to-lavender-50 rounded-full text-sm font-semibold text-gray-700 border border-golden-200"
-                    >
-                      {hobby}
-                    </span>
-                  ))}
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-golden-600 via-amber-600 to-pink-600 bg-clip-text text-transparent mb-4">
+                  {profile.name}
+                </h1>
+                <div className="flex flex-wrap gap-4">
+                  <InfoBadge icon={Briefcase} text={profile.profession} />
+                  <InfoBadge icon={MapPin} text={profile.location} />
+                  <InfoBadge icon={User} text={profile.gender} />
                 </div>
               </div>
-            </div>
 
-            {/* Education & Career */}
-            <div className="bg-white rounded-3xl border border-golden-100 p-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <GraduationCap className="w-6 h-6 text-golden-500" />
-                {t('EDUCATION_CAREER')}
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <InfoItem label={t('EDUCATION')} value={profile.education} />
-                <InfoItem label={t('COLLEGE_UNIVERSITY')} value={profile.college} />
-                <InfoItem label={t('EMPLOYED_IN')} value={profile.employedIn} />
-                <InfoItem label={t('ANNUAL_INCOME')} value={profile.income} />
+              {/* Bio Section - Always displayed */}
+              <div className="pt-6 border-t border-golden-100">
+                <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <div className="w-10 h-10 bg-gradient-to-br from-golden-100 to-amber-100 rounded-lg flex items-center justify-center">
+                    <Book className="w-5 h-5 text-golden-700" />
+                  </div>
+                  <span className="bg-gradient-to-r from-golden-600 to-amber-600 bg-clip-text text-transparent">
+                    About Me
+                  </span>
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  {profile.bio || 'No bio provided yet.'}
+                </p>
               </div>
             </div>
 
-            {/* Religious & Cultural Background */}
-            <div className="bg-white rounded-3xl border border-golden-100 p-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <Globe className="w-6 h-6 text-golden-500" />
-                {t('RELIGIOUS_CULTURAL')}
+            {/* Education & Career - Website theme */}
+            <div className="bg-white rounded-3xl shadow-xl p-8 border border-golden-100 hover:shadow-2xl transition-shadow">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-golden-400 to-golden-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <GraduationCap className="w-6 h-6 text-white" />
+                </div>
+                <span className="bg-gradient-to-r from-golden-600 to-amber-600 bg-clip-text text-transparent">
+                  Education & Career
+                </span>
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
-                <InfoItem label={t('RELIGION')} value={profile.religion} />
-                <InfoItem label={t('CASTE')} value={profile.caste} />
-                <InfoItem label={t('MOTHER_TONGUE')} value={profile.motherTongue} />
-                <InfoItem label={t('GENDER')} value={profile.gender} />
+                <DetailCard label="Education" value={profile.education} icon={GraduationCap} />
+                <DetailCard label="Profession" value={profile.profession} icon={Briefcase} />
+                {profile.income && profile.income !== 'Not Specified' && (
+                  <DetailCard label="Annual Income" value={profile.income} icon={DollarSign} />
+                )}
               </div>
             </div>
 
-            {/* Family Details */}
-            <div className="bg-white rounded-3xl border border-golden-100 p-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <Home className="w-6 h-6 text-golden-500" />
-                {t('FAMILY_DETAILS')}
+            {/* Religious & Cultural Background - Website theme */}
+            <div className="bg-white rounded-3xl shadow-xl p-8 border border-pink-100 hover:shadow-2xl transition-shadow">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-pink-400 via-rose-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <Globe className="w-6 h-6 text-white" />
+                </div>
+                <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  Religious & Cultural Background
+                </span>
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
-                <InfoItem label={t('FAMILY_TYPE')} value={profile.familyType} />
-                <InfoItem label={t('FATHER_OCCUPATION')} value={profile.fatherOccupation} />
-                <InfoItem label={t('MOTHER_OCCUPATION')} value={profile.motherOccupation} />
-                <InfoItem label={t('SIBLINGS')} value={profile.siblings} />
+                <DetailCard label="Religion" value={profile.religion} icon={Globe} />
+                <DetailCard label="Marital Status" value={profile.maritalStatus} icon={Award} />
+                {profile.caste && (
+                  <DetailCard label="Caste" value={profile.caste.toUpperCase()} icon={Award} />
+                )}
+                {profile.subCaste && (
+                  <DetailCard label="Sub Caste" value={profile.subCaste} icon={Award} />
+                )}
+                {profile.motherTongue && (
+                  <DetailCard label="Mother Tongue" value={profile.motherTongue} icon={Book} />
+                )}
               </div>
             </div>
+
+            {/* Lifestyle & Preferences - Website theme */}
+            {(profile.foodHabits || profile.complexion) && (
+              <div className="bg-white rounded-3xl shadow-xl p-8 border border-emerald-100 hover:shadow-2xl transition-shadow">
+                <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Coffee className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                    Lifestyle & Preferences
+                  </span>
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {profile.foodHabits && (
+                    <DetailCard label="Food Habits" value={profile.foodHabits} icon={Coffee} />
+                  )}
+                  {profile.complexion && (
+                    <DetailCard label="Complexion" value={profile.complexion} icon={User} />
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Contact Information - Only visible to profile owner or those who sent interest */}
+            {!isOwnProfile && (
+              <div className="bg-gradient-to-br from-golden-50 via-white to-pink-50 rounded-3xl shadow-xl p-8 border-2 border-golden-200">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-golden-400 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <MessageCircle className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Interested in this profile?</h3>
+                  <p className="text-gray-600 mb-6">Send an interest to connect and view contact details</p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setShowInterestModal(true)}
+                    className="px-8 py-4 bg-gradient-to-r from-golden-500 via-golden-600 to-amber-600 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Send className="w-5 h-5" />
+                      Send Interest Now
+                    </span>
+                  </motion.button>
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
@@ -281,12 +319,44 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
   );
 }
 
-// Helper component for info items
-function InfoItem({ label, value }: { label: string; value: string }) {
+// Modern helper components
+function StatCard({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
   return (
-    <div className="space-y-1">
-      <p className="text-sm font-medium text-gray-500">{label}</p>
-      <p className="text-base font-semibold text-gray-800">{value}</p>
+    <motion.div
+      whileHover={{ y: -5, scale: 1.02 }}
+      className="bg-gradient-to-br from-white to-golden-50 rounded-2xl p-4 shadow-lg border-2 border-golden-100 hover:shadow-xl transition-all"
+    >
+      <div className="w-8 h-8 bg-gradient-to-br from-golden-400 to-amber-500 rounded-lg flex items-center justify-center mb-2 shadow-sm">
+        <Icon className="w-5 h-5 text-white" />
+      </div>
+      <p className="text-xs text-gray-500 font-medium mb-1">{label}</p>
+      <p className="text-sm font-bold bg-gradient-to-r from-golden-700 to-amber-700 bg-clip-text text-transparent">{value}</p>
+    </motion.div>
+  );
+}
+
+function InfoBadge({ icon: Icon, text }: { icon: any; text: string }) {
+  return (
+    <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-golden-50 to-amber-50 rounded-full border border-golden-200 shadow-sm">
+      <Icon className="w-4 h-4 text-golden-600" />
+      <span className="text-sm font-medium text-gray-700">{text}</span>
     </div>
+  );
+}
+
+function DetailCard({ label, value, icon: Icon }: { label: string; value: string; icon: any }) {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      className="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-200 hover:shadow-lg transition-all"
+    >
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-10 h-10 bg-gradient-to-br from-golden-100 to-amber-100 rounded-lg flex items-center justify-center">
+          <Icon className="w-5 h-5 text-golden-700" />
+        </div>
+        <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">{label}</p>
+      </div>
+      <p className="text-lg font-bold text-gray-900 ml-13">{value}</p>
+    </motion.div>
   );
 }

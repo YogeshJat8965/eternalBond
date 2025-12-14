@@ -1,207 +1,130 @@
+'use client';
+
 import ProfileView from './ProfileView';
+import { useEffect, useState } from 'react';
+import api from '@/lib/api';
+import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 
-// Profile data - In production, this would come from an API
-const allProfiles = [
-  {
-    id: 1,
-    name: 'Sarah Johnson',
-    age: 28,
-    profession: 'Software Engineer',
-    location: 'New York, USA',
-    image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
-    gender: 'Female',
-    height: '5\'6"',
-    religion: 'Christian',
-    caste: 'Not Specified',
-    motherTongue: 'English',
-    maritalStatus: 'Never Married',
-    education: 'Master\'s in Computer Science',
-    college: 'Stanford University',
-    employedIn: 'Private Sector',
-    income: '$120,000 per year',
-    familyType: 'Nuclear Family',
-    fatherOccupation: 'Business Owner',
-    motherOccupation: 'Homemaker',
-    siblings: '1 Sister',
-    bio: 'Passionate about technology and innovation. Love traveling, reading, and trying new cuisines. Looking for someone who shares similar values and has a good sense of humor.',
-    hobbies: ['Reading', 'Traveling', 'Cooking', 'Yoga'],
-    email: 'sarah.j@email.com',
-    phone: '+1-555-0101',
-    gallery: [
-      'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=400',
-    ],
-  },
-  {
-    id: 2,
-    name: 'Michael Chen',
-    age: 32,
-    profession: 'Doctor',
-    location: 'Los Angeles, USA',
-    image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
-    gender: 'Male',
-    height: '5\'10"',
-    religion: 'Buddhist',
-    caste: 'Not Applicable',
-    motherTongue: 'Mandarin',
-    maritalStatus: 'Never Married',
-    education: 'MD - Cardiology',
-    college: 'UCLA Medical School',
-    employedIn: 'Government/Public Sector',
-    income: '$150,000 per year',
-    familyType: 'Nuclear Family',
-    fatherOccupation: 'Professor',
-    motherOccupation: 'Doctor',
-    siblings: '1 Brother',
-    bio: 'Dedicated medical professional with a passion for helping others. Enjoy hiking, photography, and spending time with family. Seeking a life partner who values health, family, and personal growth.',
-    hobbies: ['Hiking', 'Photography', 'Music', 'Volunteering'],
-    email: 'michael.chen@email.com',
-    phone: '+1-555-0102',
-    gallery: [
-      'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1484810/pexels-photo-1484810.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=400',
-    ],
-  },
-  {
-    id: 3,
-    name: 'Priya Sharma',
-    age: 26,
-    profession: 'Teacher',
-    location: 'Mumbai, India',
-    image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
-    gender: 'Female',
-    height: '5\'4"',
-    religion: 'Hindu',
-    caste: 'Brahmin',
-    motherTongue: 'Hindi',
-    maritalStatus: 'Never Married',
-    education: 'Bachelor of Education',
-    college: 'Delhi University',
-    employedIn: 'Private Sector',
-    income: '₹6,00,000 per year',
-    familyType: 'Joint Family',
-    fatherOccupation: 'Retired Government Officer',
-    motherOccupation: 'Homemaker',
-    siblings: '2 Brothers',
-    bio: 'Educator with a love for literature and arts. Believe in traditional values with a modern outlook. Looking for someone who respects family and values education.',
-    hobbies: ['Dancing', 'Painting', 'Reading', 'Gardening'],
-    email: 'priya.sharma@email.com',
-    phone: '+91-9876543210',
-    gallery: [
-      'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysrgb&w=400',
-    ],
-  },
-  {
-    id: 4,
-    name: 'James Wilson',
-    age: 30,
-    profession: 'Architect',
-    location: 'London, UK',
-    image: 'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=400',
-    gender: 'Male',
-    height: '6\'0"',
-    religion: 'Christian',
-    caste: 'Not Specified',
-    motherTongue: 'English',
-    maritalStatus: 'Never Married',
-    education: 'Master\'s in Architecture',
-    college: 'University of Cambridge',
-    employedIn: 'Private Sector',
-    income: '£85,000 per year',
-    familyType: 'Nuclear Family',
-    fatherOccupation: 'Engineer',
-    motherOccupation: 'Teacher',
-    siblings: '1 Sister',
-    bio: 'Creative architect passionate about sustainable design. Love exploring new cultures and cuisines. Seeking an intelligent and caring partner to share life\'s adventures.',
-    hobbies: ['Sketching', 'Travel', 'Cycling', 'Photography'],
-    email: 'james.wilson@email.com',
-    phone: '+44-7700-900123',
-    gallery: [
-      'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
-    ],
-  },
-  {
-    id: 5,
-    name: 'Emily Rodriguez',
-    age: 29,
-    profession: 'Marketing Manager',
-    location: 'Toronto, Canada',
-    image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
-    gender: 'Female',
-    height: '5\'5"',
-    religion: 'Catholic',
-    caste: 'Not Applicable',
-    motherTongue: 'Spanish',
-    maritalStatus: 'Never Married',
-    education: 'MBA in Marketing',
-    college: 'University of Toronto',
-    employedIn: 'Private Sector',
-    income: 'CAD 95,000 per year',
-    familyType: 'Nuclear Family',
-    fatherOccupation: 'Business Owner',
-    motherOccupation: 'Social Worker',
-    siblings: '1 Brother, 1 Sister',
-    bio: 'Dynamic professional with a creative mindset. Love fitness, fashion, and meaningful conversations. Looking for an ambitious partner who values family and personal growth.',
-    hobbies: ['Fitness', 'Fashion', 'Cooking', 'Traveling'],
-    email: 'emily.rodriguez@email.com',
-    phone: '+1-416-555-0105',
-    gallery: [
-      'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1070945/pexels-photo-1070945.jpeg?auto=compress&cs=tinysrgb&w=400',
-    ],
-  },
-  {
-    id: 6,
-    name: 'David Kim',
-    age: 31,
-    profession: 'Business Analyst',
-    location: 'Singapore',
-    image: 'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
-    gender: 'Male',
-    height: '5\'9"',
-    religion: 'Christian',
-    caste: 'Not Applicable',
-    motherTongue: 'Korean',
-    maritalStatus: 'Never Married',
-    education: 'Master\'s in Business Analytics',
-    college: 'National University of Singapore',
-    employedIn: 'Private Sector',
-    income: 'SGD 110,000 per year',
-    familyType: 'Nuclear Family',
-    fatherOccupation: 'Businessman',
-    motherOccupation: 'Accountant',
-    siblings: 'Single Child',
-    bio: 'Analytical thinker with a passion for data and technology. Enjoy sports, music, and exploring new restaurants. Seeking a compatible partner who is understanding and supportive.',
-    hobbies: ['Sports', 'Music', 'Gaming', 'Traveling'],
-    email: 'david.kim@email.com',
-    phone: '+65-9123-4567',
-    gallery: [
-      'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1484810/pexels-photo-1484810.jpeg?auto=compress&cs=tinysrgb&w=400',
-    ],
-  },
-];
-
-// Generate static params for all profile pages
-export function generateStaticParams() {
-  return allProfiles.map((profile) => ({
-    id: profile.id.toString(),
-  }));
+interface ProfileData {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  gender: string;
+  dateOfBirth: string;
+  age?: number;
+  city: string;
+  state: string;
+  country: string;
+  religion: string;
+  caste?: string;
+  subCaste?: string;
+  motherTongue?: string;
+  maritalStatus: string;
+  education: string;
+  profession: string;
+  annualIncome?: string;
+  height: string;
+  complexion?: string;
+  foodHabits?: string;
+  bio?: string;
+  profilePicture?: string;
+  photos?: string[];
 }
 
 export default function ProfilePage({ params }: { params: { id: string } }) {
-  const profile = allProfiles.find(p => p.id === parseInt(params.id));
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!profile) {
-    return <ProfileView profile={null} />;
+  // Calculate age from date of birth
+  const calculateAge = (dob: string) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/profile/${params.id}`);
+        const data = response.data.data || response.data;
+        
+        // Transform backend data to match ProfileView expected format
+        const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+        
+        // Build gallery from profile pictures
+        const gallery = [];
+        if (data.profilePicture) {
+          const mainPic = data.profilePicture.startsWith('/') 
+            ? `${API_URL}${data.profilePicture}` 
+            : `${API_URL}/uploads/${data.profilePicture}`;
+          gallery.push(mainPic);
+        }
+        if (data.photos && data.photos.length > 0) {
+          data.photos.forEach((photo: string) => {
+            const photoUrl = photo.startsWith('/') 
+              ? `${API_URL}${photo}` 
+              : `${API_URL}/uploads/${photo}`;
+            gallery.push(photoUrl);
+          });
+        }
+        
+        // If no photos, add a default
+        if (gallery.length === 0) {
+          gallery.push('/images/default-avatar.png');
+        }
+
+        // Transform to profile format - only include fields from database
+        const transformedProfile = {
+          id: data._id,
+          name: data.name,
+          age: calculateAge(data.dateOfBirth),
+          profession: data.profession || 'Not Specified',
+          location: `${data.city}${data.state ? ', ' + data.state : ''}${data.country ? ', ' + data.country : ''}`,
+          image: gallery[0],
+          gender: data.gender.charAt(0).toUpperCase() + data.gender.slice(1),
+          height: data.height,
+          religion: data.religion || 'Not Specified',
+          caste: data.caste,
+          subCaste: data.subCaste,
+          motherTongue: data.motherTongue,
+          maritalStatus: data.maritalStatus || 'Not Specified',
+          education: data.education || 'Not Specified',
+          income: data.annualIncome,
+          complexion: data.complexion,
+          foodHabits: data.foodHabits,
+          bio: data.bio,
+          email: data.email,
+          phone: data.phone,
+          gallery: gallery,
+        };
+
+        setProfile(transformedProfile);
+      } catch (error: any) {
+        console.error('Error fetching profile:', error);
+        toast.error(error.response?.data?.message || 'Failed to load profile');
+        setProfile(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [params.id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-20 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-golden-600 animate-spin" />
+      </div>
+    );
   }
 
   return <ProfileView profile={profile} />;

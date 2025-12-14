@@ -1,86 +1,113 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Search, Filter, Heart, MapPin, Briefcase, Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { Search, Filter, Heart, MapPin, Briefcase, Sparkles, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslation } from '@/context/LanguageProvider';
+import api from '@/lib/api';
+import { toast } from 'sonner';
+import Image from 'next/image';
+
+interface Member {
+  _id: string;
+  name: string;
+  dateOfBirth: string;
+  age?: number;
+  height: string;
+  profession: string;
+  city: string;
+  state: string;
+  country: string;
+  religion: string;
+  education: string;
+  profilePicture?: string;
+  photos?: string[];
+  maritalStatus?: string;
+  annualIncome?: string;
+}
 
 export default function FindPartnerPage() {
   const { t } = useTranslation();
   const [showResults, setShowResults] = useState(false);
-  const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
-  const [burstingHeart, setBurstingHeart] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [totalResults, setTotalResults] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [likedProfiles, setLikedProfiles] = useState<string[]>([]);
+  const [burstingHeart, setBurstingHeart] = useState<string | null>(null);
   const [searchFilters, setSearchFilters] = useState({
     gender: '',
     ageFrom: '',
     ageTo: '',
     religion: '',
-    location: '',
+    city: '',
+    state: '',
+    country: '',
     profession: '',
     heightFrom: '',
     heightTo: '',
     maritalStatus: '',
     education: '',
-    income: '',
+    annualIncome: '',
   });
 
-  const searchResults = [
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      age: 28,
-      height: "5'6\"",
-      profession: 'Software Engineer',
-      location: 'New York, USA',
-      education: 'Masters in Computer Science',
-      image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
-      matchScore: 95,
-    },
-    {
-      id: 2,
-      name: 'Michael Chen',
-      age: 32,
-      height: "5'10\"",
-      profession: 'Doctor',
-      location: 'Los Angeles, USA',
-      education: 'MD in Medicine',
-      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=400',
-      matchScore: 92,
-    },
-    {
-      id: 3,
-      name: 'Priya Sharma',
-      age: 26,
-      height: "5'4\"",
-      profession: 'Teacher',
-      location: 'Mumbai, India',
-      education: 'Bachelors in Education',
-      image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
-      matchScore: 88,
-    },
-    {
-      id: 4,
-      name: 'James Wilson',
-      age: 30,
-      height: "6'0\"",
-      profession: 'Architect',
-      location: 'London, UK',
-      education: 'Masters in Architecture',
-      image: 'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=400',
-      matchScore: 90,
-    },
-  ];
+  // Calculate age from date of birth
+  const calculateAge = (dob: string) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
 
-  const handleSearch = () => {
-    setShowResults(true);
-    // Scroll to results section
-    setTimeout(() => {
-      document.getElementById('search-results')?.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
+  const handleSearch = async () => {
+    try {
+      setLoading(true);
+      setShowResults(true);
+      
+      // Build query parameters
+      const params: any = {
+        page: currentPage,
+        limit: 12
+      };
+      
+      // Add filters only if they have values
+      Object.keys(searchFilters).forEach(key => {
+        const value = searchFilters[key as keyof typeof searchFilters];
+        if (value) {
+          params[key] = value;
+        }
       });
-    }, 100);
+      
+      const response = await api.get('/search', { params });
+      console.log('Search response:', response.data);
+      
+      const data = response.data.data || response.data;
+      const membersWithAge = data.map((member: Member) => ({
+        ...member,
+        age: calculateAge(member.dateOfBirth)
+      }));
+      
+      setMembers(membersWithAge);
+      setTotalResults(response.data.total || 0);
+      
+      // Scroll to results section
+      setTimeout(() => {
+        document.getElementById('search-results')?.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
+    } catch (error: any) {
+      console.error('Search error:', error);
+      toast.error(error.response?.data?.message || 'Failed to search members');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClearFilters = () => {
@@ -89,30 +116,19 @@ export default function FindPartnerPage() {
       ageFrom: '',
       ageTo: '',
       religion: '',
-      location: '',
+      city: '',
+      state: '',
+      country: '',
       profession: '',
       heightFrom: '',
       heightTo: '',
       maritalStatus: '',
       education: '',
-      income: '',
+      annualIncome: '',
     });
     setShowResults(false);
-  };
-
-  const toggleLike = (profileId: number, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Toggle like state
-    if (likedProfiles.includes(profileId)) {
-      setLikedProfiles(likedProfiles.filter(id => id !== profileId));
-    } else {
-      setLikedProfiles([...likedProfiles, profileId]);
-      // Trigger burst animation
-      setBurstingHeart(profileId);
-      setTimeout(() => setBurstingHeart(null), 600);
-    }
+    setMembers([]);
+    setTotalResults(0);
   };
 
   return (
@@ -214,25 +230,27 @@ export default function FindPartnerPage() {
                 }
               >
                 <option value="">All Religions</option>
-                <option value="christianity">Christianity</option>
-                <option value="islam">Islam</option>
-                <option value="hinduism">Hinduism</option>
-                <option value="buddhism">Buddhism</option>
-                <option value="other">Other</option>
+                <option value="Hindu">Hinduism</option>
+                <option value="Muslim">Islam</option>
+                <option value="Christian">Christianity</option>
+                <option value="Sikh">Sikhism</option>
+                <option value="Buddhist">Buddhism</option>
+                <option value="Jain">Jainism</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Location
+                City
               </label>
               <input
                 type="text"
-                placeholder="City, Country"
+                placeholder="e.g., Mumbai"
                 className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
-                value={searchFilters.location}
+                value={searchFilters.city}
                 onChange={(e) =>
-                  setSearchFilters({ ...searchFilters, location: e.target.value })
+                  setSearchFilters({ ...searchFilters, city: e.target.value })
                 }
               />
             </div>
@@ -249,11 +267,14 @@ export default function FindPartnerPage() {
                 }
               >
                 <option value="">All</option>
-                <option value="engineer">Engineer</option>
-                <option value="doctor">Doctor</option>
-                <option value="teacher">Teacher</option>
-                <option value="business">Business</option>
-                <option value="other">Other</option>
+                <option value="Software Engineer">Software Engineer</option>
+                <option value="Engineer">Engineer</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Business">Business</option>
+                <option value="Lawyer">Lawyer</option>
+                <option value="Accountant">Accountant</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
@@ -269,9 +290,9 @@ export default function FindPartnerPage() {
                 }
               >
                 <option value="">All</option>
-                <option value="never-married">Never Married</option>
-                <option value="divorced">Divorced</option>
-                <option value="widowed">Widowed</option>
+                <option value="Never Married">Never Married</option>
+                <option value="Divorced">Divorced</option>
+                <option value="Widowed">Widowed</option>
               </select>
             </div>
 
@@ -287,10 +308,12 @@ export default function FindPartnerPage() {
                 }
               >
                 <option value="">All</option>
-                <option value="high-school">High School</option>
-                <option value="bachelors">Bachelors</option>
-                <option value="masters">Masters</option>
-                <option value="phd">PhD</option>
+                <option value="High School">High School</option>
+                <option value="Diploma">Diploma</option>
+                <option value="Bachelors">Bachelors</option>
+                <option value="Masters">Masters</option>
+                <option value="PhD">PhD</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
@@ -333,7 +356,14 @@ export default function FindPartnerPage() {
           </div>
         </motion.div>
 
-        {showResults && (
+        {loading && (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-12 h-12 text-golden-600 animate-spin" />
+            <span className="ml-3 text-xl text-gray-600">Searching for your perfect match...</span>
+          </div>
+        )}
+
+        {showResults && !loading && (
           <>
             <div id="search-results" className="mb-6">
               <motion.h2
@@ -343,109 +373,75 @@ export default function FindPartnerPage() {
               >
                 Search Results{' '}
                 <span className="text-gray-500 font-normal text-lg">
-                  ({searchResults.length} profiles found)
+                  ({totalResults} profiles found)
                 </span>
               </motion.h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {searchResults.map((result, index) => (
+            {members.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-2xl text-gray-600 mb-4">No members found matching your criteria</p>
+                <p className="text-gray-500">Try adjusting your filters to see more results</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {members.map((result, index) => {
+                  const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+                  const profileImage = result.profilePicture 
+                    ? (result.profilePicture.startsWith('/') ? `${API_URL}${result.profilePicture}` : `${API_URL}/uploads/${result.profilePicture}`)
+                    : '/images/default-avatar.png';
+                  
+                  return (
                 <motion.div
-                  key={result.id}
+                  key={result._id}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
                   className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-golden-100"
                 >
-                  <div className="relative h-72 overflow-hidden group">
-                    <img
-                      src={result.image}
-                      alt={result.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                    <div className="absolute top-4 left-4 bg-rose-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      {result.matchScore}% Match
+                  <Link href={`/profile/${result._id}`}>
+                    <div className="relative h-72 overflow-hidden group cursor-pointer">
+                      <img
+                        src={profileImage}
+                        alt={result.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
                     </div>
-                    
-                    {/* Heart Button with Burst Animation */}
-                    <div className="absolute top-4 right-4">
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={(e) => toggleLike(result.id, e)}
-                        className="relative bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg transition-colors"
-                      >
-                        <Heart 
-                          className={`w-5 h-5 transition-colors ${
-                            likedProfiles.includes(result.id) 
-                              ? 'text-red-500 fill-red-500' 
-                              : 'text-gray-400'
-                          }`} 
-                        />
-                      </motion.button>
-
-                      {/* Burst Animation Hearts */}
-                      {burstingHeart === result.id && (
-                        <>
-                          {[...Array(12)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{
-                                x: 0,
-                                y: 0,
-                                scale: 1,
-                                opacity: 1,
-                              }}
-                              animate={{
-                                x: Math.cos((i * 30) * Math.PI / 180) * (60 + Math.random() * 40),
-                                y: Math.sin((i * 30) * Math.PI / 180) * (60 + Math.random() * 40),
-                                scale: 0,
-                                opacity: 0,
-                              }}
-                              transition={{
-                                duration: 0.6,
-                                ease: 'easeOut',
-                              }}
-                              className="absolute top-2 right-2 pointer-events-none"
-                            >
-                              <Heart className="w-3 h-3 text-red-500 fill-red-500" />
-                            </motion.div>
-                          ))}
-                        </>
-                      )}
-                    </div>
-                  </div>
+                  </Link>
 
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-gray-800 mb-1">
                       {result.name}, {result.age}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-3">{result.height}</p>
+                    <p className="text-gray-600 text-sm mb-3">{result.height || 'Not specified'}</p>
 
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center space-x-2 text-gray-600 text-sm">
                         <Briefcase className="w-4 h-4 text-golden-600" />
-                        <span>{result.profession}</span>
+                        <span>{result.profession || 'Not specified'}</span>
                       </div>
                       <div className="flex items-center space-x-2 text-gray-600 text-sm">
                         <MapPin className="w-4 h-4 text-golden-600" />
-                        <span>{result.location}</span>
+                        <span>{result.city}, {result.state || result.country}</span>
                       </div>
                     </div>
 
-                    <motion.button
-                      onClick={(e) => e.preventDefault()}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium cursor-default"
-                    >
-                      View Full Profile
-                    </motion.button>
+                    <Link href={`/profile/${result._id}`}>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2 rounded-lg hover:shadow-md transition-all duration-200 font-medium"
+                      >
+                        View Full Profile
+                      </motion.button>
+                    </Link>
                   </div>
                 </motion.div>
-              ))}
-            </div>
+              );
+            })}
+              </div>
+            )}
           </>
         )}
       </div>

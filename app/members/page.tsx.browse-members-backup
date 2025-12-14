@@ -1,0 +1,211 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Search, Filter, MapPin, Briefcase, Heart, User, Loader2, X } from 'lucide-react';
+import { isAuthenticated } from '@/lib/auth-utils';
+import api from '@/lib/api';
+
+export default function MembersPage() {
+  const router = useRouter();
+  const [members, setMembers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState({
+    gender: '',
+    minAge: '',
+    maxAge: '',
+    city: '',
+    religion: '',
+  });
+  const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    // Check authentication
+    if (!isAuthenticated()) {
+      router.push('/login');
+      return;
+    }
+    fetchMembers();
+  }, [router]);
+
+  const fetchMembers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Build query params
+      const params = new URLSearchParams();
+      if (searchQuery) params.append('search', searchQuery);
+      if (filters.gender) params.append('gender', filters.gender);
+      if (filters.minAge) params.append('minAge', filters.minAge);
+      if (filters.maxAge) params.append('maxAge', filters.maxAge);
+      if (filters.city) params.append('city', filters.city);
+      if (filters.religion) params.append('religion', filters.religion);
+
+      const res = await api.get(`/search?${params.toString()}`);
+      
+      if (res?.data?.success && res.data.data) {
+        setMembers(res.data.data);
+      }
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Failed to load members');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchMembers();
+  };
+
+  const calculateAge = (dob: string) => {
+    if (!dob) return 'N/A';
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const getImageUrl = (photo: string) => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+    if (photo?.startsWith('/uploads/')) {
+      return `${baseUrl}${photo}`;
+    }
+    return `${baseUrl}/uploads/${photo}`;
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-16 bg-gradient-to-br from-golden-50 via-pink-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-golden-600 mx-auto mb-4" />
+          <p className="text-gray-700 font-medium">Loading members...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen pt-16 bg-gradient-to-br from-golden-50 via-pink-50 to-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
+          <h1 className="text-5xl font-extrabold mb-3">
+            <span className="bg-gradient-to-r from-golden-500 via-pink-500 to-golden-600 bg-clip-text text-transparent">
+              Browse Members
+            </span>
+          </h1>
+          <p className="text-gray-600 text-lg">Find your perfect match</p>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-2xl shadow-xl p-6 mb-8 border-2 border-gray-100">
+          <form onSubmit={handleSearch} className="space-y-4">
+            <div className="flex gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input type="text" placeholder="Search by name, profession, city..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-golden-400 focus:border-golden-400 transition-all" />
+              </div>
+              <button type="button" onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${showFilters ? 'bg-golden-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+                <Filter className="w-5 h-5" />
+                Filters
+              </button>
+              <button type="submit" className="flex items-center gap-2 bg-gradient-to-r from-golden-500 to-golden-600 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
+                <Search className="w-5 h-5" />
+                Search
+              </button>
+            </div>
+
+            {showFilters && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 pt-4 border-t-2 border-gray-100">
+                <select value={filters.gender} onChange={(e) => setFilters({ ...filters, gender: e.target.value })} className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-golden-400 focus:border-golden-400">
+                  <option value="">Any Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <input type="number" placeholder="Min Age" value={filters.minAge} onChange={(e) => setFilters({ ...filters, minAge: e.target.value })} className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-golden-400 focus:border-golden-400" />
+                <input type="number" placeholder="Max Age" value={filters.maxAge} onChange={(e) => setFilters({ ...filters, maxAge: e.target.value })} className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-golden-400 focus:border-golden-400" />
+                <input type="text" placeholder="City" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-golden-400 focus:border-golden-400" />
+                <select value={filters.religion} onChange={(e) => setFilters({ ...filters, religion: e.target.value })} className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-golden-400 focus:border-golden-400">
+                  <option value="">Any Religion</option>
+                  <option value="Hindu">Hindu</option>
+                  <option value="Muslim">Muslim</option>
+                  <option value="Christian">Christian</option>
+                  <option value="Sikh">Sikh</option>
+                  <option value="Buddhist">Buddhist</option>
+                  <option value="Jain">Jain</option>
+                  <option value="Other">Other</option>
+                </select>
+              </motion.div>
+            )}
+          </form>
+        </motion.div>
+
+        {error && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-50 border-2 border-red-200 text-red-800 px-6 py-4 rounded-xl mb-6">{error}</motion.div>
+        )}
+
+        {members.length === 0 ? (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
+            <User className="w-20 h-20 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">No members found</h3>
+            <p className="text-gray-600">Try adjusting your search filters</p>
+          </motion.div>
+        ) : (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {members.map((member, index) => (
+              <motion.div key={member._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} whileHover={{ y: -5 }} onClick={() => router.push(`/profile/${member._id}`)} className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-100 hover:border-golden-400 cursor-pointer transition-all duration-300">
+                <div className="relative h-64 bg-gradient-to-br from-golden-100 to-pink-100">
+                  {member.profilePicture ? (
+                    <img src={getImageUrl(member.profilePicture)} alt={member.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E'; }} />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <User className="w-20 h-20 text-gray-300" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-golden-500" />
+                      <span>{calculateAge(member.dateOfBirth)} years • {member.gender}</span>
+                    </div>
+                    {member.city && (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-golden-500" />
+                        <span>{member.city}{member.state ? `, ${member.state}` : ''}</span>
+                      </div>
+                    )}
+                    {member.profession && (
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="w-4 h-4 text-golden-500" />
+                        <span>{member.profession}</span>
+                      </div>
+                    )}
+                    {member.religion && (
+                      <div className="flex items-center gap-2">
+                        <Heart className="w-4 h-4 text-golden-500" />
+                        <span>{member.religion}</span>
+                      </div>
+                    )}
+                  </div>
+                  <button onClick={(e) => { e.stopPropagation(); router.push(`/profile/${member._id}`); }} className="w-full mt-6 bg-gradient-to-r from-golden-500 to-golden-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all">
+                    View Profile
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}
