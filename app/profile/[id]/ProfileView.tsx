@@ -7,8 +7,11 @@ import {
   Award, MessageCircle, DollarSign, User, Coffee, Send
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '@/context/LanguageProvider';
+import InterestModal from '@/components/InterestModal';
+import { toast } from 'sonner';
+import api from '@/lib/api';
 
 type ProfileType = {
   id: string;
@@ -32,6 +35,7 @@ type ProfileType = {
   email: string;
   phone: string;
   gallery: string[];
+  interestAlreadySent?: boolean;
 } | null;
 
 export default function ProfileView({ profile, isOwnProfile = false }: { profile: ProfileType; isOwnProfile?: boolean }) {
@@ -39,7 +43,100 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showInterestModal, setShowInterestModal] = useState(false);
+  const [sendingInterest, setSendingInterest] = useState(false);
+  const [interestSent, setInterestSent] = useState(profile?.interestAlreadySent || false);
+  const [togglingShortlist, setTogglingShortlist] = useState(false);
   const { t } = useTranslation();
+
+  // Check if profile is shortlisted and interest status on mount
+  useEffect(() => {
+    if (profile && !isOwnProfile) {
+      checkShortlistStatus();
+      checkInterestStatus();
+    }
+  }, [profile?.id, isOwnProfile]);
+
+  const checkShortlistStatus = async () => {
+    if (!profile) return;
+    try {
+      const response = await api.get(`/shortlist/check/${profile.id}`);
+      if (response.data.success) {
+        setIsLiked(response.data.isShortlisted);
+      }
+    } catch (error) {
+      console.error('Error checking shortlist status:', error);
+    }
+  };
+
+  const checkInterestStatus = async () => {
+    if (!profile) return;
+    try {
+      const response = await api.get('/interests/sent');
+      if (response.data.success) {
+        const sentInterests = response.data.data || [];
+        // Check if we already sent an interest to this profile
+        const alreadySent = sentInterests.some(
+          (interest: any) => interest.receiverId?._id === profile.id || interest.receiverId === profile.id
+        );
+        setInterestSent(alreadySent);
+      }
+    } catch (error) {
+      console.error('Error checking interest status:', error);
+    }
+  };
+
+  const handleToggleShortlist = async () => {
+    if (!profile || togglingShortlist) return;
+    
+    setTogglingShortlist(true);
+    try {
+      if (isLiked) {
+        // Remove from shortlist
+        const response = await api.delete(`/shortlist/${profile.id}`);
+        if (response.data.success) {
+          setIsLiked(false);
+          toast.success('Removed from shortlist');
+        }
+      } else {
+        // Add to shortlist
+        const response = await api.post('/shortlist', { userId: profile.id });
+        if (response.data.success) {
+          setIsLiked(true);
+          toast.success('Added to shortlist! ❤️');
+        }
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to update shortlist';
+      toast.error(errorMessage);
+      console.error('Error toggling shortlist:', error);
+    } finally {
+      setTogglingShortlist(false);
+    }
+  };
+
+  const handleSendInterest = async (message: string) => {
+    if (!profile) return;
+    
+    setSendingInterest(true);
+    try {
+      const response = await api.post('/interests/send', {
+        receiverId: profile.id,
+        message: message
+      });
+
+      if (response.data.success) {
+        toast.success('Interest sent successfully! 🎉');
+        setInterestSent(true);
+        setShowInterestModal(false);
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to send interest. Please try again.';
+      toast.error(errorMessage);
+      console.error('Error sending interest:', error);
+    } finally {
+      setSendingInterest(false);
+    }
+  };
 
   if (!profile) {
     return (
@@ -146,27 +243,37 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
             {!isOwnProfile && (
               <div className="space-y-3">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowInterestModal(true)}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-golden-500 via-golden-600 to-amber-600 text-white font-semibold flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all group"
+                  whileHover={{ scale: interestSent ? 1 : 1.02 }}
+                  whileTap={{ scale: interestSent ? 1 : 0.98 }}
+                  onClick={() => !interestSent && setShowInterestModal(true)}
+                  disabled={interestSent}
+                  className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-3 shadow-xl transition-all group ${
+                    interestSent
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white cursor-not-allowed'
+                      : 'bg-gradient-to-r from-golden-500 via-golden-600 to-amber-600 text-white hover:shadow-2xl'
+                  }`}
                 >
-                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  Send Interest
+                  <Send className={`w-5 h-5 ${!interestSent && 'group-hover:translate-x-1 transition-transform'}`} />
+                  {interestSent ? 'Interest Sent ✓' : 'Send Interest'}
                 </motion.button>
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setIsLiked(!isLiked)}
+                  onClick={handleToggleShortlist}
+                  disabled={togglingShortlist}
                   className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-3 transition-all shadow-lg ${
                     isLiked
                       ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200'
-                  }`}
+                  } ${togglingShortlist ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-                  {isLiked ? 'Liked' : 'Like Profile'}
+                  {togglingShortlist ? (
+                    <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                  )}
+                  {togglingShortlist ? 'Updating...' : (isLiked ? 'Shortlisted' : 'Add to Shortlist')}
                 </motion.button>
               </div>
             )}
@@ -288,33 +395,20 @@ export default function ProfileView({ profile, isOwnProfile = false }: { profile
                 </div>
               </div>
             )}
-
-            {/* Contact Information - Only visible to profile owner or those who sent interest */}
-            {!isOwnProfile && (
-              <div className="bg-gradient-to-br from-golden-50 via-white to-pink-50 rounded-3xl shadow-xl p-8 border-2 border-golden-200">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-golden-400 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <MessageCircle className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Interested in this profile?</h3>
-                  <p className="text-gray-600 mb-6">Send an interest to connect and view contact details</p>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setShowInterestModal(true)}
-                    className="px-8 py-4 bg-gradient-to-r from-golden-500 via-golden-600 to-amber-600 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Send className="w-5 h-5" />
-                      Send Interest Now
-                    </span>
-                  </motion.button>
-                </div>
-              </div>
-            )}
           </motion.div>
         </div>
       </div>
+
+      {/* Interest Modal */}
+      {profile && (
+        <InterestModal
+          isOpen={showInterestModal}
+          onClose={() => setShowInterestModal(false)}
+          onSend={handleSendInterest}
+          receiverName={profile.name}
+          loading={sendingInterest}
+        />
+      )}
     </div>
   );
 }

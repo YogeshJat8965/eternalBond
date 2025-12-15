@@ -66,20 +66,18 @@ export default function DashboardPage() {
     '/app/images/hand2.jpeg',
     '/app/images/hand3.jpeg',
   ]);
-  const [interestRequests, setInterestRequests] = useState([
-    { id: 1, userId: 'user_101', name: t('NAME_RAHUL_VERMA'), age: 28, profession: t('BUSINESS_ANALYST'), location: t('LOCATION_PUNE'), time: t('HOURS_AGO').replace('{hours}', '2'), photo: '/app/images/hand1.jpeg' },
-    { id: 2, userId: 'user_102', name: t('NAME_AMIT_SINGH'), age: 29, profession: t('CIVIL_ENGINEER'), location: t('LOCATION_JAIPUR'), time: t('DAYS_AGO').replace('{days}', '1'), photo: '/app/images/hand2.jpeg' },
-    { id: 3, userId: 'user_103', name: t('NAME_VIKRAM_JOSHI'), age: 30, profession: t('ARCHITECT'), location: t('LOCATION_CHENNAI'), time: t('DAYS_AGO').replace('{days}', '3'), photo: '/app/images/hand3.jpeg' },
-  ]);
+  const [interestRequests, setInterestRequests] = useState<any[]>([]);
+  const [myInterests, setMyInterests] = useState<any[]>([]);
+  const [loadingInterests, setLoadingInterests] = useState(false);
+  const [showInterestConfirmModal, setShowInterestConfirmModal] = useState(false);
+  const [interestActionType, setInterestActionType] = useState<'accept' | 'decline'>('accept');
+  const [selectedInterest, setSelectedInterest] = useState<{id: string; name: string} | null>(null);
+  const [shortlist, setShortlist] = useState<any[]>([]);
+  const [loadingShortlist, setLoadingShortlist] = useState(false);
   const [ignoredMembers, setIgnoredMembers] = useState([
     { id: 1, userId: 'user_201', name: t('NAME_KARAN_MEHTA'), age: 31, profession: t('MANAGER'), location: t('LOCATION_HYDERABAD'), ignoredDate: '10 Nov, 2024' },
     { id: 2, userId: 'user_202', name: t('NAME_ROHAN_GUPTA'), age: 28, profession: t('CONSULTANT'), location: t('LOCATION_KOLKATA'), ignoredDate: '05 Nov, 2024' },
   ]);
-  const [toast, setToast] = useState<{ show: boolean; message: string; type: 'success' | 'error' | 'info' }>({
-    show: false,
-    message: '',
-    type: 'success'
-  });
   const [selectedChat, setSelectedChat] = useState<number | null>(null);
   const [messageText, setMessageText] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -215,6 +213,76 @@ export default function DashboardPage() {
     }
   }, [router]);
 
+  // Fetch sent interests (My Interests)
+  useEffect(() => {
+    if (activeMenu === 'MENU_MY_INTEREST') {
+      const fetchSentInterests = async () => {
+        setLoadingInterests(true);
+        try {
+          const response = await api.get('/interests/sent');
+          if (response.data.success) {
+            const interests = response.data.data || [];
+            setMyInterests(interests);
+          }
+        } catch (error: any) {
+          console.error('Error fetching sent interests:', error);
+          toast.error('Failed to load sent interests');
+        } finally {
+          setLoadingInterests(false);
+        }
+      };
+      fetchSentInterests();
+    }
+  }, [activeMenu]);
+
+  // Fetch received interests function (reusable)
+  const fetchReceivedInterests = async () => {
+    setLoadingInterests(true);
+    try {
+      const response = await api.get('/interests/received');
+      if (response.data.success) {
+        const interests = response.data.data || [];
+        // Filter to only show pending interests on frontend as well
+        const pendingInterests = interests.filter((int: any) => int.status === 'pending');
+        setInterestRequests(pendingInterests);
+      }
+    } catch (error: any) {
+      console.error('Error fetching received interests:', error);
+      toast.error('Failed to load interest requests');
+    } finally {
+      setLoadingInterests(false);
+    }
+  };
+
+  // Fetch received interests (Interest Requests)
+  useEffect(() => {
+    if (activeMenu === 'MENU_INTEREST_REQUEST') {
+      fetchReceivedInterests();
+    }
+  }, [activeMenu]);
+
+  // Fetch shortlist
+  useEffect(() => {
+    if (activeMenu === 'MENU_SHORTLIST') {
+      const fetchShortlist = async () => {
+        setLoadingShortlist(true);
+        try {
+          const response = await api.get('/shortlist');
+          if (response.data.success) {
+            const shortlistData = response.data.data || [];
+            setShortlist(shortlistData);
+          }
+        } catch (error: any) {
+          console.error('Error fetching shortlist:', error);
+          toast.error('Failed to load shortlist');
+        } finally {
+          setLoadingShortlist(false);
+        }
+      };
+      fetchShortlist();
+    }
+  }, [activeMenu]);
+
   // Close emoji picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -277,33 +345,94 @@ export default function DashboardPage() {
     setShowOnboarding(false);
   };
 
-  // Toast notification handler
-  const showToast = (message: string, type: 'success' | 'error' | 'info') => {
-    setToast({ show: true, message, type });
-    setTimeout(() => {
-      setToast({ show: false, message: '', type: 'success' });
-    }, 3000);
+
+
+  // Show confirmation modal before accept/decline
+  const showInterestConfirmation = (interestId: string, userName: string, action: 'accept' | 'decline') => {
+    setSelectedInterest({ id: interestId, name: userName });
+    setInterestActionType(action);
+    setShowInterestConfirmModal(true);
   };
 
   // Handle Accept Interest Request
-  const handleAcceptInterest = (requestId: number, userName: string) => {
-    // TODO: When backend is ready, call API: POST /api/interests/${requestId}/respond with { action: 'accept' }
-    setInterestRequests(prev => prev.filter(req => req.id !== requestId));
-    showToast(`You accepted ${userName}'s interest! 💕`, 'success');
+  const handleAcceptInterest = async () => {
+    if (!selectedInterest) return;
+    
+    try {
+      const response = await api.put(`/interests/${selectedInterest.id}/accept`);
+      if (response.data.success) {
+        setShowInterestConfirmModal(false);
+        toast.success(`You accepted ${selectedInterest.name}'s interest! 💕`);
+        setSelectedInterest(null);
+        // Refetch the list to ensure we only show pending interests
+        await fetchReceivedInterests();
+      }
+    } catch (error: any) {
+      console.error('Error accepting interest:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to accept interest';
+      
+      // If interest already processed, refetch the list
+      if (errorMessage.includes('already accepted') || errorMessage.includes('already rejected')) {
+        toast.info('This interest request has already been processed');
+        await fetchReceivedInterests();
+      } else {
+        toast.error(errorMessage);
+      }
+      
+      setShowInterestConfirmModal(false);
+      setSelectedInterest(null);
+    }
   };
 
   // Handle Decline Interest Request
-  const handleDeclineInterest = (requestId: number, userName: string) => {
-    // TODO: When backend is ready, call API: POST /api/interests/${requestId}/respond with { action: 'decline' }
-    setInterestRequests(prev => prev.filter(req => req.id !== requestId));
-    showToast(`You declined ${userName}'s interest request`, 'info');
+  const handleDeclineInterest = async () => {
+    if (!selectedInterest) return;
+    
+    try {
+      const response = await api.put(`/interests/${selectedInterest.id}/reject`);
+      if (response.data.success) {
+        setShowInterestConfirmModal(false);
+        toast.success(`You declined ${selectedInterest.name}'s interest request`);
+        setSelectedInterest(null);
+        // Refetch the list to ensure we only show pending interests
+        await fetchReceivedInterests();
+      }
+    } catch (error: any) {
+      console.error('Error declining interest:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to decline interest';
+      
+      // If interest already processed, refetch the list
+      if (errorMessage.includes('already accepted') || errorMessage.includes('already rejected')) {
+        toast.info('This interest request has already been processed');
+        await fetchReceivedInterests();
+      } else {
+        toast.error(errorMessage);
+      }
+      
+      setShowInterestConfirmModal(false);
+      setSelectedInterest(null);
+    }
   };
 
   // Handle Unignore Member
   const handleUnignoreMember = (userId: string, userName: string) => {
     // TODO: When backend is ready, call API: DELETE /api/users/ignored/${userId}
     setIgnoredMembers(prev => prev.filter(member => member.userId !== userId));
-    showToast(`${userName} has been unignored and can now contact you! ✨`, 'success');
+    toast.success(`${userName} has been unignored and can now contact you! ✨`);
+  };
+
+  // Handle Remove from Shortlist
+  const handleRemoveFromShortlist = async (userId: string, userName: string) => {
+    try {
+      const response = await api.delete(`/shortlist/${userId}`);
+      if (response.data.success) {
+        setShortlist(prev => prev.filter(item => item.shortlistedUserId._id !== userId));
+        toast.success(`${userName} removed from shortlist`);
+      }
+    } catch (error: any) {
+      console.error('Error removing from shortlist:', error);
+      toast.error(error.response?.data?.message || 'Failed to remove from shortlist');
+    }
   };
 
   // Handle Send Message
@@ -501,37 +630,6 @@ export default function DashboardPage() {
                 </button>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Toast Notification */}
-      <AnimatePresence>
-        {toast.show && (
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            className="fixed top-20 right-4 z-50"
-          >
-            <div className={`px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3 min-w-[300px] ${
-              toast.type === 'success' ? 'bg-green-500' :
-              toast.type === 'error' ? 'bg-red-500' :
-              'bg-blue-500'
-            }`}>
-              {toast.type === 'success' && (
-                <CheckCircle className="w-6 h-6 text-white flex-shrink-0" />
-              )}
-              {toast.type === 'error' && (
-                <XCircle className="w-6 h-6 text-white flex-shrink-0" />
-              )}
-              {toast.type === 'info' && (
-                <svg className="w-6 h-6 text-white flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-              )}
-              <p className="text-white font-semibold">{toast.message}</p>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1168,6 +1266,120 @@ export default function DashboardPage() {
               </motion.div>
             )}
 
+            {/* Shortlist Section */}
+            {activeMenu === 'MENU_SHORTLIST' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-pink-100"
+              >
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-6">{t('MENU_SHORTLIST')}</h2>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+                  Profiles you've added to your shortlist for easy access
+                </p>
+
+                {/* Loading State */}
+                {loadingShortlist ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="w-12 h-12 border-4 border-golden-200 border-t-golden-600 rounded-full animate-spin" />
+                  </div>
+                ) : shortlist.length > 0 ? (
+                  /* Shortlist Grid */
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    {shortlist.map((item, index) => {
+                      const user = item.shortlistedUserId;
+                      const calculateAge = (dob: string) => {
+                        const birthDate = new Date(dob);
+                        const today = new Date();
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const monthDiff = today.getMonth() - birthDate.getMonth();
+                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                          age--;
+                        }
+                        return age;
+                      };
+                      const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+                      const profilePhoto = user?.profilePicture 
+                        ? (user.profilePicture.startsWith('/') 
+                            ? `${API_URL}${user.profilePicture}` 
+                            : `${API_URL}/uploads/${user.profilePicture}`)
+                        : '/app/images/hand1.jpeg';
+                      
+                      return (
+                        <motion.div
+                          key={item._id}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.05 }}
+                          className="bg-gradient-to-br from-pink-50 to-white border border-pink-100 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300"
+                        >
+                          {/* Profile Image */}
+                          <div className="relative h-64 bg-gray-200">
+                            <img 
+                              src={profilePhoto} 
+                              alt={user?.name} 
+                              className="w-full h-full object-cover"
+                            />
+                            <button
+                              onClick={() => handleRemoveFromShortlist(user?._id, user?.name || 'this user')}
+                              className="absolute top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-red-50 transition-all group shadow-lg"
+                            >
+                              <Heart className="w-5 h-5 text-pink-500 fill-current group-hover:text-red-500 transition-colors" />
+                            </button>
+                          </div>
+
+                          {/* Profile Info */}
+                          <div className="p-4">
+                            <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">{user?.name || 'Unknown'}</h3>
+                            <p className="text-sm text-gray-600 mb-3">
+                              {user?.dateOfBirth && `${calculateAge(user.dateOfBirth)} years`}
+                              {user?.profession && ` • ${user.profession}`}
+                            </p>
+                            <p className="text-sm text-gray-500 mb-4 truncate">
+                              {user?.city && user?.state ? `${user.city}, ${user.state}` : (user?.city || user?.state || 'Location not specified')}
+                            </p>
+
+                            {/* Actions */}
+                            <div className="flex gap-2">
+                              <Link href={`/profile/${user?._id}`} className="flex-1">
+                                <motion.button
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  className="w-full bg-gradient-to-r from-golden-500 to-golden-600 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all text-sm"
+                                >
+                                  View Profile
+                                </motion.button>
+                              </Link>
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  /* Empty State */
+                  <div className="flex items-center justify-center py-12">
+                    <div className="text-center">
+                      <div className="w-24 h-24 bg-pink-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Heart className="w-12 h-12 text-pink-300" />
+                      </div>
+                      <p className="text-gray-500 font-medium">No profiles in shortlist</p>
+                      <p className="text-gray-400 text-sm mt-2">Start adding profiles you like to your shortlist</p>
+                      <Link href="/members">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="mt-4 bg-gradient-to-r from-golden-500 to-golden-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+                        >
+                          Browse Members
+                        </motion.button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
             {/* My Interest Section */}
             {activeMenu === 'MENU_MY_INTEREST' && (
               <motion.div
@@ -1180,68 +1392,103 @@ export default function DashboardPage() {
                   {t('INTERESTS_SENT_DESC')}
                 </p>
 
-                {/* Interest List */}
-                <div className="space-y-3 sm:space-y-4">
-                  {[
-                    { id: 1, userId: 'user_001', name: t('NAME_PRIYA_SHARMA'), age: 26, profession: t('SOFTWARE_ENGINEER'), location: t('LOCATION_MUMBAI'), status: 'Pending', photo: '/app/images/hand1.jpeg' },
-                    { id: 2, userId: 'user_002', name: t('NAME_ANJALI_PATEL'), age: 25, profession: t('DOCTOR'), location: t('LOCATION_DELHI'), status: 'Accepted', photo: '/app/images/hand2.jpeg' },
-                    { id: 3, userId: 'user_003', name: t('NAME_SNEHA_KUMAR'), age: 27, profession: t('TEACHER'), location: t('LOCATION_BANGALORE'), status: 'Declined', photo: '/app/images/hand3.jpeg' },
-                  ].map((interest, index) => (
-                    <motion.div
-                      key={interest.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-gradient-to-r from-pink-50 to-white border border-pink-100 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                        <div className="flex items-center gap-3 flex-1">
-                          <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-golden-400 to-golden-500 rounded-full flex items-center justify-center flex-shrink-0">
-                            <User className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{interest.name}</h3>
-                            <p className="text-gray-600 text-xs sm:text-sm truncate">{t('AGE_YEARS').replace('{age}', String(interest.age))} • {interest.profession}</p>
-                            <p className="text-gray-500 text-xs sm:text-sm truncate">{interest.location}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
-                          <span className={`px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap ${
-                            interest.status === 'Accepted' ? 'bg-green-100 text-green-700' :
-                            interest.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'
-                          }`}>
-                            {interest.status === 'Accepted' ? t('STATUS_ACCEPTED') :
-                            interest.status === 'Pending' ? t('STATUS_PENDING') :
-                            t('STATUS_DECLINED')}
-                          </span>
-                          <Link href={`/profile/${interest.userId}`}>
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="text-golden-600 hover:text-golden-700 text-xs sm:text-sm font-medium underline whitespace-nowrap"
-                            >
-                              {t('VIEW_PROFILE')}
-                            </motion.button>
-                          </Link>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Empty State */}
-                {/* Uncomment if no interests sent
-                <div className="flex items-center justify-center py-12">
-                  <div className="text-center">
-                    <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Heart className="w-12 h-12 text-golden-300" />
-                    </div>
-                    <p className="text-gray-500 font-medium">{t('NO_INTERESTS_SENT')}</p>
-                    <p className="text-gray-400 text-sm mt-2">{t('START_BROWSING_MEMBERS')}</p>
+                {/* Loading State */}
+                {loadingInterests ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="w-12 h-12 border-4 border-golden-200 border-t-golden-600 rounded-full animate-spin" />
                   </div>
-                </div>
-                */}
+                ) : myInterests.length > 0 ? (
+                  /* Interest List */
+                  <div className="space-y-3 sm:space-y-4">
+                    {myInterests.map((interest, index) => {
+                      const receiver = interest.receiverId;
+                      const calculateAge = (dob: string) => {
+                        const birthDate = new Date(dob);
+                        const today = new Date();
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const monthDiff = today.getMonth() - birthDate.getMonth();
+                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                          age--;
+                        }
+                        return age;
+                      };
+                      const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+                      const profilePhoto = receiver?.profilePicture 
+                        ? (receiver.profilePicture.startsWith('/') 
+                            ? `${API_URL}${receiver.profilePicture}` 
+                            : `${API_URL}/uploads/${receiver.profilePicture}`)
+                        : '/app/images/hand1.jpeg';
+                      
+                      return (
+                      <motion.div
+                        key={interest._id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="bg-gradient-to-r from-pink-50 to-white border border-pink-100 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
+                              <img src={profilePhoto} alt={receiver?.name} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{receiver?.name || 'Unknown'}</h3>
+                              <p className="text-gray-600 text-xs sm:text-sm truncate">
+                                {receiver?.dateOfBirth && `${calculateAge(receiver.dateOfBirth)} years`}
+                                {receiver?.profession && ` • ${receiver.profession}`}
+                              </p>
+                              <p className="text-gray-500 text-xs sm:text-sm truncate">
+                                {receiver?.city && receiver?.state ? `${receiver.city}, ${receiver.state}` : (receiver?.city || receiver?.state || 'Location not specified')}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
+                            <span className={`px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap ${
+                              interest.status === 'accepted' ? 'bg-green-100 text-green-700' :
+                              interest.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-red-100 text-red-700'
+                            }`}>
+                              {interest.status === 'accepted' ? t('STATUS_ACCEPTED') :
+                              interest.status === 'pending' ? t('STATUS_PENDING') :
+                              t('STATUS_DECLINED')}
+                            </span>
+                            <Link href={`/profile/${receiver?._id}`}>
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="text-golden-600 hover:text-golden-700 text-xs sm:text-sm font-medium underline whitespace-nowrap"
+                              >
+                                {t('VIEW_PROFILE')}
+                              </motion.button>
+                            </Link>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                  </div>
+                ) : (
+                  /* Empty State */
+                  <div className="flex items-center justify-center py-12">
+                    <div className="text-center">
+                      <div className="w-24 h-24 bg-golden-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Heart className="w-12 h-12 text-golden-300" />
+                      </div>
+                      <p className="text-gray-500 font-medium">{t('NO_INTERESTS_SENT')}</p>
+                      <p className="text-gray-400 text-sm mt-2">{t('START_BROWSING_MEMBERS')}</p>
+                      <Link href="/members">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="mt-4 bg-gradient-to-r from-golden-500 to-golden-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+                        >
+                          Browse Members
+                        </motion.button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -1257,36 +1504,81 @@ export default function DashboardPage() {
                   {t('INTEREST_REQUESTS_DESC')}
                 </p>
 
-                {/* Request List */}
-                {interestRequests.length > 0 ? (
+                {/* Loading State */}
+                {loadingInterests ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="w-12 h-12 border-4 border-golden-200 border-t-golden-600 rounded-full animate-spin" />
+                  </div>
+                ) : interestRequests.length > 0 ? (
+                  /* Request List */
                   <div className="space-y-3 sm:space-y-4">
-                    {interestRequests.map((request, index) => (
+                    {interestRequests.map((request, index) => {
+                      const sender = request.senderId;
+                      const calculateAge = (dob: string) => {
+                        const birthDate = new Date(dob);
+                        const today = new Date();
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const monthDiff = today.getMonth() - birthDate.getMonth();
+                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                          age--;
+                        }
+                        return age;
+                      };
+                      const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+                      const profilePhoto = sender?.profilePicture 
+                        ? (sender.profilePicture.startsWith('/') 
+                            ? `${API_URL}${sender.profilePicture}` 
+                            : `${API_URL}/uploads/${sender.profilePicture}`)
+                        : '/app/images/hand1.jpeg';
+                      
+                      const timeAgo = (date: string) => {
+                        const now = new Date();
+                        const createdDate = new Date(date);
+                        const diffMs = now.getTime() - createdDate.getTime();
+                        const diffMins = Math.floor(diffMs / 60000);
+                        const diffHours = Math.floor(diffMs / 3600000);
+                        const diffDays = Math.floor(diffMs / 86400000);
+                        
+                        if (diffMins < 60) return `${diffMins} min${diffMins !== 1 ? 's' : ''} ago`;
+                        if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+                        return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+                      };
+                      
+                      return (
                     <motion.div
-                      key={request.id}
+                      key={request._id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
                       className="bg-gradient-to-r from-golden-50 to-white border border-golden-200 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300"
                     >
                       <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-                        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-golden-400 to-golden-500 rounded-full flex items-center justify-center flex-shrink-0">
-                          <User className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
+                          <img src={profilePhoto} alt={sender?.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{request.name}</h3>
-                          <p className="text-gray-600 text-xs sm:text-sm truncate">{t('AGE_YEARS').replace('{age}', String(request.age))} • {request.profession}</p>
-                          <p className="text-gray-500 text-xs sm:text-sm truncate">{request.location}</p>
+                          <h3 className="text-base sm:text-lg font-bold text-gray-800 truncate">{sender?.name || 'Unknown'}</h3>
+                          <p className="text-gray-600 text-xs sm:text-sm truncate">
+                            {sender?.dateOfBirth && `${calculateAge(sender.dateOfBirth)} years`}
+                            {sender?.profession && ` • ${sender.profession}`}
+                          </p>
+                          <p className="text-gray-500 text-xs sm:text-sm truncate">
+                            {sender?.city && sender?.state ? `${sender.city}, ${sender.state}` : (sender?.city || sender?.state || 'Location not specified')}
+                          </p>
                           <p className="text-gray-400 text-xs mt-1 flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            {request.time}
+                            {timeAgo(request.createdAt)}
                           </p>
+                          {request.message && (
+                            <p className="text-gray-600 text-sm mt-2 italic bg-white/50 p-2 rounded">"{request.message}"</p>
+                          )}
                         </div>
                       </div>
                       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                         <motion.button
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          onClick={() => handleAcceptInterest(request.id, request.name)}
+                          onClick={() => showInterestConfirmation(request._id, sender?.name || 'this user', 'accept')}
                           className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-2 sm:py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                           <CheckCircle className="w-4 h-4" />
@@ -1295,13 +1587,13 @@ export default function DashboardPage() {
                         <motion.button
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          onClick={() => handleDeclineInterest(request.id, request.name)}
+                          onClick={() => showInterestConfirmation(request._id, sender?.name || 'this user', 'decline')}
                           className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 sm:py-2.5 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                         >
                           <XCircle className="w-4 h-4" />
                           {t('DECLINE')}
                         </motion.button>
-                        <Link href={`/profile/${request.userId}`} className="flex-1 sm:flex-none">
+                        <Link href={`/profile/${sender?._id}`} className="flex-1 sm:flex-none">
                           <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
@@ -1312,8 +1604,9 @@ export default function DashboardPage() {
                         </Link>
                       </div>
                     </motion.div>
-                  ))}
-                </div>
+                      );
+                    })}
+                  </div>
                 ) : (
                   <div className="flex items-center justify-center py-8 sm:py-12">
                     <div className="text-center">
@@ -1644,6 +1937,91 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Interest Confirmation Modal */}
+      <AnimatePresence>
+        {showInterestConfirmModal && selectedInterest && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowInterestConfirmModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden"
+            >
+              {/* Header */}
+              <div className={`p-6 ${interestActionType === 'accept' ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-gradient-to-r from-red-500 to-rose-600'}`}>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    {interestActionType === 'accept' ? (
+                      <CheckCircle className="w-6 h-6 text-white" />
+                    ) : (
+                      <XCircle className="w-6 h-6 text-white" />
+                    )}
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-white">
+                      {interestActionType === 'accept' ? 'Accept Interest' : 'Decline Interest'}
+                    </h2>
+                    <p className="text-white/90 text-sm">from {selectedInterest.name}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="p-6">
+                <p className="text-gray-700 text-lg mb-6">
+                  {interestActionType === 'accept' 
+                    ? `Are you sure you want to accept the interest from ${selectedInterest.name}? They will be notified and you can start connecting.`
+                    : `Are you sure you want to decline the interest from ${selectedInterest.name}? This action cannot be undone.`
+                  }
+                </p>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowInterestConfirmModal(false)}
+                    className="flex-1 py-3 rounded-2xl border-2 border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition-all"
+                  >
+                    Cancel
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={interestActionType === 'accept' ? handleAcceptInterest : handleDeclineInterest}
+                    className={`flex-1 py-3 rounded-2xl text-white font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 ${
+                      interestActionType === 'accept' 
+                        ? 'bg-gradient-to-r from-green-500 to-emerald-600' 
+                        : 'bg-gradient-to-r from-red-500 to-rose-600'
+                    }`}
+                  >
+                    {interestActionType === 'accept' ? (
+                      <>
+                        <CheckCircle className="w-5 h-5" />
+                        Accept
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="w-5 h-5" />
+                        Decline
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

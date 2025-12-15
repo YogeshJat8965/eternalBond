@@ -34,6 +34,7 @@ export default function MembersPage() {
   const [totalResults, setTotalResults] = useState(0);
   const [likedProfiles, setLikedProfiles] = useState<string[]>([]);
   const [burstingHeart, setBurstingHeart] = useState<string | null>(null);
+  const [togglingShortlist, setTogglingShortlist] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ show: boolean; message: string; name: string }>({
     show: false,
     message: '',
@@ -120,10 +121,40 @@ export default function MembersPage() {
     }
   };
 
+  // Fetch shortlist status for current members
+  const fetchShortlistStatus = async (memberIds: string[]) => {
+    try {
+      const shortlistedIds: string[] = [];
+      await Promise.all(
+        memberIds.map(async (memberId) => {
+          try {
+            const response = await api.get(`/shortlist/check/${memberId}`);
+            if (response.data.isShortlisted) {
+              shortlistedIds.push(memberId);
+            }
+          } catch (error) {
+            // Ignore errors for individual checks
+          }
+        })
+      );
+      setLikedProfiles(shortlistedIds);
+    } catch (error) {
+      console.error('Error fetching shortlist status:', error);
+    }
+  };
+
   // Load members on mount
   useEffect(() => {
     fetchMembers(1);
   }, []);
+
+  // Fetch shortlist status when members change
+  useEffect(() => {
+    if (members.length > 0) {
+      const memberIds = members.map(m => m._id);
+      fetchShortlistStatus(memberIds);
+    }
+  }, [members]);
 
   const showNotification = (name: string) => {
     setNotification({ 
@@ -136,14 +167,31 @@ export default function MembersPage() {
     }, 3000);
   };
 
-  const toggleLike = (memberId: string, memberName: string) => {
-    if (likedProfiles.includes(memberId)) {
-      setLikedProfiles(likedProfiles.filter((id) => id !== memberId));
-    } else {
-      setLikedProfiles([...likedProfiles, memberId]);
-      setBurstingHeart(memberId);
-      showNotification(memberName);
-      setTimeout(() => setBurstingHeart(null), 600);
+  const toggleLike = async (memberId: string, memberName: string) => {
+    if (togglingShortlist === memberId) return; // Prevent double clicks
+    
+    try {
+      setTogglingShortlist(memberId);
+      const isCurrentlyLiked = likedProfiles.includes(memberId);
+      
+      if (isCurrentlyLiked) {
+        // Remove from shortlist
+        await api.delete(`/shortlist/${memberId}`);
+        setLikedProfiles(likedProfiles.filter((id) => id !== memberId));
+        toast.success(`${memberName} removed from shortlist`);
+      } else {
+        // Add to shortlist
+        await api.post('/shortlist', { userId: memberId });
+        setLikedProfiles([...likedProfiles, memberId]);
+        setBurstingHeart(memberId);
+        setTimeout(() => setBurstingHeart(null), 600);
+        toast.success(`${memberName} added to shortlist! ❤️`);
+      }
+    } catch (error: any) {
+      console.error('Error toggling shortlist:', error);
+      toast.error(error.response?.data?.message || 'Failed to update shortlist');
+    } finally {
+      setTogglingShortlist(null);
     }
   };
 
@@ -604,9 +652,10 @@ export default function MembersPage() {
                           <div className="absolute top-4 right-4">
                             <motion.button
                               onClick={() => toggleLike(member._id, member.name)}
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              className="relative bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg z-10"
+                              disabled={togglingShortlist === member._id}
+                              whileHover={{ scale: togglingShortlist === member._id ? 1 : 1.1 }}
+                              whileTap={{ scale: togglingShortlist === member._id ? 1 : 0.9 }}
+                              className="relative bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg z-10 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               <motion.div
                                 animate={

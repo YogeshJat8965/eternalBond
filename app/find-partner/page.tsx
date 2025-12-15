@@ -36,6 +36,7 @@ export default function FindPartnerPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [likedProfiles, setLikedProfiles] = useState<string[]>([]);
   const [burstingHeart, setBurstingHeart] = useState<string | null>(null);
+  const [togglingShortlist, setTogglingShortlist] = useState<string | null>(null);
   const [searchFilters, setSearchFilters] = useState({
     gender: '',
     ageFrom: '',
@@ -63,6 +64,65 @@ export default function FindPartnerPage() {
     }
     return age;
   };
+
+  // Fetch shortlist status for members
+  const fetchShortlistStatus = async (memberIds: string[]) => {
+    try {
+      const shortlistedIds: string[] = [];
+      await Promise.all(
+        memberIds.map(async (memberId) => {
+          try {
+            const response = await api.get(`/shortlist/check/${memberId}`);
+            if (response.data.isShortlisted) {
+              shortlistedIds.push(memberId);
+            }
+          } catch (error) {
+            // Ignore errors for individual checks
+          }
+        })
+      );
+      setLikedProfiles(shortlistedIds);
+    } catch (error) {
+      console.error('Error fetching shortlist status:', error);
+    }
+  };
+
+  // Toggle shortlist
+  const toggleShortlist = async (memberId: string, memberName: string) => {
+    if (togglingShortlist === memberId) return; // Prevent double clicks
+    
+    try {
+      setTogglingShortlist(memberId);
+      const isCurrentlyLiked = likedProfiles.includes(memberId);
+      
+      if (isCurrentlyLiked) {
+        // Remove from shortlist
+        await api.delete(`/shortlist/${memberId}`);
+        setLikedProfiles(likedProfiles.filter((id) => id !== memberId));
+        toast.success(`${memberName} removed from shortlist`);
+      } else {
+        // Add to shortlist
+        await api.post('/shortlist', { userId: memberId });
+        setLikedProfiles([...likedProfiles, memberId]);
+        setBurstingHeart(memberId);
+        setTimeout(() => setBurstingHeart(null), 600);
+        toast.success(`${memberName} added to shortlist! ❤️`);
+      }
+    } catch (error: any) {
+      console.error('Error toggling shortlist:', error);
+      toast.error(error.response?.data?.message || 'Failed to update shortlist');
+    } finally {
+      setTogglingShortlist(null);
+    }
+  };
+
+  // Fetch shortlist status when members change
+  useEffect(() => {
+    if (members.length > 0) {
+      const memberIds = members.map(m => m._id);
+      fetchShortlistStatus(memberIds);
+    }
+  }, [members]);
 
   const handleSearch = async () => {
     try {
@@ -400,15 +460,64 @@ export default function FindPartnerPage() {
                   whileHover={{ y: -5 }}
                   className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-golden-100"
                 >
-                  <Link href={`/profile/${result._id}`}>
-                    <div className="relative h-72 overflow-hidden group cursor-pointer">
+                  <div className="relative h-72 overflow-hidden group">
+                    <Link href={`/profile/${result._id}`}>
                       <img
                         src={profileImage}
                         alt={result.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 cursor-pointer"
                       />
+                    </Link>
+                    
+                    <div className="absolute top-4 right-4">
+                      <motion.button
+                        onClick={() => toggleShortlist(result._id, result.name)}
+                        disabled={togglingShortlist === result._id}
+                        whileHover={{ scale: togglingShortlist === result._id ? 1 : 1.1 }}
+                        whileTap={{ scale: togglingShortlist === result._id ? 1 : 0.9 }}
+                        className="relative bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <motion.div
+                          animate={
+                            likedProfiles.includes(result._id)
+                              ? { scale: [1, 1.3, 1] }
+                              : {}
+                          }
+                          transition={{ duration: 0.3 }}
+                        >
+                          <Heart
+                            className={`w-5 h-5 transition-colors duration-200 ${
+                              likedProfiles.includes(result._id)
+                                ? 'text-red-500 fill-red-500'
+                                : 'text-gray-400'
+                            }`}
+                          />
+                        </motion.div>
+                      </motion.button>
+
+                      {burstingHeart === result._id && (
+                        <div className="absolute inset-0 pointer-events-none">
+                          {[...Array(8)].map((_, i) => {
+                            const angle = (i * 360) / 8;
+                            const x = Math.cos((angle * Math.PI) / 180) * 40;
+                            const y = Math.sin((angle * Math.PI) / 180) * 40;
+                            
+                            return (
+                              <motion.div
+                                key={i}
+                                className="absolute top-1/2 left-1/2"
+                                initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                                animate={{ x: x, y: y, opacity: 0, scale: 0 }}
+                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                              >
+                                <Heart className="w-3 h-3 text-red-500 fill-red-500" />
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                  </Link>
+                  </div>
 
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-gray-800 mb-1">

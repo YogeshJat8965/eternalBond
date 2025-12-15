@@ -27,6 +27,7 @@ const searchRoutes = require('./routes/search');
 const interestRoutes = require('./routes/interest');
 const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
+const shortlistRoutes = require('./routes/shortlist');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
@@ -34,6 +35,7 @@ app.use('/api/search', searchRoutes);
 app.use('/api/interests', interestRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/shortlist', shortlistRoutes);
 
 // Test route
 app.get('/', (req, res) => {

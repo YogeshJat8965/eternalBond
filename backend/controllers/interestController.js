@@ -90,7 +90,12 @@ const getReceivedInterests = async (req, res) => {
   try {
     const { status } = req.query;
 
-    const query = { receiverId: req.user._id };
+    const query = { 
+      receiverId: req.user._id,
+      status: 'pending' // Only show pending interests by default
+    };
+    
+    // If status is explicitly provided, use it
     if (status) {
       query.status = status;
     }

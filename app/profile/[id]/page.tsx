@@ -53,8 +53,26 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
     const fetchProfile = async () => {
       try {
         setLoading(true);
+        
+        // Fetch profile data
         const response = await api.get(`/profile/${params.id}`);
         const data = response.data.data || response.data;
+        
+        // Check if interest already sent to this profile
+        let interestAlreadySent = false;
+        try {
+          const sentInterestsResponse = await api.get('/interests/sent');
+          if (sentInterestsResponse.data.success) {
+            const sentInterests = sentInterestsResponse.data.data || [];
+            interestAlreadySent = sentInterests.some(
+              (interest: any) => interest.receiverId._id === params.id || interest.receiverId === params.id
+            );
+          }
+        } catch (interestError) {
+          console.log('Could not check sent interests:', interestError);
+        }
+        
+        data.interestAlreadySent = interestAlreadySent;
         
         // Transform backend data to match ProfileView expected format
         const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
