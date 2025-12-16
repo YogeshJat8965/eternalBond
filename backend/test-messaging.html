@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messaging System Test - EternalBond</title>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    .header p {
+      opacity: 0.9;
+      font-size: 1.1em;
+    }
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      padding: 30px;
+    }
+    .section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 15px;
+      border: 2px solid #e9ecef;
+    }
+    .section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section h2::before {
+      content: '✨';
+      font-size: 1.2em;
+    }
+    .status {
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .status.offline {
+      background: #fee;
+      color: #c33;
+      border: 2px solid #fcc;
+    }
+    .status.online {
+      background: #efe;
+      color: #3c3;
+      border: 2px solid #cfc;
+    }
+    .status::before {
+      content: '●';
+      font-size: 1.5em;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #495057;
+      font-weight: 600;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .messages {
+      background: white;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    .message {
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+      background: #f8f9fa;
+    }
+    .message.sent {
+      border-left-color: #28a745;
+      background: #e8f5e9;
+    }
+    .message.received {
+      border-left-color: #667eea;
+      background: #e3f2fd;
+    }
+    .message.error {
+      border-left-color: #dc3545;
+      background: #ffebee;
+    }
+    .message .time {
+      font-size: 0.85em;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+    .features {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+      padding: 25px;
+      border-radius: 15px;
+    }
+    .features h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+    .features ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      list-style: none;
+    }
+    .features li {
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .features li::before {
+      content: '✓';
+      background: #28a745;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .api-endpoints {
+      grid-column: 1 / -1;
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 15px;
+    }
+    .api-endpoints h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+    .endpoint {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+      font-family: 'Courier New', monospace;
+    }
+    .endpoint .method {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 0.9em;
+    }
+    .endpoint .method.get {
+      background: #28a745;
+      color: white;
+    }
+    .endpoint .method.post {
+      background: #007bff;
+      color: white;
+    }
+    .endpoint .method.put {
+      background: #ffc107;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚀 Phase 6: Messaging System</h1>
+      <p>Real-time Chat with Socket.io - EternalBond Matrimony Platform</p>
+    </div>
+
+    <div class="content">
+      <!-- Connection Section -->
+      <div class="section">
+        <h2>Connection Status</h2>
+        <div id="status" class="status offline">
+          Disconnected from server
+        </div>
+        <div class="form-group">
+          <label for="token">User JWT Token:</label>
+          <input type="text" id="token" placeholder="Paste your JWT token here">
+          <small style="display:block; margin-top:5px; color:#6c757d;">
+            Get token from: POST /api/auth/login
+          </small>
+        </div>
+        <button id="connectBtn">Connect to Chat Server</button>
+      </div>
+
+      <!-- Send Message Section -->
+      <div class="section">
+        <h2>Send Message</h2>
+        <div class="form-group">
+          <label for="receiverId">Receiver User ID:</label>
+          <input type="text" id="receiverId" placeholder="Enter receiver's MongoDB _id">
+        </div>
+        <div class="form-group">
+          <label for="messageContent">Message:</label>
+          <textarea id="messageContent" placeholder="Type your message here..."></textarea>
+        </div>
+        <button id="sendBtn" disabled>Send Message</button>
+      </div>
+
+      <!-- Messages Display -->
+      <div class="section" style="grid-column: 1 / -1;">
+        <h2>Live Messages & Events</h2>
+        <div id="messages" class="messages">
+          <div class="message">
+            <strong>Welcome!</strong> Connect to start messaging in real-time.
+          </div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="features">
+        <h3>✨ Implemented Features</h3>
+        <ul>
+          <li>Real-time one-on-one chat with Socket.io</li>
+          <li>JWT authentication for secure connections</li>
+          <li>See conversation list with unread counts</li>
+          <li>Mark messages as read automatically</li>
+          <li>Typing indicators for better UX</li>
+          <li>Online/Offline user status tracking</li>
+          <li>Only accepted interest users can chat</li>
+          <li>Message persistence in MongoDB</li>
+        </ul>
+      </div>
+
+      <!-- API Endpoints -->
+      <div class="api-endpoints">
+        <h3>📡 REST API Endpoints</h3>
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          /api/messages/conversations - Get all conversations with unread counts
+        </div>
+        <div class="endpoint">
+          <span class="method get">GET</span>
+          /api/messages/:userId - Get messages with specific user
+        </div>
+        <div class="endpoint">
+          <span class="method post">POST</span>
+          /api/messages/send - Send message (also via Socket.io)
+        </div>
+        <div class="endpoint">
+          <span class="method put">PUT</span>
+          /api/messages/:id/read - Mark message as read
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let socket = null;
+    const statusEl = document.getElementById('status');
+    const messagesEl = document.getElementById('messages');
+    const connectBtn = document.getElementById('connectBtn');
+    const sendBtn = document.getElementById('sendBtn');
+    const tokenInput = document.getElementById('token');
+    const receiverIdInput = document.getElementById('receiverId');
+    const messageContentInput = document.getElementById('messageContent');
+
+    function addMessage(content, type = 'info') {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+      
+      const time = new Date().toLocaleTimeString();
+      messageDiv.innerHTML = `
+        <div>${content}</div>
+        <div class="time">${time}</div>
+      `;
+      
+      messagesEl.appendChild(messageDiv);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    connectBtn.addEventListener('click', () => {
+      const token = tokenInput.value.trim();
+      
+      if (!token) {
+        alert('Please enter your JWT token');
+        return;
+      }
+
+      if (socket && socket.connected) {
+        socket.disconnect();
+        return;
+      }
+
+      // Connect to Socket.io server
+      socket = io('http://localhost:5000', {
+        auth: {
+          token: token
+        }
+      });
+
+      // Connection events
+      socket.on('connect', () => {
+        statusEl.className = 'status online';
+        statusEl.textContent = 'Connected to chat server ✓';
+        connectBtn.textContent = 'Disconnect';
+        sendBtn.disabled = false;
+        addMessage('<strong>✅ Connected successfully!</strong> You can now send messages.', 'sent');
+      });
+
+      socket.on('connected', (data) => {
+        addMessage(`<strong>Server says:</strong> ${data.message} (Your ID: ${data.userId})`, 'info');
+      });
+
+      socket.on('disconnect', () => {
+        statusEl.className = 'status offline';
+        statusEl.textContent = 'Disconnected from server';
+        connectBtn.textContent = 'Connect to Chat Server';
+        sendBtn.disabled = true;
+        addMessage('<strong>❌ Disconnected</strong> from chat server.', 'error');
+      });
+
+      socket.on('connect_error', (error) => {
+        addMessage(`<strong>Connection Error:</strong> ${error.message}`, 'error');
+        statusEl.className = 'status offline';
+        statusEl.textContent = 'Connection failed';
+        connectBtn.textContent = 'Connect to Chat Server';
+        sendBtn.disabled = true;
+      });
+
+      // Message events
+      socket.on('message:received', (data) => {
+        if (data.success) {
+          const msg = data.data;
+          addMessage(`
+            <strong>Message ${msg.senderId._id === socket.id ? 'sent' : 'received'}:</strong><br>
+            From: ${msg.senderId.name}<br>
+            To: ${msg.receiverId.name}<br>
+            Content: "${msg.content}"
+          `, msg.senderId._id === socket.id ? 'sent' : 'received');
+        }
+      });
+
+      socket.on('message:error', (data) => {
+        addMessage(`<strong>Error:</strong> ${data.message}`, 'error');
+      });
+
+      socket.on('message:read', (data) => {
+        addMessage(`<strong>✓✓ Message read</strong> at ${new Date(data.readAt).toLocaleTimeString()}`, 'info');
+      });
+
+      // User status events
+      socket.on('user:online', (data) => {
+        addMessage(`<strong>🟢 ${data.userName}</strong> is now online`, 'info');
+      });
+
+      socket.on('user:offline', (data) => {
+        addMessage(`<strong>⚫ User</strong> went offline`, 'info');
+      });
+
+      // Typing indicator
+      socket.on('user:typing', (data) => {
+        if (data.isTyping) {
+          addMessage(`<strong>💭 ${data.userName}</strong> is typing...`, 'info');
+        }
+      });
+    });
+
+    sendBtn.addEventListener('click', () => {
+      const receiverId = receiverIdInput.value.trim();
+      const content = messageContentInput.value.trim();
+
+      if (!receiverId || !content) {
+        alert('Please fill in receiver ID and message content');
+        return;
+      }
+
+      if (!socket || !socket.connected) {
+        alert('Please connect to chat server first');
+        return;
+      }
+
+      // Send message via Socket.io
+      socket.emit('message:send', {
+        receiverId: receiverId,
+        content: content
+      });
+
+      // Clear input
+      messageContentInput.value = '';
+    });
+
+    // Typing indicator
+    let typingTimeout;
+    messageContentInput.addEventListener('input', () => {
+      const receiverId = receiverIdInput.value.trim();
+      
+      if (socket && socket.connected && receiverId) {
+        socket.emit('typing', {
+          receiverId: receiverId,
+          isTyping: true
+        });
+
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          socket.emit('typing', {
+            receiverId: receiverId,
+            isTyping: false
+          });
+        }, 1000);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -3,6 +3,7 @@
 import { AuthProvider } from '@/lib/auth-context';
 import { AdminAuthProvider } from '@/lib/admin-auth-context';
 import { LanguageProvider } from '@/context/LanguageProvider';
+import { SocketProvider } from '@/context/SocketContext';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePathname } from 'next/navigation';
 
@@ -14,15 +15,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <LanguageProvider>
       <AuthProvider>
         <AdminAuthProvider>
-          {isAdminRoute ? (
-            // Admin routes without main layout (no navbar/footer)
-            children
-          ) : (
-            // Regular routes with navbar and footer
-            <MainLayout>
-              {children}
-            </MainLayout>
-          )}
+          <SocketProvider>
+            {isAdminRoute ? (
+              // Admin routes without main layout (no navbar/footer)
+              children
+            ) : (
+              // Regular routes with navbar and footer
+              <MainLayout>
+                {children}
+              </MainLayout>
+            )}
+          </SocketProvider>
         </AdminAuthProvider>
       </AuthProvider>
     </LanguageProvider>

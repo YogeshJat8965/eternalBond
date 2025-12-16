@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, UserX, Trash2, Eye, MoreVertical, X, Loader2, ExternalLink } from 'lucide-react';
+import { Search, Filter, UserX, Trash2, Eye, MoreVertical, X, Loader2, ExternalLink, RotateCcw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Toast from '@/components/admin/Toast';
 import BackButton from '@/components/admin/BackButton';
@@ -137,6 +137,24 @@ export default function UserManagement() {
     }
     setShowDeleteModal(false);
     setSelectedUser(null);
+  };
+
+  const handleRestoreUser = async (user: any) => {
+    if (!admin || admin.role !== 'super-admin') {
+      sonnerToast.error('Only super-admin can restore users');
+      return;
+    }
+
+    try {
+      await api.put(`/admin/users/${user._id}/restore`);
+      setToast({
+        message: `${user.name} has been restored successfully!`,
+        type: 'success'
+      });
+      fetchUsers();
+    } catch (error: any) {
+      sonnerToast.error(error.response?.data?.message || 'Failed to restore user');
+    }
   };
 
   return (
@@ -301,20 +319,34 @@ export default function UserManagement() {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleBlockUser(user)}
                         className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
-                        title="Block User"
+                        title={user.isActive ? "Deactivate User" : "Activate User"}
                       >
                         <UserX className="w-4 h-4" />
                       </motion.button>
                       {admin?.role === 'super-admin' && (
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDeleteUser(user)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Delete User"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </motion.button>
+                        <>
+                          {user.accountStatus === 'deleted' ? (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleRestoreUser(user)}
+                              className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                              title="Restore User"
+                            >
+                              <RotateCcw className="w-4 h-4" />
+                            </motion.button>
+                          ) : (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleDeleteUser(user)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete User"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </motion.button>
+                          )}
+                        </>
                       )}
                     </div>
                   </td>

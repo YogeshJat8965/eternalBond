@@ -44,6 +44,7 @@ interface DashboardStats {
     verified: number;
     male: number;
     female: number;
+    premium: number;
   };
   interests: {
     total: number;
@@ -59,6 +60,15 @@ interface DashboardStats {
   };
   photos: {
     usersWithPhotos: number;
+  };
+  testimonials: {
+    total: number;
+    active: number;
+  };
+  stories: {
+    total: number;
+    featured: number;
+    active: number;
   };
 }
 
@@ -350,7 +360,7 @@ export default function AdminDashboard() {
           </div>
         </motion.div>
 
-        {/* Testimonials - Placeholder */}
+        {/* Testimonials */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -364,7 +374,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <h3 className="text-3xl font-bold text-gray-800 mb-1">
-            0
+            {stats.testimonials.total}
           </h3>
           <p className="text-gray-600 text-sm font-medium mb-2">Testimonials</p>
           <div className="text-xs text-gray-500">
@@ -372,7 +382,7 @@ export default function AdminDashboard() {
           </div>
         </motion.div>
 
-        {/* Premium Users - Placeholder */}
+        {/* Premium Users */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -386,7 +396,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <h3 className="text-3xl font-bold text-gray-800 mb-1">
-            0
+            {stats.users.premium}
           </h3>
           <p className="text-gray-600 text-sm font-medium mb-2">Premium Users</p>
           <div className="text-xs text-gray-500">
@@ -423,7 +433,7 @@ export default function AdminDashboard() {
           </div>
         </motion.div>
 
-        {/* Success Stories - Placeholder */}
+        {/* Success Stories */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -437,7 +447,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <h3 className="text-3xl font-bold text-gray-800 mb-1">
-            0
+            {stats.stories.total}
           </h3>
           <p className="text-gray-600 text-sm font-medium mb-2">Success Stories</p>
           <div className="text-xs text-gray-500">

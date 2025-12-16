@@ -2,6 +2,8 @@ const Admin = require('../models/Admin');
 const User = require('../models/User');
 const Contact = require('../models/Contact');
 const Interest = require('../models/Interest');
+const Testimonial = require('../models/Testimonial');
+const Story = require('../models/Story');
 const { generateToken } = require('../utils/jwt');
 
 // @desc    Admin login
@@ -289,6 +291,56 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// @desc    Restore deleted user
+// @route   PUT /api/admin/users/:id/restore
+// @access  Private (Super Admin only)
+const restoreUser = async (req, res) => {
+  try {
+    // Check if admin is super-admin
+    if (req.admin.role !== 'super-admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only super-admin can restore users'
+      });
+    }
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Check if user needs restoration (either deleted status or inactive)
+    const needsRestore = user.accountStatus === 'deleted' || user.isActive === false;
+    
+    if (!needsRestore) {
+      return res.status(400).json({
+        success: false,
+        message: 'User is already active and not deleted'
+      });
+    }
+
+    // Restore user
+    user.isActive = true;
+    user.accountStatus = 'active';
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'User restored successfully',
+      data: user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error'
+    });
+  }
+};
+
 // @desc    Get all contacts
 // @route   GET /api/admin/contacts
 // @access  Private (Admin)
@@ -445,6 +497,18 @@ const getDashboardStats = async (req, res) => {
     // Count photos
     const usersWithPhotos = await User.countDocuments({ photos: { $exists: true, $ne: [] } });
 
+    // Count testimonials
+    const totalTestimonials = await Testimonial.countDocuments();
+    const activeTestimonials = await Testimonial.countDocuments({ isActive: true });
+
+    // Count success stories
+    const totalStories = await Story.countDocuments();
+    const featuredStories = await Story.countDocuments({ featured: true });
+    const activeStories = await Story.countDocuments({ isActive: true });
+
+    // Count premium users (users with isPremium: true)
+    const premiumUsers = await User.countDocuments({ isPremium: true });
+
     res.status(200).json({
       success: true,
       data: {
@@ -453,7 +517,8 @@ const getDashboardStats = async (req, res) => {
           active: activeUsers,
           verified: verifiedUsers,
           male: maleUsers,
-          female: femaleUsers
+          female: femaleUsers,
+          premium: premiumUsers
         },
         interests: {
           total: totalInterests,
@@ -469,6 +534,15 @@ const getDashboardStats = async (req, res) => {
         },
         photos: {
           usersWithPhotos
+        },
+        testimonials: {
+          total: totalTestimonials,
+          active: activeTestimonials
+        },
+        stories: {
+          total: totalStories,
+          featured: featuredStories,
+          active: activeStories
         }
       }
     });
@@ -486,6 +560,7 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  restoreUser,
   getAllContacts,
   updateContactStatus,
   getAllInterests,

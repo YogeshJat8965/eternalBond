@@ -5,6 +5,7 @@ const {
   getUserById,
   updateUser,
   deleteUser,
+  restoreUser,
   getAllContacts,
   updateContactStatus,
   getAllInterests,
@@ -22,6 +23,7 @@ router.get('/users', adminProtect, getAllUsers);
 router.get('/users/:id', adminProtect, getUserById);
 router.put('/users/:id', adminProtect, updateUser);
 router.delete('/users/:id', adminProtect, deleteUser); // Super-admin only (checked in controller)
+router.put('/users/:id/restore', adminProtect, restoreUser); // Super-admin only (checked in controller)
 
 router.get('/contacts', adminProtect, getAllContacts);
 router.put('/contacts/:id', adminProtect, updateContactStatus);

@@ -2,10 +2,11 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, User, Image, Eye, List, MessageCircle, Ban, Settings, Key, LogOut, Camera, LayoutDashboard, ShoppingCart, ImageIcon, ArrowLeft, ArrowRight, Clock, UserX, CheckCircle, XCircle, Send, Smile, Paperclip, Phone, Video, MoreVertical, Edit } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from '@/context/LanguageProvider';
+import { useSocket } from '@/context/SocketContext';
 import { isAuthenticated } from '@/lib/auth-utils';
 import api from '@/lib/api';
 import { toast } from 'sonner';
@@ -283,6 +284,249 @@ export default function DashboardPage() {
     }
   }, [activeMenu]);
 
+  // Socket.io integration for messaging
+  const { socket, isConnected, onlineUsers } = useSocket();
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Auto-scroll to bottom of messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Fetch conversations when Messages menu is active
+  useEffect(() => {
+    if (activeMenu === 'MENU_MESSAGE') {
+      fetchConversations();
+    }
+  }, [activeMenu]);
+
+  const fetchConversations = async () => {
+    setLoadingMessages(true);
+    try {
+      // Fetch existing conversations
+      const conversationsResponse = await api.get('/messages/conversations');
+      const existingConvs = conversationsResponse.data.success ? (conversationsResponse.data.data || []) : [];
+      
+      // Fetch accepted interests to show users available for messaging
+      const interestsResponse = await api.get('/interests/sent');
+      const sentInterests = interestsResponse.data.success ? (interestsResponse.data.data || []) : [];
+      
+      const receivedResponse = await api.get('/interests/received');
+      const receivedInterests = receivedResponse.data.success ? (receivedResponse.data.data || []) : [];
+      
+      // Get unique users with accepted interests
+      const acceptedUsers = new Map();
+      
+      // Add users from sent interests (accepted)
+      sentInterests.forEach((interest: any) => {
+        if (interest.status === 'accepted' && interest.receiverId) {
+          const user = interest.receiverId;
+          acceptedUsers.set(user._id, {
+            userId: user._id,
+            name: user.name,
+            profilePicture: user.profilePicture,
+            lastMessage: 'Start a conversation',
+            lastMessageTime: interest.updatedAt,
+            unreadCount: 0
+          });
+        }
+      });
+      
+      // Add users from received interests (accepted)
+      receivedInterests.forEach((interest: any) => {
+        if (interest.status === 'accepted' && interest.senderId) {
+          const user = interest.senderId;
+          acceptedUsers.set(user._id, {
+            userId: user._id,
+            name: user.name,
+            profilePicture: user.profilePicture,
+            lastMessage: 'Start a conversation',
+            lastMessageTime: interest.updatedAt,
+            unreadCount: 0
+          });
+        }
+      });
+      
+      // Merge with existing conversations (existing conversations take precedence)
+      existingConvs.forEach((conv: any) => {
+        acceptedUsers.set(conv.userId, conv);
+      });
+      
+      // Transform to frontend format
+      const allConversations = Array.from(acceptedUsers.values()).map((conv: any, index: number) => ({
+        id: index + 1,
+        userId: conv.userId,
+        name: conv.name,
+        lastMessage: conv.lastMessage || 'Start a conversation',
+        time: formatTime(conv.lastMessageTime),
+        unread: conv.unreadCount || 0,
+        online: onlineUsers.has(conv.userId),
+        messages: [] // Will be loaded when chat is selected
+      }));
+      
+      // Sort by last message time (most recent first)
+      allConversations.sort((a, b) => {
+        const timeA = new Date(a.time).getTime() || 0;
+        const timeB = new Date(b.time).getTime() || 0;
+        return timeB - timeA;
+      });
+      
+      setConversations(allConversations);
+      
+      if (allConversations.length === 0) {
+        toast.info('Accept some interests to start messaging!');
+      }
+    } catch (error: any) {
+      console.error('Error fetching conversations:', error);
+      if (error.response?.status !== 404) {
+        toast.error('Failed to load conversations');
+      }
+    } finally {
+      setLoadingMessages(false);
+    }
+  };
+
+  // Format time helper
+  const formatTime = (dateString: string | Date) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} mins ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    return date.toLocaleDateString();
+  };
+
+  // Socket.io event listeners
+  useEffect(() => {
+    if (!socket) return;
+
+    // Listen for incoming messages
+    socket.on('message:received', (data: any) => {
+      if (data.success && data.data) {
+        const msg = data.data;
+        const senderId = msg.senderId._id || msg.senderId;
+        const receiverId = msg.receiverId._id || msg.receiverId;
+        
+        // Update conversations list
+        setConversations(prev => {
+          const existingConv = prev.find(c => c.userId === senderId || c.userId === receiverId);
+          if (existingConv) {
+            return prev.map(c => {
+              if (c.userId === senderId || c.userId === receiverId) {
+                // Check if message already exists (prevent duplicates)
+                const messageExists = c.messages.some(m => m.id === msg._id);
+                
+                // Only add message if it doesn't exist and chat is selected
+                let newMessages = c.messages;
+                if (selectedChat === c.id && !messageExists) {
+                  newMessages = [...c.messages, {
+                    id: msg._id,
+                    text: msg.content,
+                    sender: senderId === currentUserId ? 'me' : 'them',
+                    time: new Date(msg.createdAt).toLocaleTimeString('en-US', { 
+                      hour: 'numeric', 
+                      minute: '2-digit', 
+                      hour12: true 
+                    })
+                  }];
+                }
+                
+                return {
+                  ...c,
+                  messages: newMessages,
+                  lastMessage: msg.content,
+                  time: 'Just now',
+                  unread: selectedChat === c.id ? 0 : (messageExists ? c.unread : c.unread + 1)
+                };
+              }
+              return c;
+            });
+          }
+          return prev;
+        });
+
+        // Auto-scroll if chat is selected
+        if (selectedChat !== null) {
+          setTimeout(scrollToBottom, 100);
+        }
+
+        // Show toast notification if message is from someone else
+        if (senderId !== currentUserId) {
+          toast.success(`New message from ${msg.senderId.name}`);
+        }
+      }
+    });
+
+    // Listen for typing indicators
+    socket.on('user:typing', (data: any) => {
+      if (data.isTyping) {
+        setTypingUsers(prev => new Set(prev).add(data.userId));
+      } else {
+        setTypingUsers(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(data.userId);
+          return newSet;
+        });
+      }
+    });
+
+    // Listen for read receipts
+    socket.on('message:read', (data: any) => {
+      console.log('Message read:', data);
+      // Update message status if needed
+    });
+
+    // Cleanup
+    return () => {
+      socket.off('message:received');
+      socket.off('user:typing');
+      socket.off('message:read');
+    };
+  }, [socket, selectedChat, currentUserId]);
+
+  // Update online status in conversations
+  useEffect(() => {
+    setConversations(prev => prev.map(conv => ({
+      ...conv,
+      online: onlineUsers.has(conv.userId)
+    })));
+  }, [onlineUsers]);
+
+  // Auto-scroll when messages change in selected conversation
+  useEffect(() => {
+    if (selectedChat !== null) {
+      const selectedConversation = conversations.find(c => c.id === selectedChat);
+      if (selectedConversation && selectedConversation.messages.length > 0) {
+        setTimeout(scrollToBottom, 100);
+      }
+    }
+  }, [conversations, selectedChat]);
+
+  // Get current user ID
+  useEffect(() => {
+    const getUserId = async () => {
+      try {
+        const response = await api.get('/profile/me');
+        const userId = response.data.data?._id || response.data._id;
+        setCurrentUserId(userId);
+      } catch (error) {
+        console.error('Error getting user ID:', error);
+      }
+    };
+    getUserId();
+  }, []);
+
   // Close emoji picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -435,40 +679,115 @@ export default function DashboardPage() {
     }
   };
 
-  // Handle Send Message
+  // Handle Send Message with Socket.io
   const handleSendMessage = () => {
-    if (!messageText.trim() || selectedChat === null) return;
-
-    const currentTime = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-    
-    setConversations(prev => prev.map(conv => {
-      if (conv.id === selectedChat) {
-        return {
-          ...conv,
-          messages: [...conv.messages, {
-            id: conv.messages.length + 1,
-            text: messageText,
-            sender: 'me',
-            time: currentTime
-          }],
-          lastMessage: messageText,
-          time: 'Just now'
-        };
+    if (!messageText.trim() || selectedChat === null || !socket || !isConnected) {
+      if (!isConnected) {
+        toast.error('Not connected to messaging server');
       }
-      return conv;
-    }));
+      return;
+    }
 
+    const conversation = conversations.find(c => c.id === selectedChat);
+    if (!conversation) return;
+
+    const receiverId = conversation.userId;
+    
+    // Send via Socket.io for real-time delivery (Socket.io saves to DB)
+    socket.emit('message:send', {
+      receiverId: receiverId,
+      content: messageText.trim()
+    });
+
+    // Clear input
     setMessageText('');
-    // TODO: When backend is ready, call API: POST /api/messages with { userId, message }
+    
+    // Stop typing indicator
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    socket.emit('typing', { receiverId, isTyping: false });
+    
+    // Auto-scroll to bottom immediately
+    setTimeout(scrollToBottom, 50);
+  };
+
+  // Handle typing indicator
+  const handleTyping = () => {
+    if (!socket || !isConnected || selectedChat === null) return;
+
+    const conversation = conversations.find(c => c.id === selectedChat);
+    if (!conversation) return;
+
+    const receiverId = conversation.userId;
+    
+    // Emit typing start
+    socket.emit('typing', { receiverId, isTyping: true });
+
+    // Clear previous timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Set timeout to stop typing after 1 second
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit('typing', { receiverId, isTyping: false });
+    }, 1000);
   };
 
   // Handle Select Chat
-  const handleSelectChat = (chatId: number) => {
+  const handleSelectChat = async (chatId: number) => {
     setSelectedChat(chatId);
-    // Mark messages as read
+    
+    const conversation = conversations.find(c => c.id === chatId);
+    if (!conversation) return;
+
+    // Mark messages as read locally
     setConversations(prev => prev.map(conv => 
       conv.id === chatId ? { ...conv, unread: 0 } : conv
     ));
+
+    // Fetch messages with this user from backend
+    try {
+      setLoadingMessages(true);
+      const response = await api.get(`/messages/${conversation.userId}`);
+      if (response.data.success) {
+        const messages = response.data.data || [];
+        
+        // Remove duplicates by ID before transforming
+        const uniqueMessages = messages.filter((msg: any, index: number, self: any[]) => 
+          index === self.findIndex((m: any) => m._id === msg._id)
+        );
+        
+        const transformedMessages = uniqueMessages.map((msg: any) => ({
+          id: msg._id,
+          text: msg.content,
+          sender: msg.senderId._id === currentUserId ? 'me' : 'them',
+          time: new Date(msg.createdAt).toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: '2-digit', 
+            hour12: true 
+          })
+        }));
+
+        // Update conversation with messages (replace, don't append)
+        setConversations(prev => prev.map(conv => 
+          conv.id === chatId ? { ...conv, messages: transformedMessages } : conv
+        ));
+
+        // Auto-scroll to bottom
+        setTimeout(scrollToBottom, 100);
+      }
+    } catch (error: any) {
+      console.error('Error fetching messages:', error);
+      if (error.response?.status === 403) {
+        toast.error('You can only message users who have accepted your interest');
+      } else if (error.response?.status !== 404) {
+        toast.error('Failed to load messages');
+      }
+    } finally {
+      setLoadingMessages(false);
+    }
   };
 
   // Handle Profile Photo Upload
@@ -1794,6 +2113,8 @@ export default function DashboardPage() {
                               </div>
                             </motion.div>
                           ))}
+                          {/* Invisible element for auto-scroll */}
+                          <div ref={messagesEndRef} />
                         </div>
 
                         {/* Message Input */}
