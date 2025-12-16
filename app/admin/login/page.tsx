@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Shield, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAdminAuth } from '@/lib/admin-auth-context';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -13,8 +14,9 @@ export default function AdminLogin() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { login } = useAdminAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -26,18 +28,20 @@ export default function AdminLogin() {
       return;
     }
 
-    // Check credentials
-    if (email === 'admin@gmail.com' && password === 'admin123') {
-      // Set admin session
-      localStorage.setItem('isAdminLoggedIn', 'true');
-      localStorage.setItem('adminEmail', email);
+    try {
+      // Call backend API through admin auth context
+      await login(email, password);
       
       // Redirect to admin dashboard
       setTimeout(() => {
         router.push('/admin');
       }, 500);
-    } else {
-      setError('Invalid email or password. Please try again.');
+    } catch (err: any) {
+      console.error('Admin login error:', err);
+      
+      // Extract error message from response
+      const errorMessage = err.response?.data?.message || err.message || 'Login failed. Please try again.';
+      setError(errorMessage);
       setIsLoading(false);
     }
   };
@@ -211,8 +215,8 @@ export default function AdminLogin() {
         >
           <p className="text-xs font-semibold text-blue-800 mb-2 text-center">Demo Credentials:</p>
           <div className="space-y-1 text-xs text-blue-700">
-            <p className="text-center"><strong>Email:</strong> admin@gmail.com</p>
-            <p className="text-center"><strong>Password:</strong> admin123</p>
+            <p className="text-center"><strong>Email:</strong> admin@matrimony.com</p>
+            <p className="text-center"><strong>Password:</strong> Admin@123</p>
           </div>
         </motion.div>
       </motion.div>

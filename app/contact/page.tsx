@@ -1,30 +1,86 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import PetalAnimation from '@/components/animations/PetalAnimation';
-import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/context/LanguageProvider';
+import { toast } from 'sonner';
+import api from '@/lib/api';
 
 export default function ContactPage() {
-  const { toast } = useToast();
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+    
+    if (!formData.subject.trim()) {
+      newErrors.subject = 'Subject is required';
+    }
+    
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (formData.message.length > 2000) {
+      newErrors.message = 'Maximum 2000 characters allowed';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Thank you for contacting us! ✨",
-      description: "We have received your message and will get back to you soon.",
-      className: "bg-green-50 border-green-500 text-green-900",
-    });
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    
+    if (!validateForm()) {
+      toast.error('Please fix the errors in the form');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const response = await api.post('/contact', formData);
+      
+      if (response.data.success) {
+        toast.success('Thank you! We\'ll contact you soon. 💕');
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        setErrors({});
+      } else {
+        toast.error(response.data.message || 'Failed to send message. Please try again.');
+      }
+    } catch (error: any) {
+      console.error('Contact form error:', error);
+      
+      // Handle timeout specifically
+      if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+        toast.success('Message sent! Email notifications may take a moment to arrive.');
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        setErrors({});
+      } else {
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to send message. Please try again.';
+        toast.error(errorMessage);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,76 +116,116 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                      {t('YOUR_NAME')}
+                      {t('YOUR_NAME')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      required
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                      className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 ${
+                        errors.name ? 'border-red-500 focus:ring-red-500' : 'border-golden-200 focus:ring-golden-500'
+                      }`}
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, name: e.target.value });
+                        setErrors({ ...errors, name: '' });
+                      }}
                       placeholder={t('YOUR_NAME')}
                     />
+                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                   </div>
 
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                      {t('EMAIL_ADDRESS')}
+                      {t('EMAIL_ADDRESS')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
-                      required
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                      className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 ${
+                        errors.email ? 'border-red-500 focus:ring-red-500' : 'border-golden-200 focus:ring-golden-500'
+                      }`}
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, email: e.target.value });
+                        setErrors({ ...errors, email: '' });
+                      }}
                       placeholder="john@example.com"
+                    />
+                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
+                      placeholder="9876543210"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                      {t('SUBJECT')}
+                      {t('SUBJECT')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      required
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
+                      className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 ${
+                        errors.subject ? 'border-red-500 focus:ring-red-500' : 'border-golden-200 focus:ring-golden-500'
+                      }`}
                       value={formData.subject}
-                      onChange={(e) =>
-                        setFormData({ ...formData, subject: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, subject: e.target.value });
+                        setErrors({ ...errors, subject: '' });
+                      }}
                       placeholder={t('SUBJECT')}
                     />
+                    {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject}</p>}
                   </div>
 
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                      {t('MESSAGE')}
+                      {t('MESSAGE')} <span className="text-red-500">*</span>
+                      <span className="text-gray-500 text-xs ml-2">({formData.message.length}/2000)</span>
                     </label>
                     <textarea
-                      required
                       rows={4}
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 resize-none"
+                      className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 resize-none ${
+                        errors.message ? 'border-red-500 focus:ring-red-500' : 'border-golden-200 focus:ring-golden-500'
+                      }`}
                       value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setFormData({ ...formData, message: e.target.value });
+                        setErrors({ ...errors, message: '' });
+                      }}
                       placeholder="Tell us more about your inquiry..."
                     />
+                    {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
                   </div>
 
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ scale: loading ? 1 : 1.02 }}
+                    whileTap={{ scale: loading ? 1 : 0.98 }}
                     type="submit"
-                    className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-3 sm:py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                    disabled={loading}
+                    className={`w-full bg-gradient-to-r from-golden-500 to-golden-600 text-white py-3 sm:py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base ${
+                      loading ? 'opacity-70 cursor-not-allowed' : ''
+                    }`}
                   >
-                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>{t('SEND_MESSAGE')}</span>
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                        <span>Sending...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span>{t('SEND_MESSAGE')}</span>
+                      </>
+                    )}
                   </motion.button>
                 </form>
               </div>

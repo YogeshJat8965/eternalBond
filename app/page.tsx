@@ -19,6 +19,8 @@ import heroSection1 from './images/heroSection1.jpg';
 import heroSection2 from './images/heroSection2.jpg';
 import heroSection3 from './images/heroSection3.jpg';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
 export default function Home() {
   const { t } = useTranslation();
   const [searchData, setSearchData] = useState({
@@ -31,58 +33,59 @@ export default function Home() {
   const [hoveredStory, setHoveredStory] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [faqs, setFaqs] = useState<any[]>([]);
 
-  const testimonials = [
-    {
-      id: 1,
-      name: t('TESTIMONIAL_1_NAME'),
-      content: t('TESTIMONIAL_1_CONTENT'),
-      rating: 5,
-      role: t('TESTIMONIAL_1_ROLE'),
-    },
-    {
-      id: 2,
-      name: t('TESTIMONIAL_2_NAME'),
-      content: t('TESTIMONIAL_2_CONTENT'),
-      rating: 5,
-      role: t('TESTIMONIAL_2_ROLE'),
-    },
-    {
-      id: 3,
-      name: t('TESTIMONIAL_3_NAME'),
-      content: t('TESTIMONIAL_3_CONTENT'),
-      rating: 5,
-      role: t('TESTIMONIAL_3_ROLE'),
-    },
-    {
-      id: 4,
-      name: t('TESTIMONIAL_4_NAME'),
-      content: t('TESTIMONIAL_4_CONTENT'),
-      rating: 5,
-      role: t('TESTIMONIAL_4_ROLE'),
-    },
-    {
-      id: 5,
-      name: t('TESTIMONIAL_5_NAME'),
-      content: t('TESTIMONIAL_5_CONTENT'),
-      rating: 5,
-      role: t('TESTIMONIAL_5_ROLE'),
-    },
-    {
-      id: 6,
-      name: t('TESTIMONIAL_6_NAME'),
-      content: t('TESTIMONIAL_6_CONTENT'),
-      rating: 5,
-      role: t('TESTIMONIAL_6_ROLE'),
-    },
-  ];
+  // Fetch testimonials from database
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const response = await fetch(`${API_URL}/testimonials`);
+        if (response.ok) {
+          const data = await response.json();
+          setTestimonials(data.slice(0, 6)); // Show only first 6
+        }
+      } catch (error) {
+        console.error('Error fetching testimonials:', error);
+        // Fallback to default testimonials if API fails
+        setTestimonials([
+          {
+            _id: '1',
+            name: t('TESTIMONIAL_1_NAME'),
+            message: t('TESTIMONIAL_1_CONTENT'),
+            rating: 5,
+            position: t('TESTIMONIAL_1_ROLE'),
+          }
+        ]);
+      }
+    };
+    fetchTestimonials();
+  }, [t]);
+
+  // Fetch FAQs from database
+  useEffect(() => {
+    const fetchFAQs = async () => {
+      try {
+        const response = await fetch(`${API_URL}/faqs`);
+        if (response.ok) {
+          const data = await response.json();
+          setFaqs(data.filter((faq: any) => faq.isActive).slice(0, 8)); // Show only first 8 active FAQs
+        }
+      } catch (error) {
+        console.error('Error fetching FAQs:', error);
+      }
+    };
+    fetchFAQs();
+  }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+    if (testimonials.length > 0) {
+      const timer = setInterval(() => {
+        setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+      }, 5000);
+      return () => clearInterval(timer);
+    }
+  }, [testimonials]);
 
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -998,6 +1001,8 @@ export default function Home() {
 
           {/* Testimonial Slider */}
           <div className="relative max-w-4xl mx-auto">
+            {testimonials.length > 0 ? (
+            <>
             <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-white shadow-2xl border border-golden-100">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -1027,7 +1032,7 @@ export default function Home() {
                     transition={{ delay: 0.3 }}
                     className="flex justify-center gap-1 md:gap-2 mb-4 md:mb-6"
                   >
-                    {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                    {[...Array(testimonials[currentTestimonial]?.rating || 5)].map((_, i) => (
                       <motion.div
                         key={i}
                         initial={{ scale: 0 }}
@@ -1046,7 +1051,7 @@ export default function Home() {
                     transition={{ delay: 0.5 }}
                     className="text-gray-700 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-center mb-6 md:mb-8 italic px-2"
                   >
-                    "{testimonials[currentTestimonial].content}"
+                    "{testimonials[currentTestimonial]?.message || testimonials[currentTestimonial]?.content}"
                   </motion.p>
 
                   {/* Name and Role */}
@@ -1057,10 +1062,10 @@ export default function Home() {
                     className="text-center"
                   >
                     <h4 className="text-xl md:text-2xl font-bold text-gray-800 mb-1">
-                      {testimonials[currentTestimonial].name}
+                      {testimonials[currentTestimonial]?.name}
                     </h4>
                     <p className="text-golden-600 font-medium text-sm md:text-base">
-                      {testimonials[currentTestimonial].role}
+                      {testimonials[currentTestimonial]?.position || testimonials[currentTestimonial]?.role}
                     </p>
                   </motion.div>
                 </motion.div>
@@ -1098,6 +1103,12 @@ export default function Home() {
                 />
               ))}
             </div>
+            </>
+            ) : (
+              <div className="text-center py-12 bg-white rounded-2xl shadow-lg">
+                <p className="text-gray-600">Loading testimonials...</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -1146,42 +1157,9 @@ export default function Home() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-            {[
-              {
-                question: t('FAQ_Q1'),
-                answer: "Kalyanautsava uses advanced matching algorithms to connect compatible individuals based on their preferences, values, interests, and lifestyle. Simply create a profile, set your preferences, and start connecting with potential matches."
-              },
-              {
-                question: t('FAQ_Q2'),
-                answer: "Yes! We offer a free basic membership that allows you to create a profile, browse matches, and send limited messages. For unlimited messaging, advanced search filters, and premium features, you can upgrade to our Premium or VIP plans."
-              },
-              {
-                question: t('FAQ_Q3'),
-                answer: "Upload clear, recent photos, write a genuine and detailed bio, be honest about your interests and values, and regularly update your profile. Premium members also get priority visibility in search results."
-              },
-              {
-                question: t('FAQ_Q4'),
-                answer: "Absolutely! We use bank-level encryption to protect your data. Your personal information is never shared without your consent. We have strict privacy policies and verification processes to ensure a safe environment for all members."
-              },
-              {
-                question: t('FAQ_Q5'),
-                answer: "While success varies for each individual, many of our members report meaningful connections within the first few weeks. Stay active, keep your profile updated, and be patient - the right person is worth the wait!"
-              },
-              {
-                question: t('FAQ_Q6'),
-                answer: "Yes, you can cancel your premium subscription at any time from your account settings. You'll continue to have access to premium features until the end of your billing period."
-              },
-              {
-                question: t('FAQ_Q7'),
-                answer: "We focus on meaningful relationships, not casual dating. Our verification process ensures authentic profiles, and our matching algorithm considers values, compatibility, and long-term potential. Plus, we provide personalized support throughout your journey."
-              },
-              {
-                question: t('FAQ_Q8'),
-                answer: "Profile verification is simple! Upload a government-issued ID and take a selfie. Our team reviews and approves verifications within 24 hours. Verified profiles get a special badge and higher visibility."
-              }
-            ].map((faq, index) => (
+            {faqs.length > 0 ? faqs.map((faq, index) => (
               <motion.div
-                key={index}
+                key={faq._id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -1217,7 +1195,11 @@ export default function Home() {
                   </motion.div>
                 </details>
               </motion.div>
-            ))}
+            )) : (
+              <div className="col-span-2 text-center py-8 text-gray-500">
+                Loading FAQs...
+              </div>
+            )}
           </div>
 
           {/* Still have questions CTA */}

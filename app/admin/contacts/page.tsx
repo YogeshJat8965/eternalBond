@@ -1,35 +1,82 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Eye, X, Trash2, Filter } from 'lucide-react';
-import { useState } from 'react';
+import { Search, Eye, X, Trash2, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Toast from '@/components/admin/Toast';
 import BackButton from '@/components/admin/BackButton';
+import api from '@/lib/api';
+import { useAdminAuth } from '@/lib/admin-auth-context';
 
 export default function ContactFormManagement() {
+  const { admin } = useAdminAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState<any>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'warning' | 'info' } | null>(null);
+  const [contacts, setContacts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalContacts, setTotalContacts] = useState(0);
 
-  const [contacts, setContacts] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+1 234-567-8901', subject: 'Premium Plan Inquiry', message: 'I would like to know more about the premium plan features and pricing.', status: 'New', date: '2024-11-20 10:30 AM' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '+1 234-567-8902', subject: 'Technical Issue', message: 'I am facing issues while uploading my profile picture. Please help.', status: 'Replied', date: '2024-11-19 02:15 PM' },
-    { id: 3, name: 'Robert Johnson', email: 'robert@example.com', phone: '+1 234-567-8903', subject: 'Account Verification', message: 'My account verification is pending for 3 days. Please expedite.', status: 'In Progress', date: '2024-11-18 09:45 AM' },
-    { id: 4, name: 'Emily Davis', email: 'emily@example.com', phone: '+1 234-567-8904', subject: 'Refund Request', message: 'I would like to request a refund for my premium subscription.', status: 'New', date: '2024-11-17 04:20 PM' },
-    { id: 5, name: 'Michael Wilson', email: 'michael@example.com', phone: '+1 234-567-8905', subject: 'Feature Suggestion', message: 'It would be great to have video call feature for verified members.', status: 'Replied', date: '2024-11-16 11:00 AM' },
-    { id: 6, name: 'Sarah Brown', email: 'sarah@example.com', phone: '+1 234-567-8906', subject: 'Privacy Concern', message: 'I want to know how my data is protected on your platform.', status: 'In Progress', date: '2024-11-15 03:30 PM' },
-    { id: 7, name: 'David Miller', email: 'david@example.com', phone: '+1 234-567-8907', subject: 'Partnership Inquiry', message: 'I represent a wedding planning company and would like to discuss partnership opportunities.', status: 'New', date: '2024-11-14 01:50 PM' },
-    { id: 8, name: 'Lisa Anderson', email: 'lisa@example.com', phone: '+1 234-567-8908', subject: 'Account Deletion', message: 'Please delete my account and all associated data.', status: 'Replied', date: '2024-11-13 10:10 AM' },
-  ]);
+  // Check admin token on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const adminToken = localStorage.getItem('adminToken');
+      console.log('Admin token exists:', !!adminToken);
+      if (!adminToken) {
+        console.error('No admin token found!');
+      }
+    }
+  }, []);
 
+  // Fetch contacts from backend
+  const fetchContacts = async () => {
+    try {
+      setLoading(true);
+      const params: any = {
+        page: currentPage,
+        limit: 20
+      };
+
+      if (filterStatus) {
+        params.status = filterStatus;
+      }
+
+      console.log('Fetching contacts with params:', params);
+      const response = await api.get('/admin/contacts', { params });
+      console.log('Contacts response:', response.data);
+      
+      if (response.data.success) {
+        setContacts(response.data.data || []);
+        setTotalPages(response.data.pagination?.totalPages || 1);
+        setTotalContacts(response.data.pagination?.totalContacts || 0);
+      }
+    } catch (error: any) {
+      console.error('Error fetching contacts:', error);
+      console.error('Error response:', error.response);
+      setToast({
+        message: error.response?.data?.message || error.message || 'Failed to fetch contacts',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch contacts on mount and when filters change
+  useEffect(() => {
+    fetchContacts();
+  }, [currentPage, filterStatus]);
+
+  // Filter contacts by search term (client-side)
   const filteredContacts = contacts.filter(contact => {
     const matchesSearch = contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          contact.subject.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === 'all' || contact.status.toLowerCase().replace(' ', '-') === filterStatus;
-    return matchesSearch && matchesFilter;
+    return matchesSearch;
   });
 
   const handleViewDetails = (contact: any) => {
@@ -37,22 +84,71 @@ export default function ContactFormManagement() {
     setShowDetailModal(true);
   };
 
-  const handleDelete = (contactId: number) => {
-    if (confirm('Are you sure you want to delete this contact submission?')) {
-      setContacts(contacts.filter(c => c.id !== contactId));
+  const updateStatus = async (contactId: string, newStatus: string) => {
+    try {
+      const response = await api.put(`/admin/contacts/${contactId}`, {
+        status: newStatus
+      });
+
+      if (response.data.success) {
+        setToast({
+          message: `Status updated to ${newStatus}`,
+          type: 'success'
+        });
+        // Update local state
+        setContacts(contacts.map(c => c._id === contactId ? { ...c, status: newStatus } : c));
+        // Update selected contact if modal is open
+        if (selectedContact && selectedContact._id === contactId) {
+          setSelectedContact({ ...selectedContact, status: newStatus });
+        }
+      }
+    } catch (error: any) {
+      console.error('Error updating status:', error);
       setToast({
-        message: 'Contact submission deleted successfully!',
-        type: 'success'
+        message: error.response?.data?.message || 'Failed to update status',
+        type: 'error'
       });
     }
   };
 
-  const updateStatus = (contactId: number, newStatus: string) => {
-    setContacts(contacts.map(c => c.id === contactId ? { ...c, status: newStatus } : c));
-    setToast({
-      message: `Status updated to ${newStatus}`,
-      type: 'info'
+  // Format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
+  };
+
+  // Get status color
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'new':
+        return 'bg-blue-100 text-blue-700';
+      case 'in-progress':
+        return 'bg-yellow-100 text-yellow-700';
+      case 'resolved':
+        return 'bg-green-100 text-green-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  // Get status display name
+  const getStatusDisplayName = (status: string) => {
+    switch (status) {
+      case 'new':
+        return 'New';
+      case 'in-progress':
+        return 'In Progress';
+      case 'resolved':
+        return 'Resolved';
+      default:
+        return status;
+    }
   };
 
   return (
@@ -82,7 +178,7 @@ export default function ContactFormManagement() {
           <p className="text-gray-600 mt-2">View and manage contact form submissions</p>
         </div>
         <div className="text-right">
-          <p className="text-3xl font-bold text-gray-800">{filteredContacts.length}</p>
+          <p className="text-3xl font-bold text-gray-800">{totalContacts}</p>
           <p className="text-sm text-gray-600">Total Submissions</p>
         </div>
       </motion.div>
@@ -114,13 +210,16 @@ export default function ContactFormManagement() {
             <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
+              onChange={(e) => {
+                setFilterStatus(e.target.value);
+                setCurrentPage(1); // Reset to first page when filter changes
+              }}
               className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500 appearance-none bg-white"
             >
-              <option value="all">All Status</option>
+              <option value="">All Status</option>
               <option value="new">New</option>
               <option value="in-progress">In Progress</option>
-              <option value="replied">Replied</option>
+              <option value="resolved">Resolved</option>
             </select>
           </div>
         </div>
@@ -147,73 +246,143 @@ export default function ContactFormManagement() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredContacts.map((contact, index) => (
-                <motion.tr
-                  key={contact.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + index * 0.05 }}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4 text-sm font-semibold text-gray-700">
-                    {index + 1}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-semibold text-gray-800">{contact.name}</p>
-                      <p className="text-sm text-gray-600">{contact.email}</p>
-                      <p className="text-sm text-gray-500">{contact.phone}</p>
+              {loading ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-12 h-12 border-4 border-golden-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                      <p className="text-gray-600">Loading contacts...</p>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="font-medium text-gray-800">{contact.subject}</p>
+                </tr>
+              ) : filteredContacts.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center text-gray-600">
+                    No contacts found
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm text-gray-600 line-clamp-2 max-w-xs">{contact.message}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <select
-                      value={contact.status}
-                      onChange={(e) => updateStatus(contact.id, e.target.value)}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold border-0 focus:ring-2 focus:ring-golden-500 ${
-                        contact.status === 'New' ? 'bg-blue-100 text-blue-700' :
-                        contact.status === 'In Progress' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-green-100 text-green-700'
-                      }`}
-                    >
-                      <option value="New">New</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="Replied">Replied</option>
-                    </select>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{contact.date}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2">
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => handleViewDetails(contact)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="View Details"
+                </tr>
+              ) : (
+                filteredContacts.map((contact, index) => (
+                  <motion.tr
+                    key={contact._id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 + index * 0.05 }}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm font-semibold text-gray-700">
+                      {(currentPage - 1) * 20 + index + 1}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="font-semibold text-gray-800">{contact.name}</p>
+                        <p className="text-sm text-gray-600">{contact.email}</p>
+                        {contact.phone && <p className="text-sm text-gray-500">{contact.phone}</p>}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="font-medium text-gray-800">{contact.subject}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm text-gray-600 line-clamp-2 max-w-xs">{contact.message}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <select
+                        value={contact.status}
+                        onChange={(e) => updateStatus(contact._id, e.target.value)}
+                        className={`px-3 py-1 rounded-full text-xs font-semibold border-0 focus:ring-2 focus:ring-golden-500 cursor-pointer ${getStatusColor(contact.status)}`}
                       >
-                        <Eye className="w-4 h-4" />
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => handleDelete(contact.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </motion.button>
-                    </div>
-                  </td>
-                </motion.tr>
-              ))}
+                        <option value="new">New</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{formatDate(contact.createdAt)}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-2">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleViewDetails(contact)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="View Details"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </motion.button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+            <div className="text-sm text-gray-600">
+              Showing {(currentPage - 1) * 20 + 1} to {Math.min(currentPage * 20, totalContacts)} of {totalContacts} contacts
+            </div>
+            <div className="flex items-center space-x-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg font-medium flex items-center space-x-2 ${
+                  currentPage === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-golden-500 to-golden-600 text-white hover:shadow-lg'
+                }`}
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Previous</span>
+              </motion.button>
+              <div className="flex items-center space-x-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-10 h-10 rounded-lg font-medium ${
+                        currentPage === pageNum
+                          ? 'bg-gradient-to-r from-golden-500 to-golden-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg font-medium flex items-center space-x-2 ${
+                  currentPage === totalPages
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-golden-500 to-golden-600 text-white hover:shadow-lg'
+                }`}
+              >
+                <span>Next</span>
+                <ChevronRight className="w-4 h-4" />
+              </motion.button>
+            </div>
+          </div>
+        )}
       </motion.div>
 
       {/* Detail Modal */}
@@ -248,12 +417,8 @@ export default function ContactFormManagement() {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-600 mb-1">Status</label>
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                      selectedContact.status === 'New' ? 'bg-blue-100 text-blue-700' :
-                      selectedContact.status === 'In Progress' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-green-100 text-green-700'
-                    }`}>
-                      {selectedContact.status}
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(selectedContact.status)}`}>
+                      {getStatusDisplayName(selectedContact.status)}
                     </span>
                   </div>
                 </div>
@@ -265,13 +430,13 @@ export default function ContactFormManagement() {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-600 mb-1">Phone</label>
-                    <p className="text-gray-800">{selectedContact.phone}</p>
+                    <p className="text-gray-800">{selectedContact.phone || 'Not provided'}</p>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-600 mb-1">Date & Time</label>
-                  <p className="text-gray-800">{selectedContact.date}</p>
+                  <p className="text-gray-800">{formatDate(selectedContact.createdAt)}</p>
                 </div>
 
                 <div>
@@ -285,6 +450,28 @@ export default function ContactFormManagement() {
                     <p className="text-gray-800 whitespace-pre-wrap">{selectedContact.message}</p>
                   </div>
                 </div>
+
+                {selectedContact.adminResponse && (
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-600 mb-1">Admin Response</label>
+                    <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                      <p className="text-gray-800 whitespace-pre-wrap">{selectedContact.adminResponse}</p>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-600 mb-1">Update Status</label>
+                  <select
+                    value={selectedContact.status}
+                    onChange={(e) => updateStatus(selectedContact._id, e.target.value)}
+                    className={`w-full px-4 py-2 rounded-lg text-sm font-semibold border-0 focus:ring-2 focus:ring-golden-500 cursor-pointer ${getStatusColor(selectedContact.status)}`}
+                  >
+                    <option value="new">New</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                  </select>
+                </div>
               </div>
 
               <div className="flex space-x-3 mt-6">
@@ -295,7 +482,20 @@ export default function ContactFormManagement() {
                   Close
                 </button>
                 <button
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-500 text-white rounded-lg font-medium hover:shadow-lg"
+                  onClick={() => {
+                    // Try Gmail web interface first (more reliable)
+                    const emailBody = `Dear ${selectedContact.name},%0D%0A%0D%0AThank you for contacting us regarding "${selectedContact.subject}".%0D%0A%0D%0A[Your response here]%0D%0A%0D%0A---%0D%0AOriginal Message:%0D%0A${selectedContact.message}%0D%0A%0D%0A---%0D%0ABest regards,%0D%0AEternal Bond Team`;
+                    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${selectedContact.email}&su=Re: ${encodeURIComponent(selectedContact.subject)}&body=${emailBody}`;
+                    
+                    // Open Gmail in new tab
+                    window.open(gmailUrl, '_blank');
+                    
+                    setToast({
+                      message: 'Opening Gmail compose window...',
+                      type: 'success'
+                    });
+                  }}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-golden-500 to-golden-600 text-white rounded-lg font-medium hover:shadow-lg"
                 >
                   Reply via Email
                 </button>

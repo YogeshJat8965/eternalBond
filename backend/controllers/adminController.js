@@ -267,8 +267,9 @@ const deleteUser = async (req, res) => {
         message: 'User permanently deleted. Email and phone are now available for re-registration.'
       });
     } else {
-      // Soft delete - set isActive to false and clear tokens
+      // Soft delete - set status to deleted and isActive to false
       user.isActive = false;
+      user.accountStatus = 'deleted';
       user.verificationToken = undefined;
       user.verificationTokenExpires = undefined;
       user.resetPasswordToken = undefined;
@@ -277,7 +278,7 @@ const deleteUser = async (req, res) => {
 
       res.status(200).json({
         success: true,
-        message: 'User deactivated successfully. Use ?permanent=true to permanently delete.'
+        message: 'User marked as deleted successfully. Use ?permanent=true to permanently delete.'
       });
     }
   } catch (error) {

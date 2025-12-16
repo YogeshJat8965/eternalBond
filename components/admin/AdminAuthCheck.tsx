@@ -4,36 +4,39 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Shield, Lock } from 'lucide-react';
+import { useAdminAuth } from '@/lib/admin-auth-context';
 
 export default function AdminAuthCheck({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const { admin, loading: authLoading } = useAdminAuth();
 
   useEffect(() => {
     // Skip auth check for login page
     if (pathname === '/admin/login') {
       setIsLoading(false);
+      setIsAuthenticated(true);
       return;
     }
 
-    // Check if admin is logged in
-    const checkAuth = () => {
-      const adminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
-      const adminEmail = localStorage.getItem('adminEmail');
+    // Wait for auth context to load
+    if (authLoading) {
+      return;
+    }
 
-      if (adminLoggedIn && adminEmail === 'admin@gmail.com') {
-        setIsAuthenticated(true);
-        setIsLoading(false);
-      } else {
-        // Redirect to admin login
-        router.push('/admin/login');
-      }
-    };
-
-    checkAuth();
-  }, [pathname, router]);
+    // Check if admin is authenticated via JWT token
+    if (admin) {
+      console.log('AdminAuthCheck: Admin authenticated:', admin.email);
+      setIsAuthenticated(true);
+      setIsLoading(false);
+    } else {
+      console.log('AdminAuthCheck: No admin token found, redirecting to login');
+      // Redirect to admin login
+      router.push('/admin/login');
+    }
+  }, [pathname, router, admin, authLoading]);
 
   // Loading state
   if (isLoading) {

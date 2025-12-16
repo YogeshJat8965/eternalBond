@@ -2,9 +2,11 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit, Trash2, X, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Toast from '@/components/admin/Toast';
 import BackButton from '@/components/admin/BackButton';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 export default function FAQManagement() {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -12,6 +14,7 @@ export default function FAQManagement() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedFAQ, setSelectedFAQ] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'warning' | 'info' } | null>(null);
   const [formData, setFormData] = useState({
     question: '',
@@ -19,18 +22,35 @@ export default function FAQManagement() {
     category: 'General'
   });
 
-  const [faqs, setFaqs] = useState([
-    { id: 1, question: 'How do I create an account?', answer: 'Click on the "Register" button and fill in your details. You will receive a confirmation email.', category: 'Account', order: 1 },
-    { id: 2, question: 'What payment methods do you accept?', answer: 'We accept credit cards, debit cards, PayPal, and bank transfers.', category: 'Payment', order: 2 },
-    { id: 3, question: 'How do I reset my password?', answer: 'Click on "Forgot Password" on the login page and follow the instructions sent to your email.', category: 'Account', order: 3 },
-    { id: 4, question: 'Can I cancel my subscription?', answer: 'Yes, you can cancel your subscription anytime from your account settings.', category: 'Subscription', order: 4 },
-    { id: 5, question: 'How does the matching algorithm work?', answer: 'Our algorithm matches users based on preferences, interests, and compatibility factors.', category: 'General', order: 5 },
-    { id: 6, question: 'Is my personal information secure?', answer: 'Yes, we use industry-standard encryption and security measures to protect your data.', category: 'Privacy', order: 6 },
-    { id: 7, question: 'How do I contact customer support?', answer: 'You can reach us through the contact form, email, or live chat available 24/7.', category: 'Support', order: 7 },
-    { id: 8, question: 'What is the refund policy?', answer: 'We offer a 30-day money-back guarantee for premium subscriptions.', category: 'Payment', order: 8 },
-  ]);
+  const [faqs, setFaqs] = useState<any[]>([]);
 
   const categories = ['General', 'Account', 'Payment', 'Subscription', 'Privacy', 'Support'];
+
+  // Fetch FAQs on component mount
+  useEffect(() => {
+    fetchFAQs();
+  }, []);
+
+  const fetchFAQs = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/faqs`);
+      if (response.ok) {
+        const data = await response.json();
+        setFaqs(data);
+      } else {
+        throw new Error('Failed to fetch FAQs');
+      }
+    } catch (error) {
+      console.error('Error fetching FAQs:', error);
+      setToast({
+        message: 'Failed to load FAQs',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredFAQs = faqs.filter(faq =>
     faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -54,7 +74,7 @@ export default function FAQManagement() {
     setShowDeleteModal(true);
   };
 
-  const submitAdd = () => {
+  const submitAdd = async () => {
     if (!formData.question.trim() || !formData.answer.trim()) {
       setToast({
         message: 'Please fill in all fields',
@@ -62,21 +82,45 @@ export default function FAQManagement() {
       });
       return;
     }
-    const newFAQ = {
-      id: Math.max(...faqs.map(f => f.id)) + 1,
-      ...formData,
-      order: faqs.length + 1
-    };
-    setFaqs([...faqs, newFAQ]);
-    setShowAddModal(false);
-    setFormData({ question: '', answer: '', category: 'General' });
-    setToast({
-      message: 'FAQ added successfully!',
-      type: 'success'
-    });
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/faqs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...formData,
+          order: faqs.length + 1
+        })
+      });
+
+      if (response.ok) {
+        setShowAddModal(false);
+        setFormData({ question: '', answer: '', category: 'General' });
+        setToast({
+          message: 'FAQ added successfully!',
+          type: 'success'
+        });
+        fetchFAQs();
+      } else {
+        throw new Error('Failed to add FAQ');
+      }
+    } catch (error) {
+      console.error('Error adding FAQ:', error);
+      setToast({
+        message: 'Failed to add FAQ',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const submitEdit = () => {
+  const submitEdit = async () => {
     if (!formData.question.trim() || !formData.answer.trim()) {
       setToast({
         message: 'Please fill in all fields',
@@ -84,24 +128,73 @@ export default function FAQManagement() {
       });
       return;
     }
-    setFaqs(faqs.map(faq => faq.id === selectedFAQ.id ? { ...faq, ...formData } : faq));
-    setShowEditModal(false);
-    setSelectedFAQ(null);
-    setFormData({ question: '', answer: '', category: 'General' });
-    setToast({
-      message: 'FAQ updated successfully!',
-      type: 'success'
-    });
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/faqs/${selectedFAQ._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setShowEditModal(false);
+        setSelectedFAQ(null);
+        setFormData({ question: '', answer: '', category: 'General' });
+        setToast({
+          message: 'FAQ updated successfully!',
+          type: 'success'
+        });
+        fetchFAQs();
+      } else {
+        throw new Error('Failed to update FAQ');
+      }
+    } catch (error) {
+      console.error('Error updating FAQ:', error);
+      setToast({
+        message: 'Failed to update FAQ',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const confirmDelete = () => {
-    setFaqs(faqs.filter(faq => faq.id !== selectedFAQ.id));
-    setShowDeleteModal(false);
-    setSelectedFAQ(null);
-    setToast({
-      message: 'FAQ deleted successfully!',
-      type: 'success'
-    });
+  const confirmDelete = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/faqs/${selectedFAQ._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        setShowDeleteModal(false);
+        setSelectedFAQ(null);
+        setToast({
+          message: 'FAQ deleted successfully!',
+          type: 'success'
+        });
+        fetchFAQs();
+      } else {
+        throw new Error('Failed to delete FAQ');
+      }
+    } catch (error) {
+      console.error('Error deleting FAQ:', error);
+      setToast({
+        message: 'Failed to delete FAQ',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -167,9 +260,13 @@ export default function FAQManagement() {
         transition={{ delay: 0.2 }}
         className="space-y-4"
       >
+        {loading && <p className="text-center text-gray-600">Loading FAQs...</p>}
+        {!loading && filteredFAQs.length === 0 && (
+          <p className="text-center text-gray-600">No FAQs found. Add your first FAQ!</p>
+        )}
         {filteredFAQs.map((faq, index) => (
           <motion.div
-            key={faq.id}
+            key={faq._id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 + index * 0.05 }}

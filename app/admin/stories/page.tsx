@@ -2,9 +2,11 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit, Trash2, X, Search, Upload, Image as ImageIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Toast from '@/components/admin/Toast';
 import BackButton from '@/components/admin/BackButton';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 export default function SuccessStoriesManagement() {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -12,6 +14,7 @@ export default function SuccessStoriesManagement() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedStory, setSelectedStory] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'warning' | 'info' } | null>(null);
   const [formData, setFormData] = useState({
     coupleName: '',
@@ -21,13 +24,33 @@ export default function SuccessStoriesManagement() {
     image: ''
   });
 
-  const [stories, setStories] = useState([
-    { id: 1, coupleName: 'Emma & David', weddingDate: '2024-06-15', story: 'We met on Kalyanautsava and instantly connected. After 6 months of wonderful conversations, we knew we were meant for each other. Our wedding was a dream come true!', location: 'New York, USA', image: '💑', featured: true },
-    { id: 2, coupleName: 'Sophia & Ryan', weddingDate: '2024-08-20', story: 'Kalyanautsava helped us find each other despite living in different cities. The matching algorithm was spot on! We are now happily married and planning our future together.', location: 'Los Angeles, USA', image: '💕', featured: true },
-    { id: 3, coupleName: 'Michael & Priya', weddingDate: '2024-05-10', story: 'A cross-cultural love story made possible by Kalyanautsava. We overcame all barriers and celebrated our love with family and friends from both sides.', location: 'London, UK', image: '💖', featured: false },
-    { id: 4, coupleName: 'James & Maria', weddingDate: '2024-09-03', story: 'After years of unsuccessful searching, Kalyanautsava brought us together. We connected on so many levels and our relationship blossomed naturally.', location: 'Chicago, USA', image: '❤️', featured: false },
-    { id: 5, coupleName: 'Alex & Sarah', weddingDate: '2024-07-12', story: 'We were both skeptical about online matrimonial sites, but Kalyanautsava changed our perspective. Found my soulmate and best friend for life!', location: 'Toronto, Canada', image: '💗', featured: true },
-  ]);
+  const [stories, setStories] = useState<any[]>([]);
+
+  // Fetch stories on component mount
+  useEffect(() => {
+    fetchStories();
+  }, []);
+
+  const fetchStories = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/stories`);
+      if (response.ok) {
+        const data = await response.json();
+        setStories(data);
+      } else {
+        throw new Error('Failed to fetch stories');
+      }
+    } catch (error) {
+      console.error('Error fetching stories:', error);
+      setToast({
+        message: 'Failed to load stories',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredStories = stories.filter(story =>
     story.coupleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -56,7 +79,7 @@ export default function SuccessStoriesManagement() {
     setShowDeleteModal(true);
   };
 
-  const submitAdd = () => {
+  const submitAdd = async () => {
     if (!formData.coupleName.trim() || !formData.story.trim()) {
       setToast({
         message: 'Please fill in couple name and story fields',
@@ -64,22 +87,45 @@ export default function SuccessStoriesManagement() {
       });
       return;
     }
-    const newStory = {
-      id: Math.max(...stories.map(s => s.id)) + 1,
-      ...formData,
-      image: formData.image || '💑',
-      featured: false
-    };
-    setStories([...stories, newStory]);
-    setShowAddModal(false);
-    setFormData({ coupleName: '', weddingDate: '', story: '', location: '', image: '' });
-    setToast({
-      message: 'Success story added successfully!',
-      type: 'success'
-    });
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/stories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...formData,
+          image: formData.image || '💑'
+        })
+      });
+
+      if (response.ok) {
+        setShowAddModal(false);
+        setFormData({ coupleName: '', weddingDate: '', story: '', location: '', image: '' });
+        setToast({
+          message: 'Success story added successfully!',
+          type: 'success'
+        });
+        fetchStories();
+      } else {
+        throw new Error('Failed to add story');
+      }
+    } catch (error) {
+      console.error('Error adding story:', error);
+      setToast({
+        message: 'Failed to add story',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const submitEdit = () => {
+  const submitEdit = async () => {
     if (!formData.coupleName.trim() || !formData.story.trim()) {
       setToast({
         message: 'Please fill in couple name and story fields',
@@ -87,33 +133,102 @@ export default function SuccessStoriesManagement() {
       });
       return;
     }
-    setStories(stories.map(s => s.id === selectedStory.id ? { ...s, ...formData } : s));
-    setShowEditModal(false);
-    setSelectedStory(null);
-    setFormData({ coupleName: '', weddingDate: '', story: '', location: '', image: '' });
-    setToast({
-      message: 'Success story updated successfully!',
-      type: 'success'
-    });
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/stories/${selectedStory._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setShowEditModal(false);
+        setSelectedStory(null);
+        setFormData({ coupleName: '', weddingDate: '', story: '', location: '', image: '' });
+        setToast({
+          message: 'Success story updated successfully!',
+          type: 'success'
+        });
+        fetchStories();
+      } else {
+        throw new Error('Failed to update story');
+      }
+    } catch (error) {
+      console.error('Error updating story:', error);
+      setToast({
+        message: 'Failed to update story',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const confirmDelete = () => {
-    setStories(stories.filter(s => s.id !== selectedStory.id));
-    setShowDeleteModal(false);
-    setSelectedStory(null);
-    setToast({
-      message: 'Success story deleted successfully!',
-      type: 'success'
-    });
+  const confirmDelete = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/stories/${selectedStory._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        setShowDeleteModal(false);
+        setSelectedStory(null);
+        setToast({
+          message: 'Success story deleted successfully!',
+          type: 'success'
+        });
+        fetchStories();
+      } else {
+        throw new Error('Failed to delete story');
+      }
+    } catch (error) {
+      console.error('Error deleting story:', error);
+      setToast({
+        message: 'Failed to delete story',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const toggleFeatured = (storyId: number) => {
-    setStories(stories.map(s => s.id === storyId ? { ...s, featured: !s.featured } : s));
-    const story = stories.find(s => s.id === storyId);
-    setToast({
-      message: story?.featured ? 'Removed from featured stories' : 'Added to featured stories',
-      type: 'info'
-    });
+  const toggleFeatured = async (storyId: string) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/stories/${storyId}/toggle-featured`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setToast({
+          message: data.story.featured ? 'Added to featured stories' : 'Removed from featured stories',
+          type: 'info'
+        });
+        fetchStories();
+      } else {
+        throw new Error('Failed to toggle featured status');
+      }
+    } catch (error) {
+      console.error('Error toggling featured:', error);
+      setToast({
+        message: 'Failed to update featured status',
+        type: 'error'
+      });
+    }
   };
 
   return (
@@ -194,9 +309,19 @@ export default function SuccessStoriesManagement() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
+              {loading && (
+                <tr>
+                  <td colSpan={8} className="px-6 py-4 text-center text-gray-600">Loading stories...</td>
+                </tr>
+              )}
+              {!loading && filteredStories.length === 0 && (
+                <tr>
+                  <td colSpan={8} className="px-6 py-4 text-center text-gray-600">No stories found. Add your first story!</td>
+                </tr>
+              )}
               {filteredStories.map((story, index) => (
                 <motion.tr
-                  key={story.id}
+                  key={story._id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 + index * 0.05 }}
@@ -220,7 +345,7 @@ export default function SuccessStoriesManagement() {
                   </td>
                   <td className="px-6 py-4">
                     <button
-                      onClick={() => toggleFeatured(story.id)}
+                      onClick={() => toggleFeatured(story._id)}
                       className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
                         story.featured
                           ? 'bg-green-100 text-green-700'

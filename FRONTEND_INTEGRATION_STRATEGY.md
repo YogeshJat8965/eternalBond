@@ -632,248 +632,37 @@ When interest is accepted, verify contact info shows:
 
 ---
 
-## Phase D.5: Google OAuth Integration (Continue with Google)
+## Phase E: Contact Form & Admin Panel
 
-**Goal:** Allow users to register and login using their Google account
+**Goal:** Public contact form for inquiries, admin dashboard for management
 
-### Step 1: Backend Setup - Google OAuth
-**Files to modify/create:**
-- `backend/package.json` - Install passport and passport-google-oauth20
-- `backend/config/passport.js` - Configure Google OAuth strategy
-- `backend/routes/authRoutes.js` - Add Google OAuth routes
-- `backend/controllers/authController.js` - Add Google OAuth handlers
-- `backend/.env` - Add Google OAuth credentials
+### Step 1: Public Contact Page
+**Files to update:**
+- Update `app/contact/page.tsx` - Contact form for public inquiries
 
-**Installation:**
-```bash
-cd backend
-npm install passport passport-google-oauth20
-```
-
-**Environment Variables (.env):**
-```
-GOOGLE_CLIENT_ID=your_google_client_id_here
-GOOGLE_CLIENT_SECRET=your_google_client_secret_here
-GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
-```
-
-**New Routes:**
-- GET /api/auth/google - Initiate Google OAuth
-- GET /api/auth/google/callback - Handle Google callback
-- Generate JWT token after successful Google authentication
-- Create user if doesn't exist, login if exists
+**Backend API used:**
+- POST /api/contact - Submit contact form (public, no auth)
 
 **Features:**
-- Extract name, email from Google profile
-- Auto-verify email (since Google verifies it)
-- Store Google ID for future logins
-- Generate same JWT token as regular login
-- Handle errors gracefully
+- Form fields: name, email, phone, subject, message (max 2000 chars)
+- Name, email, subject, message are required
+- Email validation
+- Submit button with loading state
+- Success message: "Thank you! We'll contact you soon."
+- Clear form after successful submission
+- Error handling
+- Toast notifications for success/error
+- Works for both logged-in and non-logged-in users
 
-### Step 2: Frontend - Google Login Button
-**Files to update:**
-- `app/login/page.tsx` - Add "Continue with Google" button
-- `app/register/page.tsx` - Add "Continue with Google" button
-- `components/GoogleAuthButton.tsx` - Reusable Google button component
-
-**Button Design:**
-- Google logo icon
-- Text: "Continue with Google"
-- Positioned above email/password form
-- Styled with Google brand colors (#4285f4)
-- OR divider between Google and email/password
-
-**Flow:**
-1. User clicks "Continue with Google"
-2. Redirect to backend: `http://localhost:5000/api/auth/google`
-3. Google consent screen opens
-4. User approves
-5. Backend receives user data
-6. Backend creates/updates user in database
-7. Backend generates JWT token
-8. Redirect to frontend: `http://localhost:3000/auth/google/callback?token=...`
-9. Frontend extracts token from URL
-10. Frontend saves token to localStorage
-11. Redirect to /members
-
-**Callback Handler:**
-- Create `app/auth/google/callback/page.tsx`
-- Extract token from URL query params
-- Save to localStorage via setToken()
-- Dispatch authChange event
-- Redirect to /members
-- Show success toast
-
-### Step 3: Google OAuth Redirect Handler
-**Files to create:**
-- `app/auth/google/callback/page.tsx` - Handle Google OAuth redirect
-
-**What it does:**
-```typescript
-'use client';
-import { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { setToken, setUser } from '@/lib/auth-utils';
-import { toast } from 'sonner';
-
-export default function GoogleCallbackPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  
-  useEffect(() => {
-    const token = searchParams.get('token');
-    const user = searchParams.get('user');
-    const error = searchParams.get('error');
-    
-    if (error) {
-      toast.error('Google authentication failed');
-      router.push('/login');
-      return;
-    }
-    
-    if (token && user) {
-      setToken(token);
-      setUser(JSON.parse(decodeURIComponent(user)));
-      
-      // Dispatch auth change event
-      window.dispatchEvent(new Event('authChange'));
-      
-      toast.success('Login successful!');
-      router.push('/members');
-    } else {
-      router.push('/login');
-    }
-  }, []);
-  
-  return <div>Processing Google authentication...</div>;
-}
-```
-
----
-
-## ✅ Phase D.5 Testing Checklist
-
-### Test 1: Google OAuth Setup
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create new project: "Eternal Bond Matrimony"
-3. Enable Google+ API
-4. Create OAuth 2.0 credentials
-5. Add authorized origins: http://localhost:5000
-6. Add authorized redirect URIs: http://localhost:5000/api/auth/google/callback
-7. Copy Client ID and Client Secret to backend/.env
-
-### Test 2: Google Login from Login Page
-1. Go to http://localhost:3000/login
-2. Should see "Continue with Google" button above email/password form
-3. Click "Continue with Google"
-4. Should redirect to Google consent screen
-5. Sign in with your Google account
-6. Should redirect back to http://localhost:3000/auth/google/callback?token=...
-7. Should show "Login successful!" toast
-8. Should redirect to /members
-9. Check localStorage - token and user should be saved
-10. Navbar should show "Dashboard" and "Logout"
-
-**Expected Backend Response:**
-```json
-// Redirect URL
-http://localhost:3000/auth/google/callback?token=eyJhbGciOi...&user=%7B%22name%22%3A%22...%22%7D
-```
-
-### Test 3: Google Signup from Register Page
-1. Logout if logged in
-2. Go to http://localhost:3000/register
-3. Click "Continue with Google"
-4. Sign in with new Google account (not previously registered)
-5. Should create new user in database
-6. Should auto-verify email
-7. Should login automatically
-8. Should redirect to /members
-9. Check database - user should exist with isEmailVerified: true
-
-### Test 4: Google Login - Existing User
-1. Logout
-2. Register a new account with email: test@gmail.com (regular registration)
-3. Verify email via link
-4. Logout
-5. Go to /login
-6. Click "Continue with Google"
-7. Sign in with same test@gmail.com Google account
-8. Should login to existing account (not create duplicate)
-9. Should work successfully
-
-### Test 5: Error Handling
-1. Try Google login with backend offline → should show error
-2. Deny Google consent → should redirect to /login with error message
-3. Invalid callback URL → should handle gracefully
-4. Network error during callback → should show error toast
-
-### Test 6: Google User in Database
-1. Login with Google account
-2. Go to database and check user document
-3. Should have fields:
-   - `googleId`: Google user ID
-   - `name`: from Google profile
-   - `email`: from Google account
-   - `isEmailVerified`: true
-   - `profilePicture`: Google profile picture URL (optional)
-4. Password field should be empty or have random hash
-5. Other profile fields should be empty (to be filled later)
-
----
-
-## Phase E: Contact Form & Admin Panel
-8. Click "Previous Page" → goes back to page 1
-9. Click page number "3" → jumps to page 3
-10. Last page should disable "Next" button
-
-### Test 6: Member Card Display
-Each card should show:
-1. Profile picture (or placeholder if none)
-2. Name
-3. Age (calculated from DOB)
-4. City, State
-5. Education level
-6. Profession
-7. "View Profile" button
-
-Verify all fields are displayed correctly for multiple members.
-
-### Test 7: View Profile Page
-1. Click "View Profile" on any member card
-2. Should navigate to /profile/[userId]
-3. Should display full profile with all sections:
-   - Photo gallery (all photos)
-   - Personal info
-   - Location details
-   - Religious info
-   - Education & profession
-   - Physical attributes
-   - Bio
-4. Should show "Send Interest" button (if not already sent)
-5. Should NOT show "Edit" button (not your profile)
-6. Back button should return to search results
-
-**Expected Backend Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "_id": "...",
-    "name": "Test User",
 **Testing:**
-- Login with admin credentials → dashboard loads
-- View stats → correct counts from database
-- Search users → filters work
-- Edit user → updates successfully
-- Deactivate user → sets isActive to false
-- View contacts → new contact from Phase E.1 visible
-- Update contact status to "in-progress" → saves
-- View interests → all interests visible
+- Submit without login → works (public endpoint)
+- Submit with missing fields → shows validation errors
+- Submit complete form → success message shown
+- Form clears after successful submission
 
 ---
 
-## ✅ Phase E Testing Checklist
+## ✅ Phase E.1 Testing Checklist (Contact Form)
 
 ### Test 1: Public Contact Form (Not Logged In)
 1. Logout if logged in (or use incognito mode)
@@ -1182,93 +971,6 @@ Verify all fields are displayed correctly for multiple members.
 9. **Logout** from admin
 
 ---
-
-## Phase F: UI Polish & Validation (Optional - After Phase E)
-5. Change order to "Descending"
-6. Should reverse order (Z-A)
-7. Change sort to "Recently Joined"
-8. Should show newest members first
-
-### Test 9: Search Performance
-1. Apply filters that return 50+ results
-2. Search should complete within 2 seconds
-3. Pagination should be smooth (no lag)
-4. Images should lazy-load (not all at once)
-5. No console errors
-
-### Test 10: Clear Filters
-1. Apply multiple filters
-2. Click "Clear All" or "Reset" button
-3. All filter fields should clear
-4. Search results should reset to default (opposite gender, all)
-
----
-
-## Phase D: Interest System
-
-**Goal:** Send, receive, accept, reject interests with notifications
-
-### Step 1: Interests Page - Send & View
-**Files to create:**
-- Create `app/interests/page.tsx` - Main interests page with tabs
-- Create `components/InterestCard.tsx` - Display interest with actions
-
-**Backend APIs used:**
-- POST /api/interests/send - Send interest (from profile page)
-- GET /api/interests/received - Get received interests
-- GET /api/interests/sent - Get sent interests
-
-**Page Layout:**
-- 3 tabs: Received, Sent, All
-- Filter dropdown: All, Pending, Accepted, Rejected
-- Interest cards showing:
-  - Received: sender's photo, name, age, city, message, date, status
-  - Sent: receiver's photo, name, age, city, message, date, status
-
-**Send Interest (from profile/[id] page):**
-- "Send Interest" button
-- Modal with message textarea (max 500 chars)
-- Send button
-- Success message: "Interest sent successfully"
-- Disable button if already sent
-- Show sent status if exists
-
-### Step 2: Accept/Reject Actions
-**APIs used:**
-- PUT /api/interests/:id/accept - Accept interest
-- PUT /api/interests/:id/reject - Reject interest
-- DELETE /api/interests/:id - Cancel sent pending interest
-
-**Features in InterestCard:**
-- **Received Interests:**
-  - If pending: Show "Accept" and "Reject" buttons
-  - If accepted: Show "Accepted" badge, display contact info (phone, email)
-  - If rejected: Show "Rejected" badge
-- **Sent Interests:**
-  - If pending: Show "Cancel" button
-  - If accepted: Show "Accepted" badge, display contact info
-  - If rejected: Show "Rejected" badge
-- Confirmation dialog for reject/cancel actions
-- Loading state on buttons
-- Real-time status update after action
-
-**Testing:**
-- Send interest to user → appears in sent list
-- Receive interest → appears in received list
-- Accept interest → status updates, contact info shown
-- Reject interest → status updates to rejected
-- Cancel pending sent interest → removed from list
-- Try sending duplicate → shows error from backend
-
----
-
-## Phase E: Contact Form & Admin Panel
-
-**Goal:** Public contact form, admin dashboard for management
-
-### Step 1: Public Contact Page
-**Files to update:**
-- Update `app/contact/page.tsx` - Contact form for public inquiries
 
 **Backend API used:**
 - POST /api/contact - Submit contact form (public, no auth)

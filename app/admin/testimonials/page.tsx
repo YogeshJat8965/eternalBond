@@ -2,9 +2,11 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit, Trash2, X, Search, Star } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Toast from '@/components/admin/Toast';
 import BackButton from '@/components/admin/BackButton';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 export default function TestimonialManagement() {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -12,6 +14,7 @@ export default function TestimonialManagement() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTestimonial, setSelectedTestimonial] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'warning' | 'info' } | null>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -22,14 +25,33 @@ export default function TestimonialManagement() {
     image: ''
   });
 
-  const [testimonials, setTestimonials] = useState([
-    { id: 1, name: 'Sarah Johnson', position: 'Marketing Manager', company: 'Tech Corp', rating: 5, message: 'Kalyanautsava helped me find my perfect match! The platform is incredibly easy to use and the matches are very accurate.', image: 'SJ', date: '2024-10-15' },
-    { id: 2, name: 'Michael Chen', position: 'Software Engineer', company: 'StartupXYZ', rating: 5, message: 'I was skeptical at first, but Kalyanautsava exceeded all my expectations. Met my soulmate within 3 months!', image: 'MC', date: '2024-09-22' },
-    { id: 3, name: 'Emma Wilson', position: 'Designer', company: 'Creative Studio', rating: 4, message: 'Great platform with genuine profiles. The customer service is outstanding and very helpful.', image: 'EW', date: '2024-11-01' },
-    { id: 4, name: 'David Brown', position: 'Business Owner', company: 'Brown Enterprises', rating: 5, message: 'The best matrimonial site I have used. Found my life partner here. Highly recommended!', image: 'DB', date: '2024-08-10' },
-    { id: 5, name: 'Lisa Anderson', position: 'Doctor', company: 'City Hospital', rating: 5, message: 'Professional, secure, and effective. Kalyanautsava made my search for a life partner so much easier.', image: 'LA', date: '2024-10-28' },
-    { id: 6, name: 'James Taylor', position: 'Teacher', company: 'Central School', rating: 4, message: 'Good experience overall. The matching algorithm is smart and the interface is user-friendly.', image: 'JT', date: '2024-09-05' },
-  ]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+
+  // Fetch testimonials on component mount
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/testimonials`);
+      if (response.ok) {
+        const data = await response.json();
+        setTestimonials(data);
+      } else {
+        throw new Error('Failed to fetch testimonials');
+      }
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+      setToast({
+        message: 'Failed to load testimonials',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredTestimonials = testimonials.filter(testimonial =>
     testimonial.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -59,7 +81,7 @@ export default function TestimonialManagement() {
     setShowDeleteModal(true);
   };
 
-  const submitAdd = () => {
+  const submitAdd = async () => {
     if (!formData.name.trim() || !formData.message.trim()) {
       setToast({
         message: 'Please fill in name and message fields',
@@ -67,22 +89,42 @@ export default function TestimonialManagement() {
       });
       return;
     }
-    const newTestimonial = {
-      id: Math.max(...testimonials.map(t => t.id)) + 1,
-      ...formData,
-      image: formData.name.split(' ').map(n => n[0]).join(''),
-      date: new Date().toISOString().split('T')[0]
-    };
-    setTestimonials([...testimonials, newTestimonial]);
-    setShowAddModal(false);
-    setFormData({ name: '', position: '', company: '', rating: 5, message: '', image: '' });
-    setToast({
-      message: 'Testimonial added successfully!',
-      type: 'success'
-    });
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/testimonials`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setShowAddModal(false);
+        setFormData({ name: '', position: '', company: '', rating: 5, message: '', image: '' });
+        setToast({
+          message: 'Testimonial added successfully!',
+          type: 'success'
+        });
+        fetchTestimonials();
+      } else {
+        throw new Error('Failed to add testimonial');
+      }
+    } catch (error) {
+      console.error('Error adding testimonial:', error);
+      setToast({
+        message: 'Failed to add testimonial',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const submitEdit = () => {
+  const submitEdit = async () => {
     if (!formData.name.trim() || !formData.message.trim()) {
       setToast({
         message: 'Please fill in name and message fields',
@@ -90,24 +132,73 @@ export default function TestimonialManagement() {
       });
       return;
     }
-    setTestimonials(testimonials.map(t => t.id === selectedTestimonial.id ? { ...t, ...formData } : t));
-    setShowEditModal(false);
-    setSelectedTestimonial(null);
-    setFormData({ name: '', position: '', company: '', rating: 5, message: '', image: '' });
-    setToast({
-      message: 'Testimonial updated successfully!',
-      type: 'success'
-    });
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/testimonials/${selectedTestimonial._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setShowEditModal(false);
+        setSelectedTestimonial(null);
+        setFormData({ name: '', position: '', company: '', rating: 5, message: '', image: '' });
+        setToast({
+          message: 'Testimonial updated successfully!',
+          type: 'success'
+        });
+        fetchTestimonials();
+      } else {
+        throw new Error('Failed to update testimonial');
+      }
+    } catch (error) {
+      console.error('Error updating testimonial:', error);
+      setToast({
+        message: 'Failed to update testimonial',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const confirmDelete = () => {
-    setTestimonials(testimonials.filter(t => t.id !== selectedTestimonial.id));
-    setShowDeleteModal(false);
-    setSelectedTestimonial(null);
-    setToast({
-      message: 'Testimonial deleted successfully!',
-      type: 'success'
-    });
+  const confirmDelete = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_URL}/testimonials/${selectedTestimonial._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        setShowDeleteModal(false);
+        setSelectedTestimonial(null);
+        setToast({
+          message: 'Testimonial deleted successfully!',
+          type: 'success'
+        });
+        fetchTestimonials();
+      } else {
+        throw new Error('Failed to delete testimonial');
+      }
+    } catch (error) {
+      console.error('Error deleting testimonial:', error);
+      setToast({
+        message: 'Failed to delete testimonial',
+        type: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -177,9 +268,13 @@ export default function TestimonialManagement() {
 
       {/* Testimonials Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {loading && <p className="text-center text-gray-600 col-span-2">Loading testimonials...</p>}
+        {!loading && filteredTestimonials.length === 0 && (
+          <p className="text-center text-gray-600 col-span-2">No testimonials found. Add your first testimonial!</p>
+        )}
         {filteredTestimonials.map((testimonial, index) => (
           <motion.div
-            key={testimonial.id}
+            key={testimonial._id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + index * 0.05 }}
@@ -222,7 +317,7 @@ export default function TestimonialManagement() {
 
             <p className="text-gray-700 mb-4">{testimonial.message}</p>
 
-            <p className="text-xs text-gray-500">{testimonial.date}</p>
+            <p className="text-xs text-gray-500">{new Date(testimonial.createdAt).toLocaleDateString()}</p>
           </motion.div>
         ))}
       </div>

@@ -51,6 +51,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(false);
   }, []);
 
+  // Periodic status check - verify user is still active/not deleted
+  useEffect(() => {
+    if (!user) return;
+
+    const checkUserStatus = async () => {
+      try {
+        // Make a lightweight API call to check if user is still active
+        await api.get('/auth/me');
+      } catch (error: any) {
+        // If 403, user has been blocked/deleted - handled by API interceptor
+        // If 401, token expired - handled by API interceptor
+        console.log('User status check failed:', error.response?.status);
+      }
+    };
+
+    // Check status every 30 seconds
+    const interval = setInterval(checkUserStatus, 30000);
+
+    // Cleanup on unmount
+    return () => clearInterval(interval);
+  }, [user]);
+
   // Login function
   const login = async (email: string, password: string) => {
     try {

@@ -9,63 +9,62 @@ import aishaAndOmar from '../images/aisha&romar.jpg';
 import priyaAndArjun from '../images/priya&arjun.jpg';
 import isabellaAndLucas from '../images/isabella&lucas.jpg';
 import yukiAndTakeshi from '../images/yuki&takesi.jpg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '@/context/LanguageProvider';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+// Default image mapping based on couple name or use fallback
+const imageMap: any = {
+  'Emma & David': emmaAndDavid,
+  'Sophia & Ryan': sophiaAndRyan,
+  'Aisha & Omar': aishaAndOmar,
+  'Priya & Arjun': priyaAndArjun,
+  'Isabella & Lucas': isabellaAndLucas,
+  'Yuki & Takeshi': yukiAndTakeshi,
+};
 
 export default function StoriesPage() {
   const { t } = useTranslation();
   const [hoveredStory, setHoveredStory] = useState<number | null>(null);
-  
-  const stories = [
-    {
-      id: 1,
-      couple: t('STORY_1_COUPLE'),
-      date: t('STORY_1_DATE'),
-      story: t('STORY_1_FULL'),
-      image: emmaAndDavid,
-      location: t('STORY_1_LOCATION'),
-    },
-    {
-      id: 2,
-      couple: t('STORY_2_COUPLE'),
-      date: t('STORY_2_DATE'),
-      story: t('STORY_2_FULL'),
-      image: sophiaAndRyan,
-      location: t('STORY_2_LOCATION'),
-    },
-    {
-      id: 3,
-      couple: t('STORY_3_COUPLE'),
-      date: t('STORY_3_DATE'),
-      story: t('STORY_3_FULL'),
-      image: aishaAndOmar,
-      location: t('STORY_3_LOCATION'),
-    },
-    {
-      id: 4,
-      couple: t('STORY_4_COUPLE'),
-      date: t('STORY_4_DATE'),
-      story: t('STORY_4_FULL'),
-      image: priyaAndArjun,
-      location: t('STORY_4_LOCATION'),
-    },
-    {
-      id: 5,
-      couple: t('STORY_5_COUPLE'),
-      date: t('STORY_5_DATE'),
-      story: t('STORY_5_FULL'),
-      image: isabellaAndLucas,
-      location: t('STORY_5_LOCATION'),
-    },
-    {
-      id: 6,
-      couple: t('STORY_6_COUPLE'),
-      date: t('STORY_6_DATE'),
-      story: t('STORY_6_FULL'),
-      image: yukiAndTakeshi,
-      location: t('STORY_6_LOCATION'),
-    },
-  ];
+  const [stories, setStories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_URL}/stories`);
+        if (response.ok) {
+          const data = await response.json();
+          // Map stories with images
+          const storiesWithImages = data.map((story: any) => ({
+            ...story,
+            imageFile: imageMap[story.coupleName] || emmaAndDavid, // Use mapped image or default
+          }));
+          setStories(storiesWithImages);
+        } else {
+          throw new Error('Failed to fetch stories');
+        }
+      } catch (error) {
+        console.error('Error fetching stories:', error);
+        // Fallback to default stories
+        setStories([
+          {
+            _id: '1',
+            coupleName: t('STORY_1_COUPLE'),
+            weddingDate: t('STORY_1_DATE'),
+            story: t('STORY_1_FULL'),
+            imageFile: emmaAndDavid,
+            location: t('STORY_1_LOCATION'),
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStories();
+  }, [t]);
 
   return (
     <div className="min-h-screen pt-16 relative">
@@ -98,9 +97,15 @@ export default function StoriesPage() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
+            {loading && (
+              <p className="col-span-2 text-center text-gray-600 text-lg">Loading stories...</p>
+            )}
+            {!loading && stories.length === 0 && (
+              <p className="col-span-2 text-center text-gray-600 text-lg">No success stories yet. Check back soon!</p>
+            )}
             {stories.map((story, index) => (
               <motion.div
-                key={story.id}
+                key={story._id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -111,7 +116,7 @@ export default function StoriesPage() {
                   rotateZ: index % 2 === 0 ? 1 : -1,
                   transition: { duration: 0.3, type: "spring", stiffness: 300 }
                 }}
-                onHoverStart={() => setHoveredStory(story.id)}
+                onHoverStart={() => setHoveredStory(index)}
                 onHoverEnd={() => setHoveredStory(null)}
                 className="relative bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-golden-100 group cursor-pointer"
               >
@@ -135,7 +140,7 @@ export default function StoriesPage() {
                 </motion.div>
 
                 {/* Heart burst animation on hover - WHOLE CARD */}
-                {hoveredStory === story.id && (
+                {hoveredStory === index && (
                   <div className="absolute inset-0 pointer-events-none overflow-hidden z-20 rounded-3xl">
                     {[...Array(10)].map((_, i) => {
                       const startX = Math.random() * 100;
@@ -181,15 +186,21 @@ export default function StoriesPage() {
                 {/* Content wrapper */}
                 <div className="relative z-10">
                   <div className="relative h-80 overflow-hidden">
-                    <motion.img
-                      src={story.image.src}
-                      alt={story.couple}
-                      className="w-full h-full object-cover"
-                      whileHover={{ 
-                        scale: 1.1,
-                        transition: { duration: 0.4 }
-                      }}
-                    />
+                    {story.imageFile ? (
+                      <motion.img
+                        src={story.imageFile.src}
+                        alt={story.coupleName}
+                        className="w-full h-full object-cover"
+                        whileHover={{ 
+                          scale: 1.1,
+                          transition: { duration: 0.4 }
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-golden-200 to-golden-400 flex items-center justify-center text-6xl">
+                        {story.image || '💑'}
+                      </div>
+                    )}
                     
                     {/* Shimmer effect on hover */}
                     <motion.div
@@ -208,13 +219,13 @@ export default function StoriesPage() {
                       transition={{ duration: 0.2 }}
                     >
                       <h3 className="text-3xl font-bold mb-2 group-hover:text-golden-200 transition-colors duration-300">
-                        {story.couple}
+                        {story.coupleName}
                       </h3>
                       <p className="text-white/90 text-sm">{story.location}</p>
                     </motion.div>
                     <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                       <p className="text-golden-600 text-sm font-semibold">
-                        {story.date}
+                        {story.weddingDate}
                       </p>
                     </div>
                   </div>

@@ -1,30 +1,30 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Users, Heart, MessageSquare, TrendingUp, DollarSign, UserCheck, Mail, Star, Settings, HelpCircle, FileText, CreditCard, Database, ArrowRight } from 'lucide-react';
+import { Users, Heart, MessageSquare, TrendingUp, DollarSign, UserCheck, Mail, Star, Settings, HelpCircle, FileText, CreditCard, Database, ArrowRight, CheckCircle, XCircle, Clock, Image, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
+import api from '@/lib/api';
+import { toast } from 'sonner';
 
 // Animated Counter Component with Intersection Observer
-function AnimatedCounter({ value, duration = 2000, inView }: { value: string; duration?: number; inView: boolean }) {
+function AnimatedCounter({ value, duration = 2000, inView }: { value: number; duration?: number; inView: boolean }) {
   const [count, setCount] = useState(0);
   
   useEffect(() => {
-    if (!inView) {
+    // Always animate if we have a value, don't wait for inView
+    if (!value || value === 0) {
       setCount(0);
       return;
     }
-
-    // Parse the numeric value from the string
-    const numericValue = parseFloat(value.replace(/[^0-9.]/g, ''));
     
     let start = 0;
-    const increment = numericValue / (duration / 16); // 60fps
+    const increment = value / (duration / 16); // 60fps
     
     const timer = setInterval(() => {
       start += increment;
-      if (start >= numericValue) {
-        setCount(numericValue);
+      if (start >= value) {
+        setCount(value);
         clearInterval(timer);
       } else {
         setCount(start);
@@ -32,27 +32,68 @@ function AnimatedCounter({ value, duration = 2000, inView }: { value: string; du
     }, 16);
     
     return () => clearInterval(timer);
-  }, [value, duration, inView]);
+  }, [value, duration]);
   
-  // Determine format from original value
-  const displayValue = () => {
-    const numValue = Math.floor(count);
-    if (value.includes('%')) {
-      return `${numValue}%`;
-    } else if (value.includes('$')) {
-      return `$${numValue.toLocaleString()}`;
-    } else if (value.includes(',')) {
-      return numValue.toLocaleString();
-    }
-    return numValue.toString();
+  return <span>{Math.floor(count)}</span>;
+}
+
+interface DashboardStats {
+  users: {
+    total: number;
+    active: number;
+    verified: number;
+    male: number;
+    female: number;
   };
-  
-  return <span>{displayValue()}</span>;
+  interests: {
+    total: number;
+    pending: number;
+    accepted: number;
+    rejected: number;
+  };
+  contacts: {
+    total: number;
+    new: number;
+    inProgress: number;
+    resolved: number;
+  };
+  photos: {
+    usersWithPhotos: number;
+  };
 }
 
 export default function AdminDashboard() {
   const [isStatsInView, setIsStatsInView] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+
+  // Fetch dashboard stats from backend
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/admin/stats');
+        
+        if (response.data.success) {
+          const statsData = response.data.data;
+          console.log('Dashboard stats loaded:', statsData);
+          console.log('Total users value:', statsData.users.total, 'Type:', typeof statsData.users.total);
+          console.log('Total interests value:', statsData.interests.total, 'Type:', typeof statsData.interests.total);
+          setStats(statsData);
+        } else {
+          toast.error('Failed to load dashboard statistics');
+        }
+      } catch (error: any) {
+        console.error('Failed to fetch dashboard stats:', error);
+        toast.error(error.response?.data?.message || 'Failed to load dashboard statistics');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   // Intersection Observer to detect when stats section is in viewport
   useEffect(() => {
@@ -78,13 +119,35 @@ export default function AdminDashboard() {
     };
   }, []);
 
-  const stats = [
-    { icon: Users, label: 'Total Users', value: '2543', change: '+12.5%', color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-50' },
-    { icon: MessageSquare, label: 'Testimonials', value: '456', change: '+15.3%', color: 'from-purple-500 to-golden-500', bgColor: 'bg-purple-50' },
-    { icon: UserCheck, label: 'Premium Users', value: '892', change: '+18.7%', color: 'from-amber-500 to-orange-500', bgColor: 'bg-amber-50' },
-    { icon: Mail, label: 'Contact Forms', value: '234', change: '+5.4%', color: 'from-indigo-500 to-purple-500', bgColor: 'bg-indigo-50' },
-    { icon: Star, label: 'Success Stories', value: '89', change: '+10.2%', color: 'from-yellow-500 to-amber-500', bgColor: 'bg-yellow-50' },
-  ];
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white pt-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="inline-block w-12 h-12 border-4 border-rose-200 border-t-rose-500 rounded-full"
+            />
+            <p className="text-gray-600 mt-4">Loading dashboard statistics...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white pt-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <p className="text-gray-600">Failed to load dashboard statistics</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white pt-20">
@@ -256,28 +319,131 @@ export default function AdminDashboard() {
         </div>
       </motion.div>
 
-      {/* Stats Grid with Animated Numbers - MOVED AFTER QUICK ACTIONS */}
-      <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + index * 0.05 }}
-            whileHover={{ y: -5 }}
-            className={`${stat.bgColor} rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100`}
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-lg flex items-center justify-center`}>
-                <stat.icon className="w-6 h-6 text-white" />
-              </div>
+      {/* Stats Grid - Dashboard Overview */}
+      <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
+        {/* Total Users */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          whileHover={{ y: -5 }}
+          className="bg-blue-50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+              <Users className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-3xl font-bold text-gray-800 mb-1">
-              <AnimatedCounter value={stat.value} inView={isStatsInView} />
-            </h3>
-            <p className="text-gray-600 text-sm font-medium">{stat.label}</p>
-          </motion.div>
-        ))}
+          </div>
+          <h3 className="text-3xl font-bold text-gray-800 mb-1">
+            {stats.users.total}
+          </h3>
+          <p className="text-gray-600 text-sm font-medium mb-2">Total Users</p>
+          <div className="text-xs text-gray-500 space-y-1">
+            <div className="flex items-center justify-between">
+              <span>Active:</span>
+              <span className="font-semibold">{stats.users.active}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Verified:</span>
+              <span className="font-semibold">{stats.users.verified}</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Testimonials - Placeholder */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          whileHover={{ y: -5 }}
+          className="bg-purple-50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-golden-500 rounded-lg flex items-center justify-center">
+              <MessageSquare className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-800 mb-1">
+            0
+          </h3>
+          <p className="text-gray-600 text-sm font-medium mb-2">Testimonials</p>
+          <div className="text-xs text-gray-500">
+            <p>Manage customer reviews</p>
+          </div>
+        </motion.div>
+
+        {/* Premium Users - Placeholder */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          whileHover={{ y: -5 }}
+          className="bg-amber-50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
+              <UserCheck className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-800 mb-1">
+            0
+          </h3>
+          <p className="text-gray-600 text-sm font-medium mb-2">Premium Users</p>
+          <div className="text-xs text-gray-500">
+            <p>Subscribed members</p>
+          </div>
+        </motion.div>
+
+        {/* Contact Forms */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          whileHover={{ y: -5 }}
+          className="bg-indigo-50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
+              <Mail className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-800 mb-1">
+            {stats.contacts.total}
+          </h3>
+          <p className="text-gray-600 text-sm font-medium mb-2">Contact Forms</p>
+          <div className="text-xs text-gray-500 space-y-1">
+            <div className="flex items-center justify-between">
+              <span>New:</span>
+              <span className="font-semibold">{stats.contacts.new}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>In Progress:</span>
+              <span className="font-semibold">{stats.contacts.inProgress}</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Success Stories - Placeholder */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          whileHover={{ y: -5 }}
+          className="bg-yellow-50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-lg flex items-center justify-center">
+              <Star className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-800 mb-1">
+            0
+          </h3>
+          <p className="text-gray-600 text-sm font-medium mb-2">Success Stories</p>
+          <div className="text-xs text-gray-500">
+            <p>Featured couple stories</p>
+          </div>
+        </motion.div>
       </div>
       </div>
     </div>

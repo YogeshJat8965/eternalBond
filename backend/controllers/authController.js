@@ -246,6 +246,17 @@ const login = async (req, res) => {
       });
     }
 
+    // Check if user account is active or deleted
+    if (user.isActive === false || user.accountStatus === 'deleted') {
+      const message = user.accountStatus === 'deleted' 
+        ? 'Your account has been deleted by admin. Please contact support if you believe this is an error.'
+        : 'Your account has been deactivated by admin. Please contact support for assistance.';
+      return res.status(403).json({
+        success: false,
+        message
+      });
+    }
+
     // Check if email is verified
     if (!user.isEmailVerified) {
       return res.status(401).json({
@@ -291,6 +302,24 @@ const login = async (req, res) => {
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Check if user account is active or deleted
+    if (user.isActive === false || user.accountStatus === 'deleted') {
+      const message = user.accountStatus === 'deleted' 
+        ? 'Your account has been deleted by admin. You have been logged out.'
+        : 'Your account has been deactivated by admin. You have been logged out.';
+      return res.status(403).json({
+        success: false,
+        message
+      });
+    }
 
     res.status(200).json({
       success: true,

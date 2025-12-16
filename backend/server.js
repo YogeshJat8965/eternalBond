@@ -28,6 +28,9 @@ const interestRoutes = require('./routes/interest');
 const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
 const shortlistRoutes = require('./routes/shortlist');
+const faqRoutes = require('./routes/faq');
+const testimonialRoutes = require('./routes/testimonial');
+const storyRoutes = require('./routes/story');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
@@ -36,6 +39,9 @@ app.use('/api/interests', interestRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/shortlist', shortlistRoutes);
+app.use('/api/faqs', faqRoutes);
+app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/stories', storyRoutes);
 
 // Test route
 app.get('/', (req, res) => {
