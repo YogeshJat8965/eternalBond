@@ -31,6 +31,8 @@ const searchMembers = async (req, res) => {
 
     console.log('Search filters received:', {
       gender,
+      ageFrom,
+      ageTo,
       maritalStatus,
       religion,
       city,
@@ -38,7 +40,9 @@ const searchMembers = async (req, res) => {
       education,
       annualIncome,
       complexion,
-      foodHabits
+      foodHabits,
+      currentUserId: req.user._id,
+      currentUserGender: req.user.gender
     });
 
     // Build query object
@@ -48,13 +52,11 @@ const searchMembers = async (req, res) => {
       _id: { $ne: req.user._id } // Exclude current user
     };
 
-    // Gender filter (required - show opposite gender by default)
-    if (gender) {
-      query.gender = gender;
-    } else {
-      // If no gender specified, show opposite gender
-      query.gender = req.user.gender === 'male' ? 'female' : 'male';
+    // Gender filter (optional - users can search for any gender)
+    if (gender && gender.trim() !== '' && gender.toLowerCase() !== 'all') {
+      query.gender = gender.toLowerCase();
     }
+    // If no gender specified, show all genders
 
     // Age filter
     if (ageFrom || ageTo) {
@@ -72,13 +74,13 @@ const searchMembers = async (req, res) => {
     }
 
     // Religion filter
-    if (religion) {
+    if (religion && religion.trim() !== '' && religion.toLowerCase() !== 'all') {
       query.religion = religion;
     }
 
     // Location filters
-    if (city) {
-      query.city = new RegExp(city, 'i'); // Case-insensitive search
+    if (city && city.trim() !== '') {
+      query.city = new RegExp(city.trim(), 'i'); // Case-insensitive search
     }
     if (state) {
       query.state = new RegExp(state, 'i');
@@ -88,22 +90,22 @@ const searchMembers = async (req, res) => {
     }
 
     // Marital status filter
-    if (maritalStatus) {
+    if (maritalStatus && maritalStatus.trim() !== '' && maritalStatus.toLowerCase() !== 'all') {
       query.maritalStatus = maritalStatus;
     }
 
     // Education filter
-    if (education) {
+    if (education && education.trim() !== '' && education.toLowerCase() !== 'all') {
       query.education = education;
     }
 
     // Profession filter
-    if (profession) {
-      query.profession = new RegExp(profession, 'i');
+    if (profession && profession.trim() !== '' && profession.toLowerCase() !== 'all') {
+      query.profession = new RegExp(profession.trim(), 'i');
     }
 
     // Annual income filter
-    if (annualIncome) {
+    if (annualIncome && annualIncome.trim() !== '' && annualIncome.toLowerCase() !== 'all') {
       query.annualIncome = annualIncome;
     }
 
@@ -138,7 +140,14 @@ const searchMembers = async (req, res) => {
       query.caste = new RegExp(caste, 'i');
     }
 
-    console.log('Final query object:', JSON.stringify(query, null, 2));
+    console.log('Final query object:', JSON.stringify({
+      ...query,
+      city: query.city ? `RegExp(${query.city.source}, 'i')` : undefined,
+      state: query.state ? `RegExp(${query.state.source}, 'i')` : undefined,
+      profession: query.profession ? `RegExp(${query.profession.source}, 'i')` : undefined,
+      motherTongue: query.motherTongue ? `RegExp(${query.motherTongue.source}, 'i')` : undefined,
+      caste: query.caste ? `RegExp(${query.caste.source}, 'i')` : undefined,
+    }, null, 2));
 
     // Pagination
     const pageNum = parseInt(page);

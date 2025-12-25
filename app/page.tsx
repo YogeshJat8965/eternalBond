@@ -5,6 +5,7 @@ import { Search, Heart, Users, Award, ArrowRight, Sparkles, Quote, ChevronLeft, 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/context/LanguageProvider';
 import FloatingHearts from '@/components/animations/FloatingHearts';
 import RotatingWords from '@/components/animations/RotatingWords';
@@ -23,6 +24,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 export default function Home() {
   const { t } = useTranslation();
+  const router = useRouter();
   const [searchData, setSearchData] = useState({
     lookingFor: '',
     profession: '',
@@ -96,6 +98,31 @@ export default function Home() {
   };
 
   const heroImages = [heroSection1, heroSection2, heroSection3];
+
+  // Handle quick search submission
+  const handleQuickSearch = () => {
+    // Build query parameters from search data
+    const queryParams = new URLSearchParams();
+    
+    // Map lookingFor to gender
+    if (searchData.lookingFor === 'bride') {
+      queryParams.append('gender', 'female');
+    } else if (searchData.lookingFor === 'groom') {
+      queryParams.append('gender', 'male');
+    }
+    
+    // Add other filters
+    if (searchData.profession) queryParams.append('profession', searchData.profession);
+    if (searchData.city) queryParams.append('city', searchData.city);
+    if (searchData.caste) queryParams.append('caste', searchData.caste);
+    if (searchData.maritalStatus) queryParams.append('maritalStatus', searchData.maritalStatus);
+    
+    // Add auto-search flag
+    queryParams.append('autoSearch', 'true');
+    
+    // Navigate to find-partner page with filters
+    router.push(`/find-partner?${queryParams.toString()}`);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -482,12 +509,13 @@ export default function Home() {
                   <option value="awaiting-divorce">Awaiting Divorce</option>
                 </select>
               </div>
-              <Link href="/find-partner">
-                <button className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2.5 md:py-3 lg:py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base">
-                  <Search className="w-4 h-4 md:w-5 md:h-5" />
-                  <span>{t('SEARCH_NOW')}</span>
-                </button>
-              </Link>
+              <button 
+                onClick={handleQuickSearch}
+                className="w-full bg-gradient-to-r from-golden-500 to-golden-500 text-white py-2.5 md:py-3 lg:py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base"
+              >
+                <Search className="w-4 h-4 md:w-5 md:h-5" />
+                <span>{t('SEARCH_NOW')}</span>
+              </button>
             </motion.div>
           </div>
         </div>

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Search, Filter, Heart, MapPin, Briefcase, Sparkles, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from '@/context/LanguageProvider';
 import api from '@/lib/api';
@@ -29,6 +30,7 @@ interface Member {
 
 export default function FindPartnerPage() {
   const { t } = useTranslation();
+  const searchParams = useSearchParams();
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
@@ -52,6 +54,41 @@ export default function FindPartnerPage() {
     education: '',
     annualIncome: '',
   });
+
+  // Initialize filters from URL params on component mount
+  useEffect(() => {
+    const gender = searchParams.get('gender') || '';
+    const profession = searchParams.get('profession') || '';
+    const city = searchParams.get('city') || '';
+    const caste = searchParams.get('caste') || '';
+    const maritalStatus = searchParams.get('maritalStatus') || '';
+    const autoSearch = searchParams.get('autoSearch') === 'true';
+
+    // Update filters if URL params exist
+    if (gender || profession || city || caste || maritalStatus) {
+      setSearchFilters(prev => ({
+        ...prev,
+        gender,
+        profession,
+        city,
+        maritalStatus,
+      }));
+
+      // Auto-trigger search if autoSearch flag is set
+      if (autoSearch) {
+        setTimeout(() => {
+          handleSearch({
+            ...searchFilters,
+            gender,
+            profession,
+            city,
+            maritalStatus,
+          });
+        }, 500);
+      }
+    }
+  }, [searchParams]);
+
 
   // Calculate age from date of birth
   const calculateAge = (dob: string) => {
@@ -124,10 +161,15 @@ export default function FindPartnerPage() {
     }
   }, [members]);
 
-  const handleSearch = async () => {
+  const handleSearch = async (filtersToUse?: typeof searchFilters) => {
     try {
       setLoading(true);
       setShowResults(true);
+      
+      // Use provided filters or current state filters
+      const filters = filtersToUse || searchFilters;
+      
+      console.log('handleSearch called with filters:', filters);
       
       // Build query parameters
       const params: any = {
@@ -136,12 +178,14 @@ export default function FindPartnerPage() {
       };
       
       // Add filters only if they have values
-      Object.keys(searchFilters).forEach(key => {
-        const value = searchFilters[key as keyof typeof searchFilters];
+      Object.keys(filters).forEach(key => {
+        const value = filters[key as keyof typeof filters];
         if (value) {
           params[key] = value;
         }
       });
+      
+      console.log('Sending API request with params:', params);
       
       const response = await api.get('/search', { params });
       console.log('Search response:', response.data);
@@ -154,6 +198,12 @@ export default function FindPartnerPage() {
       
       setMembers(membersWithAge);
       setTotalResults(response.data.total || 0);
+      
+      // Fetch shortlist status for the members
+      if (membersWithAge.length > 0) {
+        const memberIds = membersWithAge.map((m: Member) => m._id);
+        await fetchShortlistStatus(memberIds);
+      }
       
       // Scroll to results section
       setTimeout(() => {
@@ -383,9 +433,9 @@ export default function FindPartnerPage() {
               </label>
               <select
                 className="w-full px-4 py-3 border border-golden-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-golden-500"
-                value={searchFilters.income}
+                value={searchFilters.annualIncome}
                 onChange={(e) =>
-                  setSearchFilters({ ...searchFilters, income: e.target.value })
+                  setSearchFilters({ ...searchFilters, annualIncome: e.target.value })
                 }
               >
                 <option value="">All</option>
@@ -401,7 +451,7 @@ export default function FindPartnerPage() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={handleSearch}
+              onClick={() => handleSearch()}
               className="flex-1 bg-gradient-to-r from-golden-500 to-golden-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
             >
               <Search className="w-5 h-5" />
