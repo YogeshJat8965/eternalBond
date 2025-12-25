@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import { Search, Filter, Heart, MapPin, Briefcase, Sparkles, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from '@/context/LanguageProvider';
 import api from '@/lib/api';
+import { isAuthenticated } from '@/lib/auth-utils';
 import { toast } from 'sonner';
 import Image from 'next/image';
 
@@ -31,6 +33,8 @@ interface Member {
 export default function FindPartnerPage() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
@@ -54,6 +58,11 @@ export default function FindPartnerPage() {
     education: '',
     annualIncome: '',
   });
+
+  // Check authentication status
+  useEffect(() => {
+    setIsUserAuthenticated(isAuthenticated());
+  }, []);
 
   // Initialize filters from URL params on component mount
   useEffect(() => {
@@ -104,6 +113,12 @@ export default function FindPartnerPage() {
 
   // Fetch shortlist status for members
   const fetchShortlistStatus = async (memberIds: string[]) => {
+    // Only fetch for authenticated users
+    if (!isUserAuthenticated) {
+      setLikedProfiles([]);
+      return;
+    }
+    
     try {
       const shortlistedIds: string[] = [];
       await Promise.all(
@@ -126,6 +141,13 @@ export default function FindPartnerPage() {
 
   // Toggle shortlist
   const toggleShortlist = async (memberId: string, memberName: string) => {
+    // Check if user is authenticated
+    if (!isUserAuthenticated) {
+      toast.error('Please login to add members to your shortlist');
+      router.push('/login');
+      return;
+    }
+    
     if (togglingShortlist === memberId) return; // Prevent double clicks
     
     try {

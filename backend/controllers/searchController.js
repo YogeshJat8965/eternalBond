@@ -2,7 +2,7 @@ const User = require('../models/User');
 
 // @desc    Search members with filters
 // @route   GET /api/search
-// @access  Private
+// @access  Public (optional authentication)
 const searchMembers = async (req, res) => {
   try {
     const {
@@ -41,16 +41,21 @@ const searchMembers = async (req, res) => {
       annualIncome,
       complexion,
       foodHabits,
-      currentUserId: req.user._id,
-      currentUserGender: req.user.gender
+      currentUserId: req.user ? req.user._id : 'guest',
+      currentUserGender: req.user ? req.user.gender : 'none',
+      isAuthenticated: !!req.user
     });
 
     // Build query object
     const query = {
       isActive: true,
-      isEmailVerified: true,
-      _id: { $ne: req.user._id } // Exclude current user
+      isEmailVerified: true
     };
+
+    // Exclude current user if authenticated
+    if (req.user) {
+      query._id = { $ne: req.user._id };
+    }
 
     // Gender filter (optional - users can search for any gender)
     if (gender && gender.trim() !== '' && gender.toLowerCase() !== 'all') {

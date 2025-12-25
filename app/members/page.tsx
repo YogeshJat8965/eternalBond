@@ -3,8 +3,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MapPin, Briefcase, CheckCircle, Filter, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
+import { isAuthenticated } from '@/lib/auth-utils';
 import { toast } from 'sonner';
 import Image from 'next/image';
 
@@ -27,6 +29,8 @@ interface Member {
 }
 
 export default function MembersPage() {
+  const router = useRouter();
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState<Member[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,6 +67,11 @@ export default function MembersPage() {
     education: '',
     annualIncome: '',
   });
+
+  // Check authentication status on mount
+  useEffect(() => {
+    setIsUserAuthenticated(isAuthenticated());
+  }, []);
 
   // Calculate age from date of birth
   const calculateAge = (dob: string) => {
@@ -123,6 +132,12 @@ export default function MembersPage() {
 
   // Fetch shortlist status for current members
   const fetchShortlistStatus = async (memberIds: string[]) => {
+    // Only fetch for authenticated users
+    if (!isUserAuthenticated) {
+      setLikedProfiles([]);
+      return;
+    }
+    
     try {
       const shortlistedIds: string[] = [];
       await Promise.all(
@@ -168,6 +183,13 @@ export default function MembersPage() {
   };
 
   const toggleLike = async (memberId: string, memberName: string) => {
+    // Check if user is authenticated
+    if (!isUserAuthenticated) {
+      toast.error('Please login to add members to your shortlist');
+      router.push('/login');
+      return;
+    }
+    
     if (togglingShortlist === memberId) return; // Prevent double clicks
     
     try {
